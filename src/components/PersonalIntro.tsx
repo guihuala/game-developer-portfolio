@@ -19,16 +19,16 @@ interface DialogueNode {
 
 const dialogueTree: Record<string, DialogueNode> = {
   intro: {
-    zh: "你好，冒险者！欢迎来到我的个人存档。我是 moku，一名正在不断寻找“新手村”出口的游戏开发者。你想通过哪种方式了解我？",
-    en: "Hello, Adventurer! Welcome to my archive. I'm moku, a game developer still looking for the 'Noob Village' exit. How would you like to explore my profile?",
+    zh: "你好！欢迎来到我的个人主页。我是 moku，一名热爱挑战且注重细节的游戏开发者。你想从哪个方面开始了解我？",
+    en: "Hello! Welcome to my portfolio. I'm moku, a game developer passionate about challenges and detail-oriented design. Where would you like to start?",
     choices: [
-      { zh: "查看技能面板", en: "Check Skill Boons", nextNode: "start" },
-      { zh: "了解我的故事", en: "Learn my story", nextNode: "journey" },
+      { zh: "查看专长与技能", en: "Skills & Expertise", nextNode: "start" },
+      { zh: "了解我的经历", en: "Experience & Story", nextNode: "journey" },
     ]
   },
   start: {
-    zh: "在这个存档里，我记录了自己从零开始的学习历程。无论是底层架构还是视觉表现，我都以此为乐。",
-    en: "In this archive, I've recorded my learning journey from scratch. Whether it's architecture or visuals, I find joy in both.",
+    zh: "在这个空间里，我记录了自己在游戏开发领域的全栈探索。无论是底层的逻辑架构还是最终的视觉呈现，我都有广泛的涉猎。",
+    en: "In this space, I've documented my full-stack exploration in game development. I have extensive experience in both logic architecture and visual presentation.",
     choices: [
       { zh: "关于开发历程", en: "Development Journey", nextNode: "journey" },
       { zh: "关于艺术风格", en: "Artistic Style", nextNode: "art" },
@@ -61,7 +61,7 @@ const dialogueTree: Record<string, DialogueNode> = {
 };
 
 export const PersonalIntro: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const { playHover, playClick } = useSoundEffects();
   const [currentNodeId, setCurrentNodeId] = useState("intro");
   const [displayedText, setDisplayedText] = useState("");
@@ -145,7 +145,7 @@ export const PersonalIntro: React.FC = () => {
           >
             {/* Name Box */}
             <div className="absolute -top-3.5 left-8 px-4 py-1 bg-cyan-dark rounded-lg border-2 border-cyan-main shadow-md">
-              <span className="text-[10px] font-black text-white uppercase tracking-widest">moku</span>
+              <span className="text-[10px] font-black text-white uppercase tracking-widest">{t("桂花拉糕", "moku")}</span>
             </div>
 
             <div className="flex-1 flex flex-col justify-center min-h-[2rem]">

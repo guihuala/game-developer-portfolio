@@ -20,51 +20,51 @@ interface Boon {
 const boons: Boon[] = [
   {
     id: 'programming',
-    name: "核心引擎架构",
-    enName: "Core Engine Architecture",
-    god: "客户端开发",
-    enGod: "Frontend/Client",
+    name: "编程能力",
+    enName: "Programming & Engineering",
+    god: "开发核心",
+    enGod: "Development Core",
     icon: Gamepad2,
-    desc: "精通 Unity 引擎与 C# 核心开发，具备构建高性能商业级游戏框架、多线程逻辑处理及自定义渲染管线（URP）的能力。",
-    enDesc: "Proficient in Unity & C# core, capable of building high-performance frameworks, multi-threaded logic, and custom SRPs.",
-    flavor: "“以底层架构支撑上层创意，用代码编织稳定的世界基石。”",
-    enFlavor: "\"Supporting creativity with solid architecture; weaving worlds with code.\""
-  },
-  {
-    id: 'art',
-    name: "视觉艺术表现",
-    enName: "Visual Arts & Animation",
-    god: "美术设计",
-    enGod: "Technical Art",
-    icon: PenTool,
-    desc: "横跨 3D 建模、Spine 2D 骨骼动画与 HLSL 着色器。擅长通过技术手段提升视觉品质，打造独特的风格化艺术效果。",
-    enDesc: "Spanning 3D modeling, Spine animation, and HLSL shaders. Enhancing visual quality through technical expertise.",
-    flavor: "“在理性的技术边界内，释放感性的视觉张力。”",
-    enFlavor: "\"Unleashing visual tension within the boundaries of technical logic.\""
+    desc: "熟悉 C# 语言与 Unity 引擎，掌握常用 API，具备完整游戏项目开发经验。理解面向对象编程理念，能编写模块化、可维护的代码。",
+    enDesc: "Familiar with C# and Unity with mastery of core APIs and full-cycle development experience. Deep understanding of OOP principles for writing modular, maintainable code.",
+    flavor: "“理解面向对象编程理念，编写模块化、可维护的代码。”",
+    enFlavor: "\"Understanding OOP principles to write modular and maintainable code.\""
   },
   {
     id: 'design',
-    name: "系统与关卡机制",
-    enName: "Systems & Level Design",
+    name: "游戏设计",
+    enName: "Game Design & UX",
     god: "玩法逻辑",
-    enGod: "Gameplay Design",
+    enGod: "Gameplay & Systems",
     icon: LayoutTemplate,
-    desc: "深度洞察游戏性设计，负责复杂系统机制的数值模型搭建与玩法逻辑闭环，确保存档、交互等全系统的高效协同。",
-    enDesc: "In-depth insight into game design, in charge of numerical models, gameplay loops, and system coordination.",
-    flavor: "“严谨的规则是自由交互的前提，合理的逻辑是乐趣的源泉。”",
-    enFlavor: "\"Rigorous rules enable freedom; logical flow fosters fun.\""
+    desc: "擅长核心机制构建与数值平衡调优；注重玩家交互反馈与 UI/UX 体验。",
+    enDesc: "Skilled in core mechanics construction and numerical balance tuning; focused on player interactive feedback and UI/UX experience.",
+    flavor: "“注重玩家交互反馈与 UI/UX 体验，构建核心玩法循环。”",
+    enFlavor: "\"Focusing on interactive feedback and UI/UX to build engaging gameplay loops.\""
+  },
+  {
+    id: 'art',
+    name: "美术技能",
+    enName: "Technical Art & Assets",
+    god: "视觉表现",
+    enGod: "Visual Arts",
+    icon: PenTool,
+    desc: "具备美术基础，能使用 Photoshop、Krita、Blender 等进行 2D/3D 资源创作和处理。熟悉从资产制作到引擎部署的完整工作流程。",
+    enDesc: "Proficient in Photoshop, Krita, and Blender for 2D/3D asset creation. Familiar with the full pipeline from production to engine deployment.",
+    flavor: "“熟练掌握从资产制作到引擎部署的完整美术工作流。”",
+    enFlavor: "\"Mastering the full art pipeline from asset creation to engine deployment.\""
   },
   {
     id: 'leadership',
-    name: "项目全周期管理",
-    enName: "Project Lifecycle Management",
-    god: "制作人职能",
-    enGod: "Production",
+    name: "项目管理与协作",
+    enName: "Project Management",
+    god: "团队执行",
+    enGod: "Collaboration",
     icon: Trophy,
-    desc: "具备从立项原型到上线运营的全周期管理经验。高效协调跨部门沟通，确保游戏在核心创意与技术落地之间达成完美平衡。",
-    enDesc: "Experience across the full project lifecycle. Coordinating cross-dept communication to balance vision and tech.",
-    flavor: "“统筹全局，确保每一行代码、每一张画稿都服务于最终的体验。”",
-    enFlavor: "\"Orchestrating every asset and line of code for a unified player experience.\""
+    desc: "熟练使用 GitHub 进行版本控制与多人协作，使用 Trello 管理任务进度，具备良好沟通协调能力，能够高效推动项目执行并解决团队协作中的问题。",
+    enDesc: "Proficient in GitHub for version control and Trello for task tracking. Strong coordination skills to drive project execution and resolve team challenges.",
+    flavor: "“高效推动项目执行，解决协作中的复杂问题。”",
+    enFlavor: "\"Efficiently driving project execution and resolving complex collaborative challenges.\""
   }
 ];
 

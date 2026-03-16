@@ -19,7 +19,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const { playHover, playClick } = useSoundEffects();
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -98,7 +98,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           
           <div className="mt-auto flex items-center gap-2 text-sm font-black font-sans uppercase tracking-wider group-hover:underline" style={{ color: project.color }}>
             <Plus className="w-4 h-4" />
-            {language === 'zh' ? '查看详情 Details' : 'Details View'}
+            {t("查看详情", "Details View")}
           </div>
         </div>
         
@@ -116,13 +116,13 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 };
 
 export const Portfolio: React.FC = () => {
-  const [selectedTag, setSelectedTag] = useState<string>('All');
   const { t } = useLanguage();
+  const [selectedTag, setSelectedTag] = useState<string>(t('全部', 'All'));
   const { playHover, playClick } = useSoundEffects();
 
-  const allTags = ['All', ...Array.from(new Set(projects.flatMap(p => p.tags)))];
+  const allTags = [t('全部', 'All'), ...Array.from(new Set(projects.flatMap(p => p.tags)))];
 
-  const filteredProjects = selectedTag === 'All' 
+  const filteredProjects = selectedTag === t('全部', 'All') 
     ? projects 
     : projects.filter(p => p.tags.includes(selectedTag));
 

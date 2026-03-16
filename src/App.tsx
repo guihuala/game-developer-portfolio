@@ -17,6 +17,7 @@ import { PageTransition } from './components/PageTransition';
 import { AnimatePresence, motion } from 'motion/react';
 import { PartyPopper } from 'lucide-react';
 import { LanguageProvider } from './context/LanguageContext';
+import { HelmetProvider } from 'react-helmet-async';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { ToastProvider, useToast } from './context/ToastContext';
 import { ContextMenu } from './components/ContextMenu';
@@ -161,7 +162,7 @@ const AppContent = () => {
           <ParticleBackground intensity={particleIntensity} />
           <Navbar />
           
-          <main className="relative z-10 min-h-screen flex flex-col">
+          <main className="relative z-20 min-h-screen flex flex-col">
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<PageTransition><Home /></PageTransition>} />
@@ -182,14 +183,16 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <Router>
-      <LanguageProvider>
-        <SettingsProvider>
-          <ToastProvider>
-            <AppContent />
-          </ToastProvider>
-        </SettingsProvider>
-      </LanguageProvider>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <LanguageProvider>
+          <SettingsProvider>
+            <ToastProvider>
+              <AppContent />
+            </ToastProvider>
+          </SettingsProvider>
+        </LanguageProvider>
+      </Router>
+    </HelmetProvider>
   );
 }

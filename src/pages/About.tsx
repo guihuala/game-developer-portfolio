@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLanguage } from '../context/LanguageContext';
 import { PersonalIntro } from '../components/PersonalIntro';
 import { PhilosophyGallery } from '../components/PhilosophyGallery';
 import { Skills } from '../components/Skills';
-import { NextModuleLink } from '../components/NextModuleLink';
-import { User, Image as ImageIcon, Box } from 'lucide-react';
+import { ArtWorks } from '../components/ArtWorks';
+import { User, Image as ImageIcon, Box, Palette } from 'lucide-react';
+import { SEO } from '../components/SEO';
 
 const tabs = [
   { id: 'intro', label: '自我介绍', enLabel: 'Intro', icon: User, Component: PersonalIntro },
-  { id: 'philosophy', label: '创作理念', enLabel: 'Philosophy', icon: ImageIcon, Component: PhilosophyGallery },
+  { id: 'gaming', label: '游戏经历', enLabel: 'Gaming', icon: ImageIcon, Component: PhilosophyGallery },
   { id: 'skills', label: '专业技能', enLabel: 'Skills', icon: Box, Component: Skills },
+  { id: 'gallery', label: '美术作品', enLabel: 'Artworks', icon: Palette, Component: ArtWorks },
 ];
 
 export const About: React.FC = () => {
+  const { language, t } = useLanguage();
   const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   const slideVariants = {
@@ -46,15 +50,19 @@ export const About: React.FC = () => {
 
   return (
     <div id="about-me" className="pt-24 min-h-screen flex flex-col">
+      <SEO 
+        title="About Me" 
+        description="Learn more about Mokukeki's background as a game developer, design philosophy, and technical skill set."
+      />
       <div className="max-w-6xl mx-auto w-full px-6 flex-1 flex flex-col">
         
         {/* Header & Tabs */}
         <div className="flex flex-col items-center mb-12">
           <h2 className="text-4xl md:text-5xl font-black font-sans text-cyan-dark mb-8 uppercase tracking-tighter">
-            关于<span className="text-cyan-main">我</span>
+            {t("关于", "ABOUT")}<span className="text-cyan-main">{t("我", "ME")}</span>
           </h2>
           
-          <div className="flex bg-white/50 backdrop-blur-md p-2 rounded-full shadow-sm border border-cyan-light w-full max-w-3xl overflow-x-auto no-scrollbar justify-between">
+          <div className="grid grid-cols-4 md:flex md:flex-row gap-2 mb-12 p-2 bg-white/50 backdrop-blur-md rounded-[2.5rem] border-2 border-cyan-light/30 shadow-inner max-w-fit mx-auto overflow-x-auto no-scrollbar justify-between">
             {tabs.map((tab, index) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -75,10 +83,10 @@ export const About: React.FC = () => {
                   )}
                   <span className="relative z-10 flex items-center gap-2 font-black text-lg">
                     <Icon className="w-5 h-5" />
-                    {tab.label}
+                    {language === 'zh' ? tab.label : tab.enLabel}
                   </span>
                   <span className="relative z-10 text-[10px] uppercase font-bold tracking-widest opacity-60 mt-1">
-                    {tab.enLabel}
+                    {language === 'zh' ? tab.enLabel : tab.label}
                   </span>
                 </button>
               );
@@ -110,8 +118,6 @@ export const About: React.FC = () => {
         </div>
 
       </div>
-
-      <NextModuleLink to="/experience" zhText="经历" enText="Experience" />
     </div>
   );
 };

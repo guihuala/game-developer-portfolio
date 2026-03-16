@@ -5,6 +5,7 @@ import { ArrowLeft, Star, PlayCircle, ExternalLink, Code2, PenTool, Cpu, Trophy 
 import { projects } from '../data/projects';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { SEO } from '../components/SEO';
 
 export const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,6 +43,12 @@ export const ProjectDetail: React.FC = () => {
 
   return (
     <div id="project-detail" className="pt-20 min-h-screen pb-20">
+      <SEO 
+        title={project.enTitle} 
+        description={project.enDesc}
+        image={project.image}
+        keywords={`${project.tags.join(', ')}, ${project.enType}, game developer`}
+      />
       <motion.div
         className="fixed top-0 left-0 right-0 h-1.5 bg-cyan-main origin-left z-[60]"
         style={{ scaleX }}
@@ -139,7 +146,7 @@ export const ProjectDetail: React.FC = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
               <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">01</span>
-              {t("项目概述", "Overview")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Archive.Ref</span>
+              {t("项目概述", "Overview")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.2em] ml-2">Context.Info</span>
             </h2>
             <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white leading-relaxed">
               <p className="text-cyan-dark/80 font-bold text-lg md:text-xl leading-relaxed">
@@ -164,7 +171,7 @@ export const ProjectDetail: React.FC = () => {
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
               <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
                 <span className="w-10 h-10 rounded-2xl bg-yellow-main/20 flex items-center justify-center text-yellow-main text-lg shadow-inner">★</span>
-                {t("奖项荣誉", "Honors & Awards")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Recognition.Log</span>
+                {t("奖项荣誉", "Honors & Awards")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.2em] ml-2">Awards.Rec</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {project.details.honors.map((honor, idx) => (
@@ -188,7 +195,7 @@ export const ProjectDetail: React.FC = () => {
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                 <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
                   <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">02</span>
-                  {t("系统设计", "System Design")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Logic.Layer</span>
+                  {t("系统设计", "System Design")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.2em] ml-2">Logic.Structure</span>
                 </h2>
                 
                 <div className="relative group/scroll">
@@ -243,7 +250,7 @@ export const ProjectDetail: React.FC = () => {
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                 <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
                   <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">03</span>
-                  {t("技术实现", "Tech Evolution")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Binary.Path</span>
+                  {t("技术实现", "Tech Evolution")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.2em] ml-2">Internal.Core</span>
                 </h2>
                 
                 <div className="relative group/scroll-tech">
@@ -296,7 +303,7 @@ export const ProjectDetail: React.FC = () => {
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
               <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
                 <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">04</span>
-                {t("更多截图", "Snapshot.Ref")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Media.Grid</span>
+                {t("更多截图", "Snapshot.Ref")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.2em] ml-2">Visual.Gallery</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {project.details.gallery.map((img, idx) => (
