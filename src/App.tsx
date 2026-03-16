@@ -22,8 +22,6 @@ import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { ToastProvider, useToast } from './context/ToastContext';
 import { ContextMenu } from './components/ContextMenu';
 
-export type ParticleIntensity = 'off' | 'low' | 'high';
-
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -33,48 +31,10 @@ const ScrollToTop = () => {
 
   return null;
 };
-
-// Custom Hook for Konami Code
-const useKonamiCode = (callback: () => void) => {
-  useEffect(() => {
-    const konamiCode = [
-      'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-      'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-      'b', 'a'
-    ];
-    let position = 0;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === konamiCode[position]) {
-        position++;
-        if (position === konamiCode.length) {
-          callback();
-          position = 0;
-        }
-      } else {
-        position = 0;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [callback]);
-};
-
-// Route wrapper to access useLocation
 const AppContent = () => {
-  const { particleIntensity } = useSettings();
-  const { showToast } = useToast();
+  const { isLateNightMode } = useSettings();
   const [isLoading, setIsLoading] = useState(true);
-  const [isEasterEggActive, setIsEasterEggActive] = useState(false);
   const location = useLocation();
-
-  useKonamiCode(() => {
-    setIsEasterEggActive(true);
-    showToast('Achievement Unlocked', 'You found the secret Konami Code! ✤', 'achievement');
-    // Auto turn off after 5 seconds
-    setTimeout(() => setIsEasterEggActive(false), 5000);
-  });
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -106,60 +66,21 @@ const AppContent = () => {
         <Loader onComplete={() => setIsLoading(false)} />
       ) : (
         <motion.div 
-          animate={isEasterEggActive ? { 
-            rotate: [0, -5, 5, -5, 5, 0], 
-            scale: [1, 1.05, 1.05, 1],
-            filter: ['hue-rotate(0deg)', 'hue-rotate(90deg)', 'hue-rotate(0deg)']
-          } : {}}
+          animate={isLateNightMode ? { 
+            backgroundColor: '#0A1A1F',
+            color: '#E0F7FA'
+          } : {
+            backgroundColor: '#F8FCFC',
+            color: '#006064'
+          }}
           transition={{ duration: 1 }}
-          className="min-h-screen bg-[#F8FCFC] text-cyan-dark font-sans selection:bg-yellow-main selection:text-cyan-dark relative overflow-hidden"
+          className={`min-h-screen font-sans selection:bg-yellow-main selection:text-cyan-dark relative overflow-hidden ${
+            isLateNightMode ? 'dark-mode' : ''
+          }`}
         >
-          {/* Easter Egg Confetti overlay */}
-          <AnimatePresence>
-            {isEasterEggActive && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[999] pointer-events-none flex flex-col items-center justify-center bg-black/20 backdrop-blur-sm"
-              >
-                <motion.div
-                  initial={{ scale: 0, y: 100 }}
-                  animate={{ scale: [1, 1.5, 1], y: 0 }}
-                  transition={{ type: "spring", bounce: 0.6 }}
-                  className="bg-yellow-main p-8 rounded-[3rem] shadow-2xl flex flex-col items-center border-8 border-white"
-                >
-                  <PartyPopper className="w-24 h-24 text-cyan-dark mb-4 animate-bounce" />
-                  <h2 className="text-4xl font-black text-cyan-dark uppercase tracking-widest text-center">
-                    Level Up!
-                  </h2>
-                  <p className="font-bold text-cyan-dark/70 mt-2">You found the secret Konami Code.</p>
-                </motion.div>
-                
-                {/* Simple JS Confetti simulation */}
-                {Array.from({ length: 30 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    custom={i}
-                    initial={{ y: -100, x: window.innerWidth / 2, opacity: 1 }}
-                    animate={{ 
-                      y: window.innerHeight, 
-                      x: window.innerWidth / 2 + (Math.random() - 0.5) * 800,
-                      rotate: Math.random() * 360,
-                      opacity: 0
-                    }}
-                    transition={{ duration: 2 + Math.random() * 2, ease: "easeOut" }}
-                    className="absolute w-4 h-4 rounded-sm z-[1000]"
-                    style={{ backgroundColor: ['#00BCD4', '#FFD54F', '#F472B6', '#4ADE80'][Math.floor(Math.random() * 4)] }}
-                  />
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <CustomCursor />
           <ContextMenu />
-          <ParticleBackground intensity={particleIntensity} />
+          <ParticleBackground />
           <Navbar />
           
           <main className="relative z-20 min-h-screen flex flex-col">
@@ -175,6 +96,18 @@ const AppContent = () => {
           </main>
           
           <Footer />
+
+          {/* Late Night Overlay Glow */}
+          <AnimatePresence>
+            {isLateNightMode && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 pointer-events-none z-50 bg-indigo-900/10 mix-blend-color-burn"
+              />
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </>

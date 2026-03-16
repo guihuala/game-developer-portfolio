@@ -12,11 +12,11 @@ interface Particle {
   opacity: number;
 }
 
-interface ParticleBackgroundProps {
-  intensity: 'off' | 'low' | 'high';
-}
+import { useSettings } from '../context/SettingsContext';
 
-export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ intensity }) => {
+export const ParticleBackground: React.FC = () => {
+  const { isLateNightMode } = useSettings();
+  const intensity = isLateNightMode ? 'high' : 'low';
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
 
@@ -33,9 +33,7 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ intensit
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      if (intensity !== 'off') {
-        initParticles();
-      }
+      initParticles();
     };
 
     const createParticle = (x?: number, y?: number): Particle => {
@@ -57,7 +55,6 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ intensit
 
     const initParticles = () => {
       particles = [];
-      if (intensity === 'off') return;
       
       const divisor = intensity === 'high' ? 12000 : 36000;
       const numParticles = Math.floor((window.innerWidth * window.innerHeight) / divisor);
@@ -86,11 +83,6 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ intensit
 
     const update = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (intensity === 'off') {
-        animationFrameId = requestAnimationFrame(update);
-        return;
-      }
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -143,7 +135,6 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ intensit
     };
 
     const handleMouseClick = (e: MouseEvent) => {
-      if (intensity === 'off') return;
       
       const burstCount = intensity === 'high' ? 15 : 5;
       // Burst of petals on click!
@@ -182,7 +173,7 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({ intensit
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-500"
-      style={{ background: 'transparent', opacity: intensity === 'off' ? 0 : 1 }}
+      style={{ background: 'transparent', opacity: 1 }}
     />
   );
 };

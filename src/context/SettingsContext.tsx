@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type ParticleIntensity = 'off' | 'low' | 'high';
-
 interface SettingsContextType {
-  particleIntensity: ParticleIntensity;
-  setParticleIntensity: (intensity: ParticleIntensity) => void;
+  isLateNightMode: boolean;
+  toggleLateNightMode: () => void;
   audioEnabled: boolean;
   toggleAudio: () => void;
   setAudioEnabled: (enabled: boolean) => void;
@@ -13,9 +11,9 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [particleIntensity, setParticleIntensityState] = useState<ParticleIntensity>(() => {
-    const saved = localStorage.getItem('particleIntensity');
-    return (saved as ParticleIntensity) || 'low';
+  const [isLateNightMode, setIsLateNightMode] = useState<boolean>(() => {
+    const hours = new Date().getHours();
+    return hours >= 1 && hours < 5; // Midnight to early morning
   });
 
   const [audioEnabled, setAudioEnabledState] = useState<boolean>(() => {
@@ -23,9 +21,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return saved !== 'false'; // Default to true
   });
 
-  const setParticleIntensity = (intensity: ParticleIntensity) => {
-    setParticleIntensityState(intensity);
-    localStorage.setItem('particleIntensity', intensity);
+  const toggleLateNightMode = () => {
+    setIsLateNightMode(!isLateNightMode);
   };
 
   const setAudioEnabled = (enabled: boolean) => {
@@ -40,8 +37,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <SettingsContext.Provider 
       value={{ 
-        particleIntensity, 
-        setParticleIntensity, 
+        isLateNightMode,
+        toggleLateNightMode,
         audioEnabled, 
         toggleAudio,
         setAudioEnabled 

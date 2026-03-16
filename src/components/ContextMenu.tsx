@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Sparkles, 
+  Moon,
+  Sun,
   Volume2, 
   VolumeX, 
   Languages, 
@@ -26,8 +27,8 @@ import { CONTACT_INFO } from '../constants/contactInfo';
 
 export const ContextMenu: React.FC = () => {
   const { 
-    particleIntensity, 
-    setParticleIntensity, 
+    isLateNightMode,
+    toggleLateNightMode,
     audioEnabled, 
     toggleAudio 
   } = useSettings();
@@ -75,14 +76,6 @@ export const ContextMenu: React.FC = () => {
     };
   }, [playClick]);
 
-  const cycleIntensity = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    playClick();
-    if (particleIntensity === 'high') setParticleIntensity('low');
-    else if (particleIntensity === 'low') setParticleIntensity('off');
-    else setParticleIntensity('high');
-  };
-
   const menuItems = [
     { 
       label: t("返回顶部", "Back to Top"), 
@@ -118,12 +111,14 @@ export const ContextMenu: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed z-[9999] w-60 bg-white border-2 border-cyan-main shadow-2xl overflow-hidden rounded-xl py-2"
+            className={`fixed z-[9999] w-60 border-2 shadow-2xl overflow-hidden rounded-xl py-2 ${
+              isLateNightMode ? 'bg-[#0A1A1F] border-cyan-main text-white' : 'bg-white border-cyan-main text-cyan-dark'
+            }`}
             style={{ left: position.x, top: position.y }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-4 py-2 border-b-2 border-cyan-main/5 mb-2 flex justify-between items-center bg-cyan-main/5">
+            <div className={`px-4 py-2 border-b-2 border-cyan-main/5 mb-2 flex justify-between items-center ${isLateNightMode ? 'bg-cyan-main/10' : 'bg-cyan-main/5'}`}>
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-main">Protocol Menu</span>
               <X className="w-3 h-3 text-cyan-dark/20 cursor-pointer" onClick={() => setVisible(false)} />
             </div>
@@ -135,7 +130,9 @@ export const ContextMenu: React.FC = () => {
                   key={i}
                   onMouseEnter={playHover}
                   onClick={() => { item.onClick(); setVisible(false); }}
-                  className="flex items-center gap-3 px-4 py-2.5 hover:bg-cyan-main hover:text-white text-cyan-dark transition-all text-sm font-black italic tracking-tight"
+                  className={`flex items-center gap-3 px-4 py-2.5 hover:bg-cyan-main hover:text-white transition-all text-sm font-black italic tracking-tight ${
+                    isLateNightMode ? 'text-cyan-light' : 'text-cyan-dark'
+                  }`}
                 >
                   <item.icon className="w-4 h-4" />
                   {item.label}
@@ -149,14 +146,16 @@ export const ContextMenu: React.FC = () => {
             <div className="flex flex-col gap-1">
               <button
                 onMouseEnter={playHover}
-                onClick={cycleIntensity}
-                className="flex items-center justify-between px-4 py-2.5 hover:bg-cyan-light/20 text-cyan-dark transition-all text-sm font-black"
+                onClick={(e) => { e.stopPropagation(); playClick(); toggleLateNightMode(); }}
+                className={`flex items-center justify-between px-4 py-2.5 hover:bg-cyan-light/20 transition-all text-sm font-black ${
+                  isLateNightMode ? 'text-cyan-light' : 'text-cyan-dark'
+                }`}
               >
                 <div className="flex items-center gap-3 italic">
-                  <Sparkles className={`w-4 h-4 ${particleIntensity === 'off' ? 'text-cyan-dark/30' : 'text-yellow-main'}`} />
-                  <span>粒子强度</span>
+                  <Moon className={`w-4 h-4 ${isLateNightMode ? 'text-yellow-main' : 'text-cyan-dark/30'}`} />
+                  <span>{t("深夜模式", "Late Night")}</span>
                 </div>
-                <span className="text-[10px] font-black uppercase text-cyan-main tracking-widest">{particleIntensity}</span>
+                <span className="text-[10px] font-black uppercase text-cyan-main tracking-widest">{isLateNightMode ? 'ON' : 'OFF'}</span>
               </button>
 
               <button

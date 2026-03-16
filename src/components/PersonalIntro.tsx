@@ -91,19 +91,40 @@ export const PersonalIntro: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-[600px] flex flex-col items-center justify-start pt-12 lg:pt-20 p-4 relative">
-      
-      <div className="flex flex-col items-center justify-between w-full h-full gap-4 max-w-5xl relative">
+    <div className="w-full min-h-[600px] flex flex-col items-center justify-start pt-12 lg:pt-20 p-4 relative overflow-hidden">
+      {/* Background Bottom Patterns (底纹) */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ 
+          backgroundImage: 'radial-gradient(circle at 2px 2px, #00BCD4 1px, transparent 0)',
+          backgroundSize: '32px 32px' 
+        }} 
+      />
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        style={{
+          backgroundImage: 'repeating-linear-gradient(45deg, #00BCD4, #00BCD4 1px, transparent 1px, transparent 10px)'
+        }}
+      />
+
+
+
+      <div className="flex flex-col items-center justify-between w-full h-full gap-4 max-w-6xl relative">
+        {/* HUD Corners for the whole area */}
+        <div className="absolute -inset-4 pointer-events-none hidden lg:block">
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-main/20"></div>
+          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-cyan-main/20"></div>
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-cyan-main/20"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-main/20"></div>
+        </div>
         
         {/* Character Portrait Layer */}
-        <div className="flex-1 w-full flex items-center justify-center relative min-h-[350px]">
+        <div className="flex-1 w-full flex items-center justify-center relative min-h-[400px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentNodeId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="relative w-56 h-56 sm:w-72 sm:h-72 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] -mb-12 sm:-mb-24 lg:-mb-32"
+              className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[450px] md:h-[450px] lg:w-[650px] lg:h-[650px] -mb-8 sm:-mb-16 lg:-mb-24"
             >
               <img 
                 src="/avatar.png" 
@@ -116,32 +137,32 @@ export const PersonalIntro: React.FC = () => {
 
         {/* Floating Choices - Flat Style & Centered */}
         {!isTyping && currentNode.choices && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-40 pointer-events-none pb-24 sm:pb-32">
+          <div className="absolute inset-0 flex flex-col items-end justify-center gap-3 z-40 pointer-events-none pb-32 sm:pb-40 pr-6 sm:pr-10 lg:pr-8">
             <AnimatePresence>
               {currentNode.choices.map((choice, i) => (
                 <motion.button
                   key={i}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                   onMouseEnter={playHover}
                   onClick={() => handleChoice(choice.nextNode)}
-                  className="pointer-events-auto px-6 sm:px-10 py-2.5 sm:py-3 bg-white border-2 border-cyan-main hover:bg-cyan-main hover:text-white rounded-xl text-sm sm:text-base font-black text-cyan-dark transition-all flex items-center gap-3 group/choice shadow-md min-w-[240px] sm:min-w-[280px] justify-center"
+                  className="pointer-events-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-white/90 backdrop-blur-md border-2 border-cyan-main hover:bg-cyan-main hover:text-white rounded-xl text-sm sm:text-base font-black text-cyan-dark transition-all flex items-center gap-3 group/choice shadow-xl min-w-[200px] sm:min-w-[260px] justify-end"
                 >
+                  <span className="text-right">{language === 'zh' ? choice.zh : choice.en}</span>
                   <ChevronRight className="w-4 h-4 text-cyan-main group-hover/choice:text-white transition-colors" />
-                  {language === 'zh' ? choice.zh : choice.en}
                 </motion.button>
               ))}
             </AnimatePresence>
           </div>
         )}
 
-        {/* AVG Dialogue Box - More Compact & Higher Up */}
-        <div className="w-full pb-6 lg:pb-8 relative z-30 max-w-4xl -mt-16 sm:-mt-24 lg:-mt-32">
+        {/* AVG Dialogue Box - More Impactful Scale */}
+        <div className="w-full pb-6 lg:pb-10 relative z-30 max-w-5xl -mt-16 sm:-mt-24 lg:-mt-40">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full bg-white rounded-2xl border-2 border-cyan-main p-4 sm:p-6 flex flex-col gap-1 shadow-lg relative"
+            className="w-full bg-white rounded-3xl border-2 border-cyan-main p-6 sm:p-8 lg:p-10 flex flex-col gap-1 shadow-2xl relative"
           >
             {/* Name Box */}
             <div className="absolute -top-3.5 left-8 px-4 py-1 bg-cyan-dark rounded-lg border-2 border-cyan-main shadow-md">

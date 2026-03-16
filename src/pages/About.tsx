@@ -57,12 +57,12 @@ export const About: React.FC = () => {
       <div className="max-w-6xl mx-auto w-full px-6 flex-1 flex flex-col">
         
         {/* Header & Tabs */}
-        <div className="flex flex-col items-center mb-12">
+        <div className="flex flex-col items-center mb-8">
           <h2 className="text-4xl md:text-5xl font-black font-sans text-cyan-dark mb-8 uppercase tracking-tighter">
             {t("关于", "ABOUT")}<span className="text-cyan-main">{t("我", "ME")}</span>
           </h2>
           
-          <div className="grid grid-cols-4 md:flex md:flex-row gap-2 mb-12 p-2 bg-white/50 backdrop-blur-md rounded-[2.5rem] border-2 border-cyan-light/30 shadow-inner max-w-fit mx-auto overflow-x-auto no-scrollbar justify-between">
+          <div className="grid grid-cols-4 md:flex md:flex-row gap-2 mb-6 p-2 bg-white/50 backdrop-blur-md rounded-[2.5rem] border-2 border-cyan-light/30 shadow-inner max-w-fit mx-auto overflow-x-auto no-scrollbar justify-between">
             {tabs.map((tab, index) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -95,7 +95,7 @@ export const About: React.FC = () => {
         </div>
 
         {/* Content Area */}
-        <div className="relative w-full flex-1 min-h-[500px] lg:min-h-[600px] rounded-[2rem] lg:rounded-[3rem] bg-white/30 backdrop-blur-sm border-2 border-white shadow-xl flex flex-col mb-8 overflow-hidden">
+        <div className="relative w-full flex-1 min-h-[300px] lg:min-h-[400px] rounded-[2rem] lg:rounded-[3rem] bg-white/30 backdrop-blur-sm border-2 border-white shadow-xl flex flex-col mb-4 overflow-hidden">
           <AnimatePresence custom={direction} mode="popLayout" initial={false}>
             <motion.div
               key={activeTab}
@@ -110,7 +110,7 @@ export const About: React.FC = () => {
               }}
               className="w-full h-full flex flex-col items-center justify-center"
             >
-              <div className="w-full p-4 md:p-8 lg:p-12 overflow-y-auto max-h-full">
+              <div className="w-full p-4 md:p-6 lg:p-10 overflow-y-auto max-h-full">
                 <ActiveComponent />
               </div>
             </motion.div>

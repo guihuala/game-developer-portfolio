@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Flower2, Sparkles, Languages, Menu, X, Github, Twitter, Globe, Tv, Gamepad2 } from 'lucide-react';
+import { Flower2, Moon, Sun, Languages, Menu, X, Github, Twitter, Globe, Tv, Gamepad2 } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useSettings } from '../context/SettingsContext';
@@ -9,7 +9,7 @@ import { CONTACT_INFO } from '../constants/contactInfo';
 
 export const Navbar: React.FC = () => {
   const { language, toggleLanguage, t } = useLanguage();
-  const { particleIntensity, setParticleIntensity } = useSettings();
+  const { isLateNightMode, toggleLateNightMode } = useSettings();
   const { playHover, playClick } = useSoundEffects();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
@@ -19,13 +19,6 @@ export const Navbar: React.FC = () => {
     { zh: '关于我', en: 'About', path: '/about' },
     { zh: '经历', en: 'Experience', path: '/experience' }
   ];
-
-  const cycleIntensity = () => {
-    playClick();
-    if (particleIntensity === 'high') setParticleIntensity('low');
-    else if (particleIntensity === 'low') setParticleIntensity('off');
-    else setParticleIntensity('high');
-  };
 
   const currentNavItems = navItems.map(item => ({
     ...item,
@@ -43,8 +36,8 @@ export const Navbar: React.FC = () => {
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}
       className={`fixed top-0 left-0 right-0 z-[100] transition-colors duration-300 ${
-        isMobileMenuOpen ? 'bg-white' : 'bg-white/60 backdrop-blur-lg'
-      } border-b border-white/80 shadow-sm`}
+        isMobileMenuOpen ? 'bg-white' : isLateNightMode ? 'bg-[#0A1A1F]/80 backdrop-blur-lg' : 'bg-white/60 backdrop-blur-lg'
+      } border-b ${isLateNightMode ? 'border-cyan-main/10' : 'border-white/80'} shadow-sm`}
     >
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-[110]">
         <Link to="/">
@@ -62,10 +55,23 @@ export const Navbar: React.FC = () => {
             >
               <span className="text-yellow-main text-4xl" style={{ transform: "rotate(45deg)", display: "inline-block" }}>✤</span>
             </motion.div>
-            <span className="font-sans font-black text-2xl tracking-wide text-cyan-dark group-hover:text-cyan-main transition-colors">
-              {t("桂花", "moku")}
-              <span className="text-yellow-main">{t("拉糕", "keki")}</span>
-            </span>
+            <div className="flex flex-col items-start leading-none">
+              <span className={`font-sans font-black text-2xl tracking-wide transition-colors ${isLateNightMode ? 'text-cyan-main' : 'text-cyan-dark'} group-hover:text-cyan-main`}>
+                {t("桂花", "moku")}
+                <span className="text-yellow-main">{t("拉糕", "keki")}</span>
+              </span>
+              <AnimatePresence>
+                {isLateNightMode && (
+                  <motion.span 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-[8px] font-black text-yellow-main/60 tracking-[0.3em] uppercase mt-1 flex items-center gap-1"
+                  >
+                    <Moon className="w-2 h-2" /> {t("深夜模式", "NIGHT MODE")}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </div>
           </motion.div>
         </Link>
 
@@ -77,16 +83,26 @@ export const Navbar: React.FC = () => {
               to={item.path}
               onMouseEnter={playHover}
               onClick={playClick}
-              className={({ isActive }) => `relative flex flex-col items-center group px-4 py-2 rounded-xl transition-all ${isActive ? 'bg-cyan-light/20' : 'hover:bg-cyan-light/10'}`}
+              className={({ isActive }) => `relative flex flex-col items-center group px-4 py-2 rounded-xl transition-all ${
+                isActive 
+                  ? isLateNightMode ? 'bg-cyan-main/10' : 'bg-cyan-light/20' 
+                  : 'hover:bg-cyan-light/10'
+              }`}
             >
               {({ isActive }) => (
                 <>
-                  <span className={`font-sans font-black text-lg transition-colors ${isActive ? 'text-cyan-main' : 'text-cyan-dark/80 group-hover:text-cyan-main'}`}>
+                  <span className={`font-sans font-black text-lg transition-colors ${
+                    isActive 
+                      ? 'text-cyan-main' 
+                      : isLateNightMode ? 'text-cyan-light/60 group-hover:text-cyan-main' : 'text-cyan-dark/80 group-hover:text-cyan-main'
+                  }`}>
                     {item.display}
                   </span>
-                  <span className={`font-sans font-bold text-[10px] uppercase tracking-widest transition-colors -mt-1 ${isActive ? 'text-yellow-main' : 'text-cyan-dark/40 group-hover:text-yellow-main'} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                    {item.en}
-                  </span>
+                  {language === 'zh' && (
+                    <span className={`font-sans font-bold text-[10px] uppercase tracking-widest transition-colors -mt-1 ${isActive ? 'text-yellow-main' : 'text-cyan-dark/40 group-hover:text-yellow-main'} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                      {item.en}
+                    </span>
+                  )}
                   <motion.span 
                     layoutId="nav-underline"
                     className={`absolute -bottom-1 left-4 right-4 h-1.5 bg-yellow-main rounded-full transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
@@ -97,16 +113,20 @@ export const Navbar: React.FC = () => {
           ))}
 
           <div className="flex items-center gap-4 ml-4">
-            {/* Particle Toggle Button */}
+            {/* Night mode Toggle Button */}
             <button
-              onClick={cycleIntensity}
+              onClick={() => { playClick(); toggleLateNightMode(); }}
               onMouseEnter={playHover}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
-              title="Toggle Particle Intensity"
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors border ${
+                isLateNightMode 
+                  ? 'bg-cyan-main/20 text-yellow-main border-yellow-main/20' 
+                  : 'bg-cyan-light/30 text-cyan-dark border-cyan-main/20'
+              }`}
+              title="Toggle Night Mode"
             >
-              <Sparkles className={`w-4 h-4 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
+              {isLateNightMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
               <span className="font-sans font-bold text-xs uppercase tracking-widest">
-                FX: {particleIntensity}
+                {isLateNightMode ? t("深夜", "NIGHT") : t("日间", "DAY")}
               </span>
             </button>
 
@@ -117,10 +137,14 @@ export const Navbar: React.FC = () => {
                 toggleLanguage();
               }}
               onMouseEnter={playHover}
-              className="flex items-center justify-center p-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
+              className={`flex items-center justify-center p-2 rounded-full transition-colors border ${
+                isLateNightMode 
+                  ? 'bg-cyan-main/20 text-cyan-light border-cyan-main/20' 
+                  : 'bg-cyan-light/30 text-cyan-dark border-cyan-main/20'
+              }`}
               title="Toggle Language"
             >
-              <Languages className="w-5 h-5 text-cyan-dark" />
+              <Languages className="w-5 h-5" />
               <span className="ml-1 font-sans font-black text-xs uppercase">{language === 'zh' ? 'EN' : '中'}</span>
             </button>
           </div>
@@ -130,14 +154,14 @@ export const Navbar: React.FC = () => {
         <div className="md:hidden flex items-center gap-4 relative z-[120]">
           <button
             onClick={() => { playClick(); toggleLanguage(); }}
-            className="text-cyan-dark hover:text-cyan-main bg-cyan-light/30 p-2 rounded-full"
+            className={`p-2 rounded-full ${isLateNightMode ? 'bg-cyan-main/20 text-cyan-light' : 'bg-cyan-light/30 text-cyan-dark'}`}
           >
             <Languages className="w-5 h-5" />
           </button>
           <button
             onClick={toggleMobileMenu}
             onMouseEnter={playHover}
-            className="text-cyan-dark hover:text-cyan-main bg-cyan-light/40 p-2 rounded-full"
+            className={`p-2 rounded-full ${isLateNightMode ? 'bg-cyan-main/20 text-cyan-light' : 'bg-cyan-light/40 text-cyan-dark'}`}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -201,20 +225,22 @@ export const Navbar: React.FC = () => {
                   {({ isActive }) => (
                     <>
                       <span className={`font-sans font-black text-2xl ${isActive ? 'text-cyan-main' : 'text-cyan-dark'}`}>{item.display}</span>
-                      <span className="font-sans font-bold text-[10px] uppercase tracking-[0.25em] text-cyan-dark/30">{item.en}</span>
+                      {language === 'zh' && (
+                        <span className="font-sans font-bold text-[10px] uppercase tracking-[0.25em] text-cyan-dark/30">{item.en}</span>
+                      )}
                     </>
                   )}
                 </NavLink>
               ))}
             </div>
 
-            <div className="mt-8 flex items-center gap-6 relative z-10">
+            <div className="mt-8 flex items-center gap-6 relative z-10 w-full max-w-sm">
               <button
-                onClick={cycleIntensity}
-                className="flex items-center gap-3 px-8 py-4 rounded-3xl bg-white text-cyan-dark border-2 border-cyan-main/20 font-black shadow-md hover:shadow-lg transition-all active:scale-95"
+                onClick={() => { playClick(); toggleLateNightMode(); }}
+                className="flex flex-1 items-center justify-center gap-3 px-8 py-4 rounded-3xl bg-white text-cyan-dark border-2 border-cyan-main/20 font-black shadow-md hover:shadow-lg transition-all active:scale-95"
               >
-                <Sparkles className={`w-5 h-5 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
-                <span>FX: {particleIntensity.toUpperCase()}</span>
+                {isLateNightMode ? <Moon className="w-5 h-5 text-yellow-main" /> : <Sun className="w-5 h-5 text-yellow-main" />}
+                <span>{isLateNightMode ? t("深夜模式", "NIGHT MODE") : t("日间模式", "DAY MODE")}</span>
               </button>
             </div>
 

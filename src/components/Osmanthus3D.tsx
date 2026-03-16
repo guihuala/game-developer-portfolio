@@ -1,4 +1,4 @@
-import React, { useRef, Suspense, useLayoutEffect } from 'react';
+import React, { useRef, Suspense, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Environment, ContactShadows, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -7,13 +7,10 @@ const Model = () => {
   const { scene } = useGLTF('/小桂花.glb');
   const groupRef = useRef<THREE.Group>(null);
 
-  // We've removed the material override to keep your original textures. 
-  // The model will now render exactly as exported from your 3D software.
-
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
-      const targetRotationY = state.pointer.x * 0.3;
+      const targetRotationY = state.pointer.x * 0.2;
       const targetRotationX = -state.pointer.y * 0.2;
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, 0.05);
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, 0.05);
@@ -21,7 +18,7 @@ const Model = () => {
   });
 
   return (
-    <group ref={groupRef} scale={1.1} position={[0.2, 0.4, 0]}>
+    <group ref={groupRef} scale={1.2} position={[0, 0, 0]}>
       <primitive object={scene} />
     </group>
   );
@@ -43,15 +40,15 @@ const ProceduralOsmanthus = () => (
 );
 
 const FloatingFlowers = () => {
-  const flowers = React.useMemo(() => {
+  const flowers = useMemo(() => {
     return Array.from({ length: 6 }).map((_, i) => {
       const angle = (i / 6) * Math.PI * 2;
       return {
-        radius: 1.5 + Math.random() * 0.5,
+        radius: 1.8 + Math.random() * 0.4,
         baseAngle: angle,
         speed: 0.3 + Math.random() * 0.2,
-        yOffset: (Math.random() - 0.5) * 2,
-        scale: 0.6 + Math.random() * 0.4,
+        yOffset: (Math.random() - 0.5) * 1.5,
+        scale: 0.5 + Math.random() * 0.4,
         rotationSpeed: [Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02] as [number, number, number]
       };
     });
@@ -66,7 +63,7 @@ const FloatingFlowers = () => {
         const currentAngle = flower.baseAngle + state.clock.elapsedTime * flower.speed;
         child.position.x = Math.cos(currentAngle) * flower.radius;
         child.position.z = Math.sin(currentAngle) * flower.radius;
-        child.position.y = flower.yOffset + Math.sin(state.clock.elapsedTime * flower.speed * 2 + flower.baseAngle) * 0.4;
+        child.position.y = flower.yOffset + Math.sin(state.clock.elapsedTime * flower.speed * 2 + flower.baseAngle) * 0.3;
         child.rotation.x += flower.rotationSpeed[0];
         child.rotation.y += flower.rotationSpeed[1];
         child.rotation.z += flower.rotationSpeed[2];
@@ -75,7 +72,7 @@ const FloatingFlowers = () => {
   });
 
   return (
-    <group ref={groupRef} position={[0.2, 0.4, 0]}>
+    <group ref={groupRef} position={[0, 0, 0]}>
       {flowers.map((props, i) => (
         <group key={i} scale={props.scale}>
           <ProceduralOsmanthus />
@@ -90,31 +87,33 @@ useGLTF.preload('/小桂花.glb');
 export const Osmanthus3D: React.FC = () => {
   return (
     <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+      <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
         <Suspense fallback={null}>
           <ambientLight intensity={0.8} />
-          <directionalLight position={[10, 10, 5]} intensity={1.0} color="#ffffff" shadow-bias={-0.0001} />
+          <directionalLight position={[10, 10, 5]} intensity={1.0} color="#ffffff" />
           <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#E0F7FA" />
           <pointLight position={[0, 0, 2]} intensity={0.6} color="#FFD54F" />
 
           <Float
-            speed={2}
+            speed={1.2}
             rotationIntensity={0.5}
-            floatIntensity={1.5}
-            floatingRange={[-0.2, 0.2]}
+            floatIntensity={1}
+            floatingRange={[0.05, 0.1]}
           >
-            <Model />
-            <FloatingFlowers />
+            <group position={[0, 0.4, 0]}>
+              <Model />
+              <FloatingFlowers />
+            </group>
           </Float>
 
           <OrbitControls
             enableZoom={false}
             enablePan={false}
-            enableRotate={false}
+            enableRotate={true}
             autoRotate={false}
           />
           <Environment preset="city" />
-          <ContactShadows position={[0, -2.5, 0]} opacity={0.3} scale={10} blur={2} far={4} color="#00BCD4" />
+          <ContactShadows position={[0, -1.5, 0]} opacity={0.3} scale={10} blur={2} far={4} color="#00BCD4" />
         </Suspense>
       </Canvas>
     </div>

@@ -114,52 +114,57 @@ export const Timeline: React.FC = () => {
   const xPercent = useTransform(springX, (val) => `${val}%`);
   const yPercent = useTransform(springY, (val) => `${val}%`);
 
+  // Use Ref to avoid re-registering effect on every state change
+  const activeNodeRef = useRef<string | null>(null);
+
   useEffect(() => {
     let lastCheckTime = 0;
-    const CHECK_INTERVAL = 50; // Only check distance every 50ms
+    const CHECK_INTERVAL = 32; // ~30fps for checks is plenty
 
-    const handleMouseMove = (e: MouseEvent | Touch) => {
-      if (!mapRef.current) return;
-
-      const rect = mapRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-      const boundedX = Math.max(0, Math.min(100, x));
-      const boundedY = Math.max(0, Math.min(100, y));
-
+    const handleMouseMove = (xPos: number, yPos: number) => {
       // Update MotionValues directly (no re-render)
-      mouseX.set(boundedX);
-      mouseY.set(boundedY);
+      mouseX.set(xPos);
+      mouseY.set(yPos);
 
-      // Throttled Distance Check
+      // Throttled Distance Check for state updates
       const now = performance.now();
       if (now - lastCheckTime > CHECK_INTERVAL) {
         lastCheckTime = now;
         
-        let foundActive = false;
+        let foundNode: typeof milestones[0] | null = null;
         for (const node of milestones) {
-          const dist = Math.sqrt(Math.pow(boundedX - node.x, 2) + Math.pow(boundedY - node.y, 2));
-          if (dist < 12) {
-            if (activeNode?.id !== node.id) {
-              setActiveNode(node);
-              playSuccess();
-            }
-            foundActive = true;
+          const dist = Math.sqrt(Math.pow(xPos - node.x, 2) + Math.pow(yPos - node.y, 2));
+          if (dist < 10) { // Slightly tighter detection
+            foundNode = node;
             break;
           }
         }
-        if (!foundActive && activeNode !== null) {
-          setActiveNode(null);
+
+        const currentId = foundNode?.id || null;
+        if (currentId !== activeNodeRef.current) {
+          activeNodeRef.current = currentId;
+          setActiveNode(foundNode);
+          if (foundNode) playSuccess();
         }
       }
     };
 
     const mapEl = mapRef.current;
     if (mapEl) {
-      const onMove = (e: MouseEvent) => handleMouseMove(e);
+      const onMove = (e: MouseEvent) => {
+        const rect = mapEl.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        handleMouseMove(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+      };
+
       const onTouch = (e: TouchEvent) => {
-        if (e.touches[0]) handleMouseMove(e.touches[0]);
+        if (e.touches[0]) {
+          const rect = mapEl.getBoundingClientRect();
+          const x = ((e.touches[0].clientX - rect.left) / rect.width) * 100;
+          const y = ((e.touches[0].clientY - rect.top) / rect.height) * 100;
+          handleMouseMove(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)));
+        }
       };
 
       mapEl.addEventListener('mousemove', onMove, { passive: true });
@@ -170,7 +175,7 @@ export const Timeline: React.FC = () => {
         mapEl.removeEventListener('touchmove', onTouch);
       };
     }
-  }, [activeNode, mouseX, mouseY, playSuccess]);
+  }, [mouseX, mouseY, playSuccess]);
 
   // Draw dash lines between nodes
   const renderPath = () => {
@@ -222,6 +227,23 @@ export const Timeline: React.FC = () => {
 
           {/* Topographical / Fantasy Map texture */}
           <div className="absolute inset-0 opacity-40 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900 via-cyan-dark to-black"></div>
+          
+          {/* Added: Map Texture / Grid Pattern */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none" 
+            style={{ 
+              backgroundImage: `
+                linear-gradient(to right, #00BCD4 1px, transparent 1px),
+                linear-gradient(to bottom, #00BCD4 1px, transparent 1px)
+              `,
+              backgroundSize: '100px 100px'
+            }} 
+          />
+          <div className="absolute inset-0 opacity-5 pointer-events-none"
+            style={{
+              backgroundImage: 'url("https://www.transparenttextures.com/patterns/carbon-fibre.png")',
+              mixBlendMode: 'overlay'
+            }}
+          />
 
           {renderPath()}
 

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { Coffee, Play } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Play } from 'lucide-react';
 import { Osmanthus3D } from './Osmanthus3D';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { useToast } from '../context/ToastContext';
 
 export const Hero: React.FC = () => {
   const [text, setText] = useState('');
+  const [clickCount, setClickCount] = useState(0);
+  const [showBubble, setShowBubble] = useState(false);
   const { language, t } = useLanguage();
-  const { playHover, playClick } = useSoundEffects();
-  
+  const { playHover, playClick, playSuccess } = useSoundEffects();
+  const { showToast } = useToast();
+
   const fullText = language === 'zh' ? "你好，我是桂花拉糕" : "Hello, I'm mokukeki";
   const navigate = useNavigate();
 
@@ -24,6 +28,34 @@ export const Hero: React.FC = () => {
     }, Math.max(50, 150 - (fullText.length * 2))); // Faster for longer english text
     return () => clearInterval(interval);
   }, [fullText]);
+
+  const handleModelClick = () => {
+    playClick();
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+
+    if (newCount >= 3) {
+      setShowBubble(true);
+      if (newCount === 7) {
+        setClickCount(0);
+        playSuccess();
+        showToast(
+          language === 'zh' ? '成就达成！' : 'Achievement!',
+          language === 'zh' ? '你发现了一个喜欢被戳的桂花。' : 'You found a flower that likes to be poked.',
+          'achievement'
+        );
+      }
+
+      // Auto hide bubble after 3 seconds
+      const timer = setTimeout(() => setShowBubble(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  };
+
+  const bubbleMessage = {
+    zh: "再戳就要变成拉糕了...",
+    en: "Stop poking... I'll turn into a cake..."
+  };
 
   return (
     <section id="start" className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-12 overflow-hidden z-10">
@@ -48,7 +80,7 @@ export const Hero: React.FC = () => {
           <div className="space-y-2 mb-10">
             <p className="text-base md:text-xl text-cyan-dark/80 max-w-lg font-sans font-bold leading-relaxed">
               {t(
-                "我致力于打造有趣的游戏机制和温馨的视觉体验。用代码和创意构建美好的数字世界。", 
+                "我致力于打造有趣的游戏机制和温馨的视觉体验。用代码和创意构建美好的数字世界。",
                 "Dedicated to crafting engaging game mechanics and cozy visual experiences. Building beautiful digital worlds with code and creativity."
               )}
             </p>
@@ -84,17 +116,45 @@ export const Hero: React.FC = () => {
         </motion.div>
 
         {/* Right Content - 3D Osmanthus Flower */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="hidden lg:block lg:relative lg:inset-auto z-10 w-full lg:w-full h-[600px] xl:h-[750px] 2xl:h-[850px] pointer-events-none lg:pointer-events-auto"
-        >
+        <div className="hidden lg:block relative z-10 w-full lg:w-[calc(100%+10rem)] xl:w-[calc(100%+12rem)] lg:-mr-24 xl:-mr-48 h-[700px] xl:h-[850px] 2xl:h-[1000px]">
           {/* Glowing backdrop */}
-          <div className="absolute inset-0 bg-yellow-main/20 blur-[100px] rounded-full w-3/4 h-3/4 m-auto pointer-events-none"></div>
+          <div className="absolute inset-0 bg-yellow-main/20 blur-[120px] rounded-full w-full h-full m-auto pointer-events-none"></div>
 
-          <Osmanthus3D />
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              rotate: clickCount > 0 ? [0, -4, 4, -4, 4, 0] : 0,
+              scale: clickCount > 0 ? [1, 1.05, 1] : 1
+            }}
+            transition={{
+              opacity: { duration: 1.5 },
+              rotate: { duration: 0.3 },
+              scale: { duration: 0.3 }
+            }}
+            onClick={handleModelClick}
+            className="w-full h-full cursor-pointer relative pointer-events-auto"
+          >
+            <Osmanthus3D />
+
+            {/* Speech Bubble */}
+            <AnimatePresence>
+              {showBubble && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.5, y: 20 }}
+                  className="absolute top-1/4 left-1/2 -translate-x-1/2 z-30 bg-white px-6 py-3 rounded-2xl shadow-xl border-4 border-yellow-main whitespace-nowrap"
+                >
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full border-[15px] border-transparent border-t-yellow-main"></div>
+                  <span className="text-cyan-dark font-black text-sm">
+                    {language === 'zh' ? bubbleMessage.zh : bubbleMessage.en}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
 
       </div>
     </section>
