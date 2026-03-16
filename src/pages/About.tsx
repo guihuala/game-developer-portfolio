@@ -94,8 +94,8 @@ export const About: React.FC = () => {
           </div>
         </div>
 
-        {/* Content Slider Area */}
-        <div className="relative w-full flex-1 min-h-[600px] overflow-hidden rounded-[3rem] bg-white/30 backdrop-blur-sm border-2 border-white shadow-xl flex flex-col items-center justify-center mb-8">
+        {/* Content Area */}
+        <div className="relative w-full flex-1 min-h-[500px] lg:min-h-[600px] rounded-[2rem] lg:rounded-[3rem] bg-white/30 backdrop-blur-sm border-2 border-white shadow-xl flex flex-col mb-8 overflow-hidden">
           <AnimatePresence custom={direction} mode="popLayout" initial={false}>
             <motion.div
               key={activeTab}
@@ -108,9 +108,9 @@ export const About: React.FC = () => {
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 }
               }}
-              className="absolute inset-0 w-full h-full p-4 lg:p-8 flex items-center justify-center"
+              className="w-full h-full flex flex-col items-center justify-center"
             >
-              <div className="w-full h-full max-w-5xl relative">
+              <div className="w-full p-4 md:p-8 lg:p-12 overflow-y-auto max-h-full">
                 <ActiveComponent />
               </div>
             </motion.div>

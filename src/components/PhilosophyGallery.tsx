@@ -220,31 +220,30 @@ export const PhilosophyGallery: React.FC = () => {
       </div>
 
       {/* Decorative HUD */}
-      <div className="absolute top-6 left-8 flex flex-col gap-2 z-10">
-        <div className="flex items-center gap-4 text-cyan-main/60 font-black text-[9px] uppercase tracking-[0.2em]">
-          <div className="flex items-center gap-1.5 bg-cyan-main/10 border border-cyan-main/20 px-2 py-1 rounded-sm">
-            <div className="w-1.5 h-1.5 bg-cyan-main rounded-full animate-pulse" />
+      <div className="absolute top-4 lg:top-6 left-4 lg:left-8 flex flex-col gap-1 lg:gap-2 z-10">
+        <div className="flex items-center gap-2 lg:gap-4 text-cyan-main/60 font-black text-[7px] lg:text-[9px] uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-1.5 bg-cyan-main/10 border border-cyan-main/20 px-1.5 lg:px-2 py-0.5 lg:py-1 rounded-sm">
+            <div className="w-1 lg:w-1.5 h-1 lg:h-1.5 bg-cyan-main rounded-full animate-pulse" />
             <span>{t("系统就绪", "SYSTEM READY")}</span>
           </div>
           <span>HP: 99/99</span>
-          <span>GOLD: 125</span>
+          <span className="hidden sm:inline">GOLD: 125</span>
         </div>
-        <div className="h-1 w-48 bg-cyan-main/5 rounded-full overflow-hidden">
+        <div className="h-1 w-24 lg:w-48 bg-cyan-main/5 rounded-full overflow-hidden">
           <motion.div className="h-full bg-cyan-main/20" animate={{ width: ['0%', '100%'] }} transition={{ duration: 4, repeat: Infinity }} />
         </div>
       </div>
 
-      <div className="absolute top-6 right-8 z-10 text-right">
-        <div className="px-3 py-1 bg-yellow-main/10 border border-yellow-main/30 rounded-sm text-[9px] font-black text-yellow-600 uppercase tracking-widest inline-block">
+      <div className="absolute top-4 lg:top-6 right-4 lg:right-8 z-10 text-right">
+        <div className="px-2 lg:px-3 py-0.5 lg:py-1 bg-yellow-main/10 border border-yellow-main/30 rounded-sm text-[7px] lg:text-[9px] font-black text-yellow-600 uppercase tracking-widest inline-block">
           {t("选择卡牌查看详情", "DECK VIEW")}
         </div>
-        <div className="mt-2 text-[8px] font-bold text-cyan-dark/30 uppercase">Floor: 51 / The Heart</div>
       </div>
 
       {/* Battlefield (Central Focus) */}
-      <div className="flex-1 w-full flex items-center justify-center relative perspective-[2000px]">
+      <div className="flex-1 w-full flex items-center justify-center relative perspective-[2000px] py-12 lg:py-0">
         {/* Floor Marking */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-cyan-main/5 rounded-full [transform:rotateX(75deg)] -z-10" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] border border-cyan-main/5 rounded-full [transform:rotateX(75deg)] -z-10" />
         
         <AnimatePresence mode="wait">
           {activeCard ? (
@@ -254,7 +253,7 @@ export const PhilosophyGallery: React.FC = () => {
               animate={{ rotateY: 360, scale: 1, y: -20, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0, rotateX: 20 }}
               transition={{ type: "spring", stiffness: 150, damping: 20 }}
-              className="relative w-64 h-[400px] sm:w-72 sm:h-[440px] group cursor-pointer perspective-[2000px]"
+              className="relative w-56 h-[380px] sm:w-72 sm:h-[440px] group cursor-pointer perspective-[2000px]"
               onMouseMove={handleMouseMove}
               onClick={() => setSelectedId(null)}
             >
@@ -267,7 +266,7 @@ export const PhilosophyGallery: React.FC = () => {
                 className="w-full h-full relative"
               >
                 {/* Front */}
-                <div className={`absolute inset-0 rounded-2xl border-[6px] shadow-2xl overflow-hidden flex flex-col z-10 ${
+                <div className={`absolute inset-0 rounded-xl lg:rounded-2xl border-[4px] lg:border-[6px] shadow-2xl overflow-hidden flex flex-col z-10 ${
                   activeCard.edition === 'negative' ? 'bg-[#000d11] border-cyan-main' : 'bg-white border-cyan-light'
                 }`}>
                   
@@ -275,35 +274,35 @@ export const PhilosophyGallery: React.FC = () => {
                   <CardFoil mouseX={mouseX} mouseY={mouseY} edition={activeCard.edition} />
                   
                   {/* Header */}
-                  <div className={`flex justify-between items-center p-4 mt-1 border-b border-cyan-main/5`}>
-                    <span className={`font-black tracking-tighter ${activeCard.edition === 'negative' ? 'text-cyan-main' : 'text-cyan-dark'} text-lg uppercase`}>
+                  <div className={`flex justify-between items-center p-3 lg:p-4 mt-1 border-b border-cyan-main/5`}>
+                    <span className={`font-black tracking-tighter ${activeCard.edition === 'negative' ? 'text-cyan-main' : 'text-cyan-dark'} text-sm lg:text-lg uppercase whitespace-nowrap overflow-hidden text-ellipsis`}>
                       {language === 'zh' ? activeCard.title : activeCard.enTitle}
                     </span>
-                    <span className="text-[10px] font-black opacity-30">#00{activeCard.id}</span>
+                    <span className="text-[8px] lg:text-[10px] font-black opacity-30">#00{activeCard.id}</span>
                   </div>
 
                   {/* Art */}
-                  <div className={`w-full h-48 relative overflow-hidden bg-cyan-dark/5`}>
+                  <div className={`w-full h-32 lg:h-48 relative overflow-hidden bg-cyan-dark/5`}>
                     <img src={activeCard.img} className={`w-full h-full object-cover ${activeCard.edition === 'negative' ? 'invert hue-rotate-180 brightness-75' : 'grayscale-[0.1]'}`} alt="" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                   </div>
 
                   {/* Type Bar */}
-                  <div className={`py-1.5 px-4 text-[9px] font-black uppercase tracking-widest border-y border-cyan-main/10 ${
+                  <div className={`py-1 lg:py-1.5 px-3 lg:px-4 text-[7px] lg:text-[9px] font-black uppercase tracking-widest border-y border-cyan-main/10 ${
                     activeCard.edition === 'negative' ? 'bg-cyan-main/20 text-cyan-main' : 'bg-cyan-light/10 text-cyan-main'
                   }`}>
                     {language === 'zh' ? activeCard.type : activeCard.enType}
                   </div>
 
                   {/* Description Box */}
-                  <div className={`flex-1 p-5 text-sm font-bold leading-relaxed ${
+                  <div className={`flex-1 p-3 lg:p-5 text-xs lg:text-sm font-bold leading-relaxed ${
                     activeCard.edition === 'negative' ? 'text-white/80' : 'text-cyan-dark/80'
                   }`}>
-                    <p>{language === 'zh' ? activeCard.desc : activeCard.enDesc}</p>
+                    <p className="line-clamp-4">{language === 'zh' ? activeCard.desc : activeCard.enDesc}</p>
                   </div>
 
                   {/* Footer */}
-                  <div className={`pb-4 px-5 flex justify-between items-center opacity-30 text-[8px] font-black uppercase tracking-tighter`}>
+                  <div className={`pb-3 lg:pb-4 px-3 lg:px-5 flex justify-between items-center opacity-30 text-[7px] lg:text-[8px] font-black uppercase tracking-tighter`}>
                     <div className="flex items-center gap-1">
                       <div className="w-1 h-1 bg-cyan-main rounded-full" />
                       <span>{activeCard.edition}</span>
@@ -334,14 +333,14 @@ export const PhilosophyGallery: React.FC = () => {
               animate={{ opacity: 1 }}
               className="flex flex-col items-center gap-6"
             >
-              <div className="w-72 h-[420px] rounded-3xl border-4 border-dashed border-cyan-main/20 flex flex-col items-center justify-center p-10 text-center relative">
-                <div className="w-20 h-20 bg-cyan-main/5 rounded-full flex items-center justify-center mb-4">
-                  <Sparkles className="w-10 h-10 text-cyan-main/20 animate-pulse" />
+              <div className="w-56 h-[340px] lg:w-72 lg:h-[420px] rounded-[1.5rem] lg:rounded-3xl border-4 border-dashed border-cyan-main/20 flex flex-col items-center justify-center p-6 lg:p-10 text-center relative">
+                <div className="w-14 h-14 lg:w-20 lg:h-20 bg-cyan-main/5 rounded-full flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 lg:w-10 lg:h-10 text-cyan-main/20 animate-pulse" />
                 </div>
-                <h4 className="text-xl font-black text-cyan-main/30 uppercase tracking-[0.2em]">
+                <h4 className="text-sm lg:text-xl font-black text-cyan-main/30 uppercase tracking-[0.2em]">
                   {t("等待选择", "SELECT A CARD")}
                 </h4>
-                <p className="text-xs font-bold text-cyan-main/20 mt-4 leading-relaxed">
+                <p className="text-[10px] lg:text-xs font-bold text-cyan-main/20 mt-4 leading-relaxed">
                   {t("从下方手牌中选择一张，\n将其置入战场中心。", "Select a card from your hand\nand move it to center stage.")}
                 </p>
               </div>
@@ -351,24 +350,24 @@ export const PhilosophyGallery: React.FC = () => {
       </div>
 
       {/* The Hand (Bottom Card Rack) */}
-      <div className="h-44 w-full max-w-4xl relative flex items-end justify-center perspective-[1000px] mt-4">
+      <div className="h-32 lg:h-44 w-full max-w-4xl relative flex items-end justify-center perspective-[1000px] mt-4 mb-2 lg:mb-0">
         {philosophyCards.map((card, index) => {
           const isSelected = selectedId === card.id;
           const total = philosophyCards.length;
-          const rotZ = (index - (total - 1) / 2) * 8; // Fan out effect
-          const moveY = Math.abs(index - (total - 1) / 2) * 10;
+          const rotZ = (index - (total - 1) / 2) * (window.innerWidth < 640 ? 6 : 8); 
+          const moveY = Math.abs(index - (total - 1) / 2) * (window.innerWidth < 640 ? 5 : 10);
           
           return (
             <div 
               key={card.id} 
-              className="relative w-28 h-40 -ml-8 first:ml-0 group"
+              className="relative w-16 h-28 sm:w-28 sm:h-40 -ml-4 sm:-ml-8 first:ml-0 group"
               style={{ zIndex: isSelected ? 100 : 10 + index }}
             >
               <motion.div
                 layoutId={`card-${card.id}`}
                 whileHover={{ 
-                  y: -40, 
-                  scale: 1.15, 
+                  y: -30, 
+                  scale: 1.1, 
                   rotateZ: 0,
                   transition: { type: "spring", stiffness: 400, damping: 20 }
                 }}
@@ -392,7 +391,7 @@ export const PhilosophyGallery: React.FC = () => {
                   <CardBack />
                   
                   {/* Small tooltip on hover */}
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-cyan-dark text-white px-2 py-1 rounded text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-cyan-dark text-white px-2 py-1 rounded text-[7px] lg:text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
                     {language === 'zh' ? card.title : card.enTitle}
                   </div>
                 </div>

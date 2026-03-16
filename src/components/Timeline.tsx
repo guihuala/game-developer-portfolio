@@ -198,14 +198,18 @@ export const Timeline: React.FC = () => {
         {/* Header - Compact style like About page */}
         <div className="mb-10 flex flex-col items-center text-center">
           <h2 className="text-4xl md:text-5xl font-black font-sans text-cyan-dark mb-4 uppercase tracking-tighter">
-            成长<span className="text-cyan-main">历程</span>
+            {language === 'zh' ? (
+              <>成长<span className="text-cyan-main">历程</span></>
+            ) : (
+              <>GROWTH <span className="text-cyan-main">JOURNEY</span></>
+            )}
           </h2>
           
           <div className="flex flex-col items-center">
             <p className="text-[10px] font-black text-cyan-main uppercase tracking-[0.3em] mb-2">{t("Journey Map", "Adventurer's Path")}</p>
             <div className="w-12 h-1 bg-cyan-main/30 rounded-full mb-4"></div>
-            <p className="text-cyan-dark/40 text-[10px] font-bold tracking-widest uppercase bg-cyan-light/30 px-4 py-1.5 rounded-full border border-cyan-main/10">
-              {t("移动鼠标控制角色 · 靠近据点查看详情", "Mouse to control · Near nodes for info")}
+            <p className="text-cyan-dark/40 text-[10px] font-bold tracking-widest uppercase bg-cyan-light/30 px-4 py-1.5 rounded-full border border-cyan-main/10 text-center">
+              {t("移动鼠标或触摸控制角色 · 靠近据点查看详情", "Mouse or Touch to control · Near nodes for info")}
             </p>
           </div>
         </div>
@@ -302,16 +306,16 @@ export const Timeline: React.FC = () => {
                   </div>
                   <div>
                     <div className="flex items-center gap-3 mb-2 flex-wrap">
-                      <span className="px-3 py-1 rounded-full text-white text-[10px] font-black tracking-widest uppercase shadow-sm" style={{ backgroundColor: activeNode.color }}>
+                      <span className="px-2 py-0.5 md:px-3 md:py-1 rounded-full text-white text-[8px] md:text-[10px] font-black tracking-widest uppercase shadow-sm" style={{ backgroundColor: activeNode.color }}>
                         {activeNode.questType}
                       </span>
-                      <span className="text-cyan-dark/50 font-bold text-sm tracking-widest">{activeNode.year}</span>
+                      <span className="text-cyan-dark/50 font-bold text-xs md:text-sm tracking-widest">{activeNode.year}</span>
                     </div>
 
-                    <h3 className="text-2xl md:text-3xl font-black text-cyan-dark mb-1">{language === 'zh' ? activeNode.title : activeNode.enTitle}</h3>
-                    <p className="text-xs font-black text-cyan-main uppercase tracking-widest mb-4">{language === 'zh' ? activeNode.enTitle : activeNode.title}</p>
+                    <h3 className="text-lg md:text-3xl font-black text-cyan-dark mb-1">{language === 'zh' ? activeNode.title : activeNode.enTitle}</h3>
+                    <p className="text-[8px] md:text-[10px] font-black text-cyan-main uppercase tracking-widest mb-3">{language === 'zh' ? activeNode.enTitle : activeNode.title}</p>
 
-                    <p className="text-cyan-dark/80 font-sans font-bold text-sm md:text-base leading-relaxed mb-2 max-w-3xl">
+                    <p className="text-cyan-dark/80 font-sans font-bold text-xs md:text-base leading-relaxed mb-1 max-w-3xl">
                       {language === 'zh' ? activeNode.desc : activeNode.enDesc}
                     </p>
                   </div>

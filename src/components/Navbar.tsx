@@ -1,15 +1,17 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Flower2, Sparkles, Languages } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Flower2, Sparkles, Languages, Menu, X, Github, Twitter, Globe, Tv, Gamepad2 } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useSettings } from '../context/SettingsContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { CONTACT_INFO } from '../constants/contactInfo';
 
 export const Navbar: React.FC = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const { particleIntensity, setParticleIntensity } = useSettings();
   const { playHover, playClick } = useSoundEffects();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const navItems = [
     { zh: '主页', en: 'Home', path: '/' },
@@ -30,21 +32,28 @@ export const Navbar: React.FC = () => {
     display: language === 'zh' ? item.zh : item.en
   }));
 
+  const toggleMobileMenu = () => {
+    playClick();
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-lg border-b border-white/80 shadow-sm"
+      className={`fixed top-0 left-0 right-0 z-[100] transition-colors duration-300 ${
+        isMobileMenuOpen ? 'bg-white' : 'bg-white/60 backdrop-blur-lg'
+      } border-b border-white/80 shadow-sm`}
     >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative z-[110]">
         <Link to="/">
           <motion.div
             whileHover={{ scale: 1.05, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-3 cursor-pointer group"
             onMouseEnter={playHover}
-            onClick={playClick}
+            onClick={() => { playClick(); setIsMobileMenuOpen(false); }}
           >
             <motion.div
               animate={{ rotate: 360 }}
@@ -60,69 +69,161 @@ export const Navbar: React.FC = () => {
           </motion.div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-10">
           {currentNavItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               onMouseEnter={playHover}
               onClick={playClick}
-              className={({ isActive }) => `relative flex flex-col items-center group ${isActive ? 'is-active' : ''}`}
+              className={({ isActive }) => `relative flex flex-col items-center group px-4 py-2 rounded-xl transition-all ${isActive ? 'bg-cyan-light/20' : 'hover:bg-cyan-light/10'}`}
             >
               {({ isActive }) => (
                 <>
-                  <span className={`font-sans font-black text-base transition-colors ${isActive ? 'text-cyan-main' : 'text-cyan-dark/80 group-hover:text-cyan-main'}`}>
+                  <span className={`font-sans font-black text-lg transition-colors ${isActive ? 'text-cyan-main' : 'text-cyan-dark/80 group-hover:text-cyan-main'}`}>
                     {item.display}
                   </span>
                   <span className={`font-sans font-bold text-[10px] uppercase tracking-widest transition-colors -mt-1 ${isActive ? 'text-yellow-main' : 'text-cyan-dark/40 group-hover:text-yellow-main'} opacity-0 group-hover:opacity-100 transition-opacity`}>
                     {item.en}
                   </span>
-                  <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1.5 bg-yellow-main rounded-full transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+                  <motion.span 
+                    layoutId="nav-underline"
+                    className={`absolute -bottom-1 left-4 right-4 h-1.5 bg-yellow-main rounded-full transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                  ></motion.span>
                 </>
               )}
             </NavLink>
           ))}
 
-          {/* Particle Toggle Button */}
-          <button
-            onClick={cycleIntensity}
-            onMouseEnter={playHover}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
-            title="Toggle Particle Intensity"
-          >
-            <Sparkles className={`w-4 h-4 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
-            <span className="font-sans font-bold text-xs uppercase tracking-widest">
-              FX: {particleIntensity}
-            </span>
-          </button>
+          <div className="flex items-center gap-4 ml-4">
+            {/* Particle Toggle Button */}
+            <button
+              onClick={cycleIntensity}
+              onMouseEnter={playHover}
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
+              title="Toggle Particle Intensity"
+            >
+              <Sparkles className={`w-4 h-4 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
+              <span className="font-sans font-bold text-xs uppercase tracking-widest">
+                FX: {particleIntensity}
+              </span>
+            </button>
 
-          {/* Language Switch Button */}
-          <button
-            onClick={() => {
-              playClick();
-              toggleLanguage();
-            }}
-            onMouseEnter={playHover}
-            className="flex items-center justify-center p-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
-            title="Toggle Language"
-          >
-            <Languages className="w-5 h-5 text-cyan-dark" />
-            <span className="ml-1 font-sans font-black text-xs uppercase">{language === 'zh' ? 'EN' : '中'}</span>
-          </button>
+            {/* Language Switch Button */}
+            <button
+              onClick={() => {
+                playClick();
+                toggleLanguage();
+              }}
+              onMouseEnter={playHover}
+              className="flex items-center justify-center p-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
+              title="Toggle Language"
+            >
+              <Languages className="w-5 h-5 text-cyan-dark" />
+              <span className="ml-1 font-sans font-black text-xs uppercase">{language === 'zh' ? 'EN' : '中'}</span>
+            </button>
+          </div>
         </div>
 
-        <div className="md:hidden flex items-center gap-4">
+        {/* Mobile Nav Toggle */}
+        <div className="md:hidden flex items-center gap-4 relative z-[120]">
           <button
-            onClick={cycleIntensity}
-            className="text-cyan-dark hover:text-cyan-main bg-cyan-light/30 p-2 rounded-full shadow-sm"
+            onClick={() => { playClick(); toggleLanguage(); }}
+            className="text-cyan-dark hover:text-cyan-main bg-cyan-light/30 p-2 rounded-full"
           >
-            <Sparkles className={`w-5 h-5 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
-          </button>
-          <button onClick={() => { playClick(); toggleLanguage(); }} className="text-cyan-dark hover:text-cyan-main bg-cyan-light/30 p-2 rounded-full shadow-sm">
             <Languages className="w-5 h-5" />
+          </button>
+          <button
+            onClick={toggleMobileMenu}
+            onMouseEnter={playHover}
+            className="text-cyan-dark hover:text-cyan-main bg-cyan-light/40 p-2 rounded-full"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[105] bg-white flex flex-col items-center justify-start md:hidden p-8 pt-28"
+          >
+            {/* Background Decorative Patterns */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none" 
+                  style={{ backgroundImage: 'radial-gradient(#00BCD4 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            
+            {/* Social Icons Quick Access - NEW SECTION */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="flex items-center gap-6 mb-10 relative z-10"
+            >
+              {[
+                { icon: Github, link: CONTACT_INFO.github, color: '#006064' },
+                { icon: Tv, link: CONTACT_INFO.bilibili, color: '#fb7299' },
+                { icon: Gamepad2, link: CONTACT_INFO.itch, color: '#fa5c5c' },
+                { icon: Globe, link: CONTACT_INFO.blog, color: '#00BCD4' }
+              ].map((social, i) => (
+                <motion.a
+                  key={i}
+                  href={social.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="w-12 h-12 rounded-full bg-white flex items-center justify-center border-2 border-cyan-main/10 shadow-md transition-all hover:border-cyan-main/30"
+                  style={{ color: social.color }}
+                >
+                  <social.icon className="w-6 h-6" />
+                </motion.a>
+              ))}
+            </motion.div>
+
+            <div className="flex flex-col items-center gap-4 w-full relative z-10 max-w-sm">
+              {currentNavItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => { playClick(); setIsMobileMenuOpen(false); }}
+                  className={({ isActive }) => `flex flex-col items-center gap-1 p-4 w-full rounded-2xl border-2 transition-all ${
+                    isActive 
+                    ? 'bg-white border-cyan-main shadow-lg scale-[1.02]' 
+                    : 'bg-white border-cyan-light/20 shadow-sm hover:border-cyan-main/20'
+                  }`}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span className={`font-sans font-black text-2xl ${isActive ? 'text-cyan-main' : 'text-cyan-dark'}`}>{item.display}</span>
+                      <span className="font-sans font-bold text-[10px] uppercase tracking-[0.25em] text-cyan-dark/30">{item.en}</span>
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
+
+            <div className="mt-8 flex items-center gap-6 relative z-10">
+              <button
+                onClick={cycleIntensity}
+                className="flex items-center gap-3 px-8 py-4 rounded-3xl bg-white text-cyan-dark border-2 border-cyan-main/20 font-black shadow-md hover:shadow-lg transition-all active:scale-95"
+              >
+                <Sparkles className={`w-5 h-5 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
+                <span>FX: {particleIntensity.toUpperCase()}</span>
+              </button>
+            </div>
+
+            <footer className="mt-auto pb-10 text-cyan-dark/30 font-black text-[10px] tracking-widest uppercase">
+              ✤ {language === 'zh' ? '桂花拉糕' : 'MOKU KEKI'} PORTFOLIO ✤
+            </footer>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 };

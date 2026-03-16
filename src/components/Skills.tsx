@@ -134,16 +134,16 @@ export const Skills: React.FC = () => {
               </div>
 
               {/* Title Section */}
-              <div className="mb-10">
-                <h2 className="text-3xl lg:text-6xl font-black text-cyan-dark italic tracking-tight">
+              <div className="mb-6 lg:mb-10">
+                <h2 className="text-2xl md:text-5xl lg:text-6xl font-black text-cyan-dark italic tracking-tight">
                   {language === 'zh' ? activeBoon.name : activeBoon.enName}
                 </h2>
-                <div className="h-1.5 w-24 bg-cyan-main mt-4 rounded-full" />
+                <div className="h-1 lg:h-1.5 w-16 lg:w-24 bg-cyan-main mt-4 rounded-full" />
               </div>
 
               {/* Description Section */}
               <div className="flex-1 flex flex-col justify-center">
-                <p className="text-xl lg:text-2xl text-cyan-dark font-black leading-relaxed">
+                <p className="text-lg lg:text-2xl text-cyan-dark font-black leading-relaxed">
                   {language === 'zh' ? activeBoon.desc : activeBoon.enDesc}
                 </p>
               </div>
