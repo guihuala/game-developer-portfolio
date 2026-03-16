@@ -10,14 +10,14 @@ interface ArtItem {
 
 // 您现在只需添加图片路径，系统会自动根据高度适配宽度，确保图片不被裁切
 const artworks: ArtItem[] = [
-  { id: 1, image: "/art/鹤喰.png" },
-  { id: 2, image: "/art/bg.png" },
-  { id: 3, image: "/art/Image_658224922644321.jpg" },
-  { id: 4, image: "/art/156828.jpg" },
-  { id: 5, image: "/art/158419.jpg" },
-  { id: 6, image: "/art/honakana.jpg" },
-  { id: 7, image: "/art/1.jpg" },
-  { id: 8, image: "/art/2.jpg" },
+  { id: 1, image: "/art/鹤喰.webp" },
+  { id: 2, image: "/art/bg.webp" },
+  { id: 3, image: "/art/Image_658224922644321.webp" },
+  { id: 4, image: "/art/156828.webp" },
+  { id: 5, image: "/art/158419.webp" },
+  { id: 6, image: "/art/honakana.webp" },
+  { id: 7, image: "/art/1.webp" },
+  { id: 8, image: "/art/2.webp" },
 ];
 
 export const ArtWorks: React.FC = () => {
