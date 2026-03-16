@@ -191,7 +191,7 @@ export const ProjectDetail: React.FC = () => {
           {/* Design & Tech Modules - Horizontal Scrolling Style */}
           <div className="grid grid-cols-1 gap-16">
             {/* Design Module */}
-            {(project.details as any).designModule && (
+            {project.details.designModules && project.details.designModules.length > 0 && (
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                 <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
                   <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">02</span>
@@ -201,52 +201,61 @@ export const ProjectDetail: React.FC = () => {
                 <div className="relative group/scroll">
                    {/* Horizontal Scroll Area */}
                   <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2 snap-x">
-                    {/* Main Content Card */}
-                    <div className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
-                      <h3 className="text-2xl font-black text-cyan-dark mb-6">
-                        {language === 'zh' ? (project.details as any).designModule.title : (project.details as any).designModule.enTitle}
-                      </h3>
-                      <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
-                        {language === 'zh' ? (project.details as any).designModule.content : (project.details as any).designModule.enContent}
-                      </p>
-                      {(project.details as any).designModule.image && (
-                        <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
-                          <img src={(project.details as any).designModule.image} alt="Design" className="w-full h-full object-cover" />
+                    {project.details.designModules.map((module, idx) => {
+                      const isMain = idx === 0 && module.image;
+                      const Icon = module.icon === 'code' ? Code2 : 
+                                  module.icon === 'cpu' ? Cpu : 
+                                  module.icon === 'star' ? Star : 
+                                  module.icon === 'trophy' ? Trophy : 
+                                  module.icon === 'play' ? PlayCircle : PenTool;
+
+                      if (isMain) {
+                        return (
+                          <div key={idx} className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
+                            <h3 className="text-2xl font-black text-cyan-dark mb-6">
+                              {language === 'zh' ? module.title : module.enTitle}
+                            </h3>
+                            <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
+                              {language === 'zh' ? module.content : module.enContent}
+                            </p>
+                            {module.image && (
+                              <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
+                                <img src={module.image} alt="Design" className="w-full h-full object-cover" />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div key={idx} className={`min-w-[280px] md:min-w-[400px] rounded-[3rem] p-8 md:p-10 shadow-xl border-4 snap-center flex flex-col justify-end relative overflow-hidden ${idx % 2 === 1 ? 'bg-cyan-dark border-cyan-main/50 text-white' : 'bg-white border-white text-cyan-dark'}`}>
+                           {idx % 2 === 1 && <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-main/20 blur-3xl rounded-full translate-x-10 -translate-y-10" />}
+                           <Icon className={`w-12 h-12 mb-6 ${idx % 2 === 1 ? 'text-cyan-main' : 'text-yellow-main'}`} fill={module.icon === 'star' ? 'currentColor' : 'none'} />
+                           <h4 className="text-xl font-black mb-2 uppercase tracking-tight">
+                             {language === 'zh' ? module.title : module.enTitle}
+                           </h4>
+                           <p className={`${idx % 2 === 1 ? 'text-white/60' : 'text-cyan-dark/60'} text-sm font-bold leading-relaxed`}>
+                              {language === 'zh' ? module.content : module.enContent}
+                           </p>
                         </div>
-                      )}
-                    </div>
-
-                    {/* Additional Sub-Module Cards */}
-                    <div className="min-w-[280px] md:min-w-[400px] bg-cyan-dark rounded-[3rem] p-8 md:p-10 shadow-xl border-4 border-cyan-main/50 snap-center text-white flex flex-col justify-end relative overflow-hidden">
-                       <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-main/20 blur-3xl rounded-full translate-x-10 -translate-y-10" />
-                       <PenTool className="w-12 h-12 text-cyan-main mb-6" />
-                       <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{t("交互规范", "UX Protocol")}</h4>
-                       <p className="text-white/60 text-sm font-bold leading-relaxed">
-                          {t("采用了高度一致的交互反馈系统，确保每一步操作都有明确的视觉与听学回馈。", "Highly consistent interaction feedback system ensuring clear visual and auditory cues for every action.")}
-                       </p>
-                    </div>
-
-                    <div className="min-w-[280px] md:min-w-[400px] bg-white rounded-[3rem] p-8 md:p-10 shadow-sm border-2 border-white snap-center flex flex-col justify-center text-center">
-                       <Star className="w-12 h-12 text-yellow-main mx-auto mb-6" fill="currentColor" />
-                       <h4 className="text-xl font-black text-cyan-dark mb-4">{t("设计美学", "Aesthetics")}</h4>
-                       <p className="text-cyan-dark/60 text-sm font-bold leading-relaxed">
-                          {t("追求极简而富有表现力的视觉语言，将游戏感深度融入每一像素。", "Pursuing minimalist yet expressive visuals, deeply integrating game-feel into every pixel.")}
-                       </p>
-                    </div>
+                      );
+                    })}
                   </div>
                   
                   {/* Visual Indicator */}
-                  <div className="mt-4 flex justify-center gap-1.5 opacity-30 group-hover/scroll:opacity-100 transition-opacity">
-                    <div className="w-8 h-1.5 bg-cyan-main rounded-full" />
-                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
-                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
-                  </div>
+                  {project.details.designModules.length > 1 && (
+                    <div className="mt-4 flex justify-center gap-1.5 opacity-30 group-hover/scroll:opacity-100 transition-opacity">
+                      {project.details.designModules.map((_, i) => (
+                        <div key={i} className={`h-1.5 rounded-full ${i === 0 ? 'w-8 bg-cyan-main' : 'w-2 bg-cyan-light'}`} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
 
             {/* Tech Module */}
-            {(project.details as any).techModule && (
+            {project.details.techModules && project.details.techModules.length > 0 && (
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
                 <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
                   <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">03</span>
@@ -255,44 +264,57 @@ export const ProjectDetail: React.FC = () => {
                 
                 <div className="relative group/scroll-tech">
                   <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2 snap-x">
-                    <div className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
-                      <h3 className="text-2xl font-black text-cyan-dark mb-6">
-                        {language === 'zh' ? (project.details as any).techModule.title : (project.details as any).techModule.enTitle}
-                      </h3>
-                      <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
-                        {language === 'zh' ? (project.details as any).techModule.content : (project.details as any).techModule.enContent}
-                      </p>
-                      {(project.details as any).techModule.image && (
-                        <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
-                          <img src={(project.details as any).techModule.image} alt="Tech" className="w-full h-full object-cover" />
+                    {project.details.techModules.map((module, idx) => {
+                      const isMain = idx === 0 && module.image;
+                      const Icon = module.icon === 'code' ? Code2 : 
+                                  module.icon === 'cpu' ? Cpu : 
+                                  module.icon === 'star' ? Star : 
+                                  module.icon === 'trophy' ? Trophy : 
+                                  module.icon === 'play' ? PlayCircle : PenTool;
+
+                      if (isMain) {
+                        return (
+                          <div key={idx} className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
+                            <h3 className="text-2xl font-black text-cyan-dark mb-6">
+                              {language === 'zh' ? module.title : module.enTitle}
+                            </h3>
+                            <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
+                              {language === 'zh' ? module.content : module.enContent}
+                            </p>
+                            {module.image && (
+                              <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
+                                <img src={module.image} alt="Tech" className="w-full h-full object-cover" />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div key={idx} className={`min-w-[280px] md:min-w-[400px] rounded-[3rem] p-8 md:p-10 shadow-xl border-4 snap-center flex flex-col justify-end relative overflow-hidden ${idx % 2 === 1 ? 'bg-cyan-dark border-cyan-main/50 text-white' : 'bg-yellow-main border-white text-cyan-dark'}`}>
+                           {idx % 2 === 1 ? (
+                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
+                           ) : null}
+                           <Icon className={`w-12 h-12 mb-6 ${idx % 2 === 1 ? 'text-cyan-main' : 'text-cyan-dark'}`} fill={module.icon === 'star' ? 'currentColor' : 'none'} />
+                           <h4 className="text-xl font-black mb-2 uppercase tracking-tight">
+                             {language === 'zh' ? module.title : module.enTitle}
+                           </h4>
+                           <p className={`${idx % 2 === 1 ? 'text-white/60' : 'text-cyan-dark/70'} text-sm font-bold leading-relaxed`}>
+                              {language === 'zh' ? module.content : module.enContent}
+                           </p>
                         </div>
-                      )}
-                    </div>
-
-                    <div className="min-w-[280px] md:min-w-[400px] bg-cyan-dark rounded-[3rem] p-8 md:p-10 shadow-xl border-4 border-cyan-main/50 snap-center text-white flex flex-col justify-end relative overflow-hidden">
-                       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
-                       <Cpu className="w-12 h-12 text-cyan-main mb-6" />
-                       <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{t("架构优化", "Architecture")}</h4>
-                       <p className="text-white/60 text-sm font-bold leading-relaxed">
-                          {t("通过解耦核心模块，显著提升了系统的可维护性与扩展能力。", "Significantly improved maintainability and scalability by decoupling core modules.")}
-                       </p>
-                    </div>
-
-                    <div className="min-w-[280px] md:min-w-[400px] bg-yellow-main rounded-[3rem] p-8 md:p-10 shadow-lg border-4 border-white snap-center text-cyan-dark flex flex-col justify-center">
-                       <Code2 className="w-12 h-12 mb-6" />
-                       <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{t("核心算法", "Algorithms")}</h4>
-                       <p className="text-cyan-dark/70 text-sm font-bold leading-relaxed">
-                          {t("自研关键路径优化算法，在保持高精度的同时提升了处理效率。", "Proprietary path optimization algorithms enhancing efficiency while maintaining high precision.")}
-                       </p>
-                    </div>
+                      );
+                    })}
                   </div>
                   
                   {/* Visual Indicator */}
-                  <div className="mt-4 flex justify-center gap-1.5 opacity-30 group-hover/scroll-tech:opacity-100 transition-opacity">
-                    <div className="w-8 h-1.5 bg-cyan-main rounded-full" />
-                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
-                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
-                  </div>
+                  {project.details.techModules.length > 1 && (
+                    <div className="mt-4 flex justify-center gap-1.5 opacity-30 group-hover/scroll-tech:opacity-100 transition-opacity">
+                      {project.details.techModules.map((_, i) => (
+                        <div key={i} className={`h-1.5 rounded-full ${i === 0 ? 'w-8 bg-cyan-main' : 'w-2 bg-cyan-light'}`} />
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
