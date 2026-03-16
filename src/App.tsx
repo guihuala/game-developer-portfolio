@@ -16,6 +16,10 @@ import { Loader } from './components/Loader';
 import { PageTransition } from './components/PageTransition';
 import { AnimatePresence, motion } from 'motion/react';
 import { PartyPopper } from 'lucide-react';
+import { LanguageProvider } from './context/LanguageContext';
+import { SettingsProvider, useSettings } from './context/SettingsContext';
+import { ToastProvider, useToast } from './context/ToastContext';
+import { ContextMenu } from './components/ContextMenu';
 
 export type ParticleIntensity = 'off' | 'low' | 'high';
 
@@ -58,13 +62,15 @@ const useKonamiCode = (callback: () => void) => {
 
 // Route wrapper to access useLocation
 const AppContent = () => {
-  const [particleIntensity, setParticleIntensity] = useState<ParticleIntensity>('high');
+  const { particleIntensity } = useSettings();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [isEasterEggActive, setIsEasterEggActive] = useState(false);
   const location = useLocation();
 
   useKonamiCode(() => {
     setIsEasterEggActive(true);
+    showToast('Achievement Unlocked', 'You found the secret Konami Code! ✤', 'achievement');
     // Auto turn off after 5 seconds
     setTimeout(() => setIsEasterEggActive(false), 5000);
   });
@@ -151,8 +157,9 @@ const AppContent = () => {
           </AnimatePresence>
 
           <CustomCursor />
+          <ContextMenu />
           <ParticleBackground intensity={particleIntensity} />
-          <Navbar particleIntensity={particleIntensity} setParticleIntensity={setParticleIntensity} />
+          <Navbar />
           
           <main className="relative z-10 min-h-screen flex flex-col">
             <AnimatePresence mode="wait">
@@ -176,7 +183,13 @@ const AppContent = () => {
 export default function App() {
   return (
     <Router>
-      <AppContent />
+      <LanguageProvider>
+        <SettingsProvider>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </SettingsProvider>
+      </LanguageProvider>
     </Router>
   );
 }

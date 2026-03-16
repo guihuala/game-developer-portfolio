@@ -6,7 +6,7 @@ export const Works: React.FC = () => {
   return (
     <div className="pt-20">
       <Portfolio />
-      <NextModuleLink to="/experience" zhText="工作经历" enText="Experience" />
+      <NextModuleLink to="/about" zhText="关于我" enText="About Me" />
     </div>
   );
 };

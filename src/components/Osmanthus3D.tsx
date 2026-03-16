@@ -1,4 +1,4 @@
-import React, { useRef, Suspense } from 'react';
+import React, { useRef, Suspense, useLayoutEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Environment, ContactShadows, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
@@ -27,33 +27,65 @@ const Model = () => {
   });
 
   return (
-    // Positioned more left
-    <group ref={groupRef} scale={1.1} position={[-0.5, 0.4, 0]}>
+    // Positioned more center-right
+    <group ref={groupRef} scale={1.1} position={[0.2, 0.4, 0]}>
       {/* We use primitive to render the loaded Three.js scene */}
       <primitive object={scene} />
     </group>
   );
 };
 
+const ProceduralOsmanthus = () => {
+  return (
+    <group>
+      {/* 4 Petals */}
+      {[0, 1, 2, 3].map((i) => (
+        <mesh 
+          key={i} 
+          rotation={[0, 0, (Math.PI / 2) * i]} 
+          position={[Math.cos((Math.PI / 2) * i) * 0.12, Math.sin((Math.PI / 2) * i) * 0.12, 0]}
+          scale={[1.2, 0.6, 0.2]} // Flatten the spheres into petal shapes
+        >
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshPhysicalMaterial 
+            color="#FFF59D" 
+            emissive="#FBC02D" 
+            emissiveIntensity={0.5} 
+            roughness={0.2} 
+            metalness={0.1}
+            clearcoat={1}
+            clearcoatRoughness={0.1}
+            transparent={true}
+            opacity={0.95}
+          />
+        </mesh>
+      ))}
+      {/* Center Pistil */}
+      <mesh position={[0, 0, 0.01]} scale={[1, 1, 0.1]}>
+        <sphereGeometry args={[0.06, 16, 16]} />
+        <meshStandardMaterial 
+          color="#FFB300" 
+          emissive="#FF8F00" 
+          emissiveIntensity={0.8} 
+        />
+      </mesh>
+    </group>
+  );
+};
+
 const FloatingFlowers = () => {
-  const { scene } = useGLTF('/小桂花.glb');
-  
   const flowers = React.useMemo(() => {
-    return Array.from({ length: 7 }).map(() => ({
-      position: [
-        (Math.random() - 0.5) * 5 - 0.5, // Center roughly around -0.5
-        (Math.random() - 0.5) * 4 + 0.5,
-        (Math.random() - 0.5) * 3 - 1
-      ] as [number, number, number],
-      scale: 0.1 + Math.random() * 0.15,
-      rotation: [
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      ] as [number, number, number],
-      speed: 0.5 + Math.random() * 1.5,
-      offset: Math.random() * Math.PI * 2
-    }));
+    return Array.from({ length: 6 }).map((_, i) => {
+      const angle = (i / 6) * Math.PI * 2;
+      return {
+        radius: 1.5 + Math.random() * 0.5,
+        baseAngle: angle,
+        speed: 0.3 + Math.random() * 0.2,
+        yOffset: (Math.random() - 0.5) * 2,
+        scale: 0.6 + Math.random() * 0.4,
+        rotationSpeed: [Math.random() * 0.02, Math.random() * 0.02, Math.random() * 0.02] as [number, number, number]
+      };
+    });
   }, []);
 
   const groupRef = useRef<THREE.Group>(null);
@@ -62,18 +94,27 @@ const FloatingFlowers = () => {
     if (groupRef.current) {
       groupRef.current.children.forEach((child, i) => {
         const flower = flowers[i];
-        child.position.y += Math.sin(state.clock.elapsedTime * flower.speed + flower.offset) * 0.003;
-        child.rotation.y += 0.002 * flower.speed;
-        child.rotation.x += 0.001 * flower.speed;
+        // Orbit rotation
+        const currentAngle = flower.baseAngle + state.clock.elapsedTime * flower.speed;
+        
+        // Circular orbit + gentle bobbing
+        child.position.x = Math.cos(currentAngle) * flower.radius;
+        child.position.z = Math.sin(currentAngle) * flower.radius;
+        child.position.y = flower.yOffset + Math.sin(state.clock.elapsedTime * flower.speed * 2 + flower.baseAngle) * 0.4;
+
+        // Self rotation
+        child.rotation.x += flower.rotationSpeed[0];
+        child.rotation.y += flower.rotationSpeed[1];
+        child.rotation.z += flower.rotationSpeed[2];
       });
     }
   });
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} position={[0.2, 0.4, 0]}>
       {flowers.map((props, i) => (
-        <group key={i} position={props.position} scale={props.scale} rotation={props.rotation}>
-          <primitive object={scene.clone()} />
+        <group key={i} scale={props.scale}>
+          <ProceduralOsmanthus />
         </group>
       ))}
     </group>

@@ -45,7 +45,7 @@ export const About: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 min-h-screen flex flex-col">
+    <div id="about-me" className="pt-24 min-h-screen flex flex-col">
       <div className="max-w-6xl mx-auto w-full px-6 flex-1 flex flex-col">
         
         {/* Header & Tabs */}
@@ -111,7 +111,7 @@ export const About: React.FC = () => {
 
       </div>
 
-      <NextModuleLink to="/works" zhText="作品集" enText="Works" />
+      <NextModuleLink to="/experience" zhText="经历" enText="Experience" />
     </div>
   );
 };

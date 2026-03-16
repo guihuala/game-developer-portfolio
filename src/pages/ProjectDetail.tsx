@@ -1,12 +1,23 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { ArrowLeft, Star, PlayCircle, ExternalLink, Code2, PenTool, Cpu } from 'lucide-react';
+import { motion, useScroll, useSpring } from 'motion/react';
+import { ArrowLeft, Star, PlayCircle, ExternalLink, Code2, PenTool, Cpu, Trophy } from 'lucide-react';
 import { projects } from '../data/projects';
+import { useLanguage } from '../context/LanguageContext';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 export const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { language, t } = useLanguage();
+  const { playHover, playClick } = useSoundEffects();
+  
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
   
   const project = projects.find(p => p.id === Number(id));
 
@@ -17,30 +28,38 @@ export const ProjectDetail: React.FC = () => {
   if (!project) {
     return (
       <div className="min-h-screen pt-32 flex flex-col items-center justify-center text-center px-6">
-        <h1 className="text-4xl font-black text-cyan-dark mb-4">项目未找到</h1>
-        <p className="text-cyan-dark/60 mb-8 font-bold">Project Not Found</p>
-        <button onClick={() => navigate('/works')} className="px-8 py-3 bg-yellow-main text-cyan-dark font-black rounded-full hover:scale-105 transition-transform">
-          返回作品集 Back to Works
+        <h1 className="text-4xl font-black text-cyan-dark mb-4">{t("项目未找到", "Project Not Found")}</h1>
+        <button 
+          onClick={() => { playClick(); navigate('/works'); }}
+          onMouseEnter={playHover}
+          className="px-8 py-3 bg-yellow-main text-cyan-dark font-black rounded-full hover:scale-105 transition-transform"
+        >
+          {t("返回作品集 Back to Works", "Back to Works")}
         </button>
       </div>
     );
   }
 
   return (
-    <div className="pt-20 min-h-screen pb-20">
+    <div id="project-detail" className="pt-20 min-h-screen pb-20">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1.5 bg-cyan-main origin-left z-[60]"
+        style={{ scaleX }}
+      />
       <div className="max-w-5xl mx-auto px-6">
         
         {/* Back Button */}
         <motion.button 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate('/works')}
+          onClick={() => { playClick(); navigate('/works'); }}
+          onMouseEnter={playHover}
           className="group flex items-center gap-2 text-cyan-dark font-black font-sans uppercase tracking-wider mb-8 hover:text-cyan-main transition-colors mt-8"
         >
           <div className="p-2 rounded-full bg-white shadow-sm group-hover:bg-cyan-light transition-colors">
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           </div>
-          返回 Back
+          {t("返回 Back", "Back")}
         </motion.button>
 
         {/* Hero Image */}
@@ -59,122 +78,284 @@ export const ProjectDetail: React.FC = () => {
             <div>
               <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2 inline-flex shadow-lg mb-4">
                 <Star className="w-5 h-5" style={{ color: project.color, fill: project.color }} />
-                <span className="font-sans font-black text-sm uppercase tracking-wider text-cyan-dark">{project.type}</span>
+                <span className="font-sans font-black text-sm uppercase tracking-wider text-cyan-dark">
+                  {language === 'zh' ? project.type : project.enType}
+                </span>
               </div>
               <h1 className="text-5xl md:text-7xl font-black font-sans text-white drop-shadow-md tracking-tight">
-                {project.title}
+                {language === 'zh' ? project.title : project.enTitle}
               </h1>
-              <p className="text-xl md:text-2xl font-black text-white/80 uppercase tracking-widest mt-2">{project.enTitle}</p>
+              <p className="text-xl md:text-2xl font-black text-white/80 uppercase tracking-widest mt-2">
+                {language === 'zh' ? project.enTitle : project.title}
+              </p>
             </div>
             
-            <button className="hidden md:flex items-center gap-3 px-8 py-4 bg-white text-cyan-dark rounded-full font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-xl">
-              <PlayCircle className="w-6 h-6 text-yellow-main" />
-              观看预告片
-            </button>
+            {project.trailerUrl && (
+              <button 
+                onMouseEnter={playHover}
+                onClick={() => { playClick(); window.open(project.trailerUrl, '_blank'); }}
+                className="hidden md:flex items-center gap-3 px-8 py-4 bg-white text-cyan-dark rounded-full font-black uppercase tracking-wider hover:scale-105 transition-transform shadow-xl"
+              >
+                <PlayCircle className="w-6 h-6 text-yellow-main" />
+                {t("观看 PV", "Watch PV")}
+              </button>
+            )}
           </div>
         </motion.div>
 
-        {/* Content Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Quick Info Bar */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white/80 backdrop-blur-md rounded-[2.5rem] p-6 mb-12 border-2 border-white shadow-sm flex flex-wrap items-center justify-between gap-6"
+        >
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-xs font-black text-cyan-dark/40 uppercase tracking-widest mr-2">{t("技术栈", "Stack")}:</span>
+            {project.tags.map(tag => (
+              <span key={tag} className="px-4 py-1.5 bg-cyan-light/10 rounded-full font-bold text-xs text-cyan-dark border border-cyan-main/10">
+                {tag}
+              </span>
+            ))}
+          </div>
           
-          {/* Main Content (Left, 2/3) */}
-          <div className="lg:col-span-2 space-y-10">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-              <h2 className="text-3xl font-black text-cyan-dark mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-cyan-light flex items-center justify-center text-cyan-main text-lg">1</span>
-                项目概述 <span className="text-cyan-dark/30 text-lg uppercase tracking-widest">Overview</span>
-              </h2>
-              <div className="bg-white rounded-3xl p-8 shadow-sm border-2 border-white leading-relaxed">
-                <p className="text-cyan-dark/80 font-bold text-lg mb-4">{project.details.about}</p>
-                <p className="text-cyan-dark/50 font-semibold text-sm">{project.details.enAbout}</p>
-              </div>
-            </motion.div>
+          <div className="flex items-center gap-4">
+            {project.liveUrl && (
+              <button 
+                onMouseEnter={playHover}
+                onClick={() => { playClick(); window.open(project.liveUrl, '_blank'); }}
+                className="px-6 py-3 bg-cyan-dark text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-cyan-main transition-colors flex items-center gap-2 shadow-lg"
+              >
+                {t("体验 Demo", "Try Demo")} <ExternalLink className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </motion.div>
 
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-              <h2 className="text-3xl font-black text-cyan-dark mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-yellow-main/20 flex items-center justify-center text-yellow-main text-lg">2</span>
-                核心特色 <span className="text-cyan-dark/30 text-lg uppercase tracking-widest">Features</span>
-              </h2>
-              <div className="grid gap-4">
+        {/* Content Section - Full Width */}
+        <div className="space-y-16">
+          
+          {/* Overview Section */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
+              <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">01</span>
+              {t("项目概述", "Overview")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Archive.Ref</span>
+            </h2>
+            <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white leading-relaxed">
+              <p className="text-cyan-dark/80 font-bold text-lg md:text-xl leading-relaxed">
+                {language === 'zh' ? project.details.about : project.details.enAbout}
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
                 {project.details.features.map((feature, idx) => (
-                  <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm border-2 border-white flex items-start gap-4">
-                    <div className="mt-1" style={{ color: project.color }}>
-                      <Star className="w-6 h-6 fill-current" />
+                  <div key={idx} className="bg-cyan-light/5 rounded-[2rem] p-6 border-2 border-transparent hover:border-cyan-main/20 transition-all group">
+                    <Star className="w-6 h-6 text-yellow-main mb-4 group-hover:scale-110 transition-transform" fill="currentColor" />
+                    <p className="text-cyan-dark font-black text-sm leading-relaxed">
+                      {language === 'zh' ? feature : project.details.enFeatures[idx]}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Honors & Awards Section */}
+          {project.details.honors && project.details.honors.length > 0 && (
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+              <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
+                <span className="w-10 h-10 rounded-2xl bg-yellow-main/20 flex items-center justify-center text-yellow-main text-lg shadow-inner">★</span>
+                {t("奖项荣誉", "Honors & Awards")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Recognition.Log</span>
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {project.details.honors.map((honor, idx) => (
+                  <div key={idx} className="bg-white rounded-3xl p-6 border-2 border-yellow-main/20 shadow-sm flex items-center gap-4 group hover:border-yellow-main transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-yellow-main/10 flex items-center justify-center text-yellow-main shrink-0 group-hover:rotate-12 transition-transform">
+                      <Trophy className="w-6 h-6" />
                     </div>
-                    <div>
-                      <p className="text-cyan-dark font-black text-lg">{feature}</p>
-                      <p className="text-cyan-dark/50 font-semibold text-xs mt-1">{project.details.enFeatures[idx]}</p>
-                    </div>
+                    <span className="text-cyan-dark font-black text-base">
+                      {language === 'zh' ? honor : project.details.enHonors?.[idx]}
+                    </span>
                   </div>
                 ))}
               </div>
             </motion.div>
+          )}
 
-            {/* Added: Design Module */}
+          {/* Design & Tech Modules - Horizontal Scrolling Style */}
+          <div className="grid grid-cols-1 gap-16">
+            {/* Design Module */}
             {(project.details as any).designModule && (
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-                <h2 className="text-3xl font-black text-cyan-dark mb-6 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-pink-500 text-lg">
-                    <PenTool className="w-4 h-4" />
-                  </span>
-                  系统设计 <span className="text-cyan-dark/30 text-lg uppercase tracking-widest">System Design</span>
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
+                  <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">02</span>
+                  {t("系统设计", "System Design")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Logic.Layer</span>
                 </h2>
-                <div className="bg-white rounded-3xl p-8 shadow-sm border-2 border-white leading-relaxed">
-                  <h3 className="text-xl font-bold text-cyan-dark mb-2">{(project.details as any).designModule.title}</h3>
-                  <p className="text-sm font-bold text-cyan-dark/50 uppercase tracking-widest mb-4">{(project.details as any).designModule.enTitle}</p>
+                
+                <div className="relative group/scroll">
+                   {/* Horizontal Scroll Area */}
+                  <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2 snap-x">
+                    {/* Main Content Card */}
+                    <div className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
+                      <h3 className="text-2xl font-black text-cyan-dark mb-6">
+                        {language === 'zh' ? (project.details as any).designModule.title : (project.details as any).designModule.enTitle}
+                      </h3>
+                      <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
+                        {language === 'zh' ? (project.details as any).designModule.content : (project.details as any).designModule.enContent}
+                      </p>
+                      {(project.details as any).designModule.image && (
+                        <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
+                          <img src={(project.details as any).designModule.image} alt="Design" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Additional Sub-Module Cards */}
+                    <div className="min-w-[280px] md:min-w-[400px] bg-cyan-dark rounded-[3rem] p-8 md:p-10 shadow-xl border-4 border-cyan-main/50 snap-center text-white flex flex-col justify-end relative overflow-hidden">
+                       <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-main/20 blur-3xl rounded-full translate-x-10 -translate-y-10" />
+                       <PenTool className="w-12 h-12 text-cyan-main mb-6" />
+                       <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{t("交互规范", "UX Protocol")}</h4>
+                       <p className="text-white/60 text-sm font-bold leading-relaxed">
+                          {t("采用了高度一致的交互反馈系统，确保每一步操作都有明确的视觉与听学回馈。", "Highly consistent interaction feedback system ensuring clear visual and auditory cues for every action.")}
+                       </p>
+                    </div>
+
+                    <div className="min-w-[280px] md:min-w-[400px] bg-white rounded-[3rem] p-8 md:p-10 shadow-sm border-2 border-white snap-center flex flex-col justify-center text-center">
+                       <Star className="w-12 h-12 text-yellow-main mx-auto mb-6" fill="currentColor" />
+                       <h4 className="text-xl font-black text-cyan-dark mb-4">{t("设计美学", "Aesthetics")}</h4>
+                       <p className="text-cyan-dark/60 text-sm font-bold leading-relaxed">
+                          {t("追求极简而富有表现力的视觉语言，将游戏感深度融入每一像素。", "Pursuing minimalist yet expressive visuals, deeply integrating game-feel into every pixel.")}
+                       </p>
+                    </div>
+                  </div>
                   
-                  <p className="text-cyan-dark/80 font-bold text-base mb-4">{(project.details as any).designModule.content}</p>
-                  <p className="text-cyan-dark/50 font-semibold text-sm">{(project.details as any).designModule.enContent}</p>
+                  {/* Visual Indicator */}
+                  <div className="mt-4 flex justify-center gap-1.5 opacity-30 group-hover/scroll:opacity-100 transition-opacity">
+                    <div className="w-8 h-1.5 bg-cyan-main rounded-full" />
+                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
+                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
+                  </div>
                 </div>
               </motion.div>
             )}
 
-            {/* Added: Tech Module */}
+            {/* Tech Module */}
             {(project.details as any).techModule && (
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-                <h2 className="text-3xl font-black text-cyan-dark mb-6 flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-cyan-dark/10 flex items-center justify-center text-cyan-dark text-lg">
-                    <Cpu className="w-4 h-4" />
-                  </span>
-                  技术实现 <span className="text-cyan-dark/30 text-lg uppercase tracking-widest">Implementation</span>
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+                <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
+                  <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">03</span>
+                  {t("技术实现", "Tech Evolution")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Binary.Path</span>
                 </h2>
-                <div className="bg-white rounded-3xl p-8 shadow-sm border-2 border-white leading-relaxed">
-                  <h3 className="text-xl font-bold text-cyan-dark mb-2">{(project.details as any).techModule.title}</h3>
-                  <p className="text-sm font-bold text-cyan-dark/50 uppercase tracking-widest mb-4">{(project.details as any).techModule.enTitle}</p>
+                
+                <div className="relative group/scroll-tech">
+                  <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2 snap-x">
+                    <div className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
+                      <h3 className="text-2xl font-black text-cyan-dark mb-6">
+                        {language === 'zh' ? (project.details as any).techModule.title : (project.details as any).techModule.enTitle}
+                      </h3>
+                      <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
+                        {language === 'zh' ? (project.details as any).techModule.content : (project.details as any).techModule.enContent}
+                      </p>
+                      {(project.details as any).techModule.image && (
+                        <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
+                          <img src={(project.details as any).techModule.image} alt="Tech" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="min-w-[280px] md:min-w-[400px] bg-cyan-dark rounded-[3rem] p-8 md:p-10 shadow-xl border-4 border-cyan-main/50 snap-center text-white flex flex-col justify-end relative overflow-hidden">
+                       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
+                       <Cpu className="w-12 h-12 text-cyan-main mb-6" />
+                       <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{t("架构优化", "Architecture")}</h4>
+                       <p className="text-white/60 text-sm font-bold leading-relaxed">
+                          {t("通过解耦核心模块，显著提升了系统的可维护性与扩展能力。", "Significantly improved maintainability and scalability by decoupling core modules.")}
+                       </p>
+                    </div>
+
+                    <div className="min-w-[280px] md:min-w-[400px] bg-yellow-main rounded-[3rem] p-8 md:p-10 shadow-lg border-4 border-white snap-center text-cyan-dark flex flex-col justify-center">
+                       <Code2 className="w-12 h-12 mb-6" />
+                       <h4 className="text-xl font-black mb-2 uppercase tracking-tight">{t("核心算法", "Algorithms")}</h4>
+                       <p className="text-cyan-dark/70 text-sm font-bold leading-relaxed">
+                          {t("自研关键路径优化算法，在保持高精度的同时提升了处理效率。", "Proprietary path optimization algorithms enhancing efficiency while maintaining high precision.")}
+                       </p>
+                    </div>
+                  </div>
                   
-                  <p className="text-cyan-dark/80 font-bold text-base mb-4">{(project.details as any).techModule.content}</p>
-                  <p className="text-cyan-dark/50 font-semibold text-sm">{(project.details as any).techModule.enContent}</p>
+                  {/* Visual Indicator */}
+                  <div className="mt-4 flex justify-center gap-1.5 opacity-30 group-hover/scroll-tech:opacity-100 transition-opacity">
+                    <div className="w-8 h-1.5 bg-cyan-main rounded-full" />
+                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
+                    <div className="w-2 h-1.5 bg-cyan-light rounded-full" />
+                  </div>
                 </div>
               </motion.div>
             )}
-
           </div>
 
-          {/* Sidebar (Right, 1/3) */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
-            className="space-y-8"
-          >
-             {/* Tech Stack */}
-             <div className="bg-gradient-to-b from-cyan-light/30 to-white rounded-[2rem] p-8 shadow-sm border-2 border-white">
-              <h3 className="text-xl font-black text-cyan-dark mb-6 flex items-center gap-2">
-                <Code2 className="w-6 h-6 text-cyan-main" /> 技术栈
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map(tag => (
-                  <span key={tag} className="px-4 py-2 bg-white rounded-full font-bold text-sm text-cyan-dark shadow-sm border border-cyan-main/10 flex-grow text-center">
-                    {tag}
-                  </span>
+          {/* Gallery Module */}
+          {project.details.gallery && project.details.gallery.length > 0 && (
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+              <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center gap-3">
+                <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">04</span>
+                {t("更多截图", "Snapshot.Ref")} <span className="text-cyan-dark/10 text-xl font-black uppercase tracking-[0.3em] ml-2">Media.Grid</span>
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {project.details.gallery.map((img, idx) => (
+                  <motion.div 
+                    key={idx}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    className="group relative aspect-video rounded-[2.5rem] overflow-hidden bg-white shadow-md border-4 border-white cursor-zoom-in"
+                  >
+                    <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-cyan-dark/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="bg-white/90 p-3 rounded-full shadow-xl translate-y-4 group-hover:translate-y-0 transition-transform">
+                        <ExternalLink className="w-5 h-5 text-cyan-dark" />
+                      </div>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
+          )}
 
-            {/* Links */}
-            <div className="bg-white rounded-[2rem] p-8 shadow-sm border-2 border-white text-center">
-              <h3 className="text-lg font-black text-cyan-dark mb-4">想要了解更多？</h3>
-              <button className="w-full py-4 bg-cyan-dark text-white rounded-xl font-black uppercase tracking-widest hover:bg-cyan-main transition-colors flex items-center justify-center gap-2">
-                Visit Website <ExternalLink className="w-4 h-4" />
+          {/* Related Projects Section */}
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="pt-16 border-t-2 border-cyan-light/20 mt-16">
+            <h2 className="text-3xl font-black text-cyan-dark mb-8 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-10 rounded-2xl bg-cyan-main/10 flex items-center justify-center text-cyan-main text-lg shadow-inner">→</span>
+                {t("继续探索", "Continue Exploration")}
+              </div>
+              <button 
+                onClick={() => { playClick(); navigate('/works'); }}
+                className="text-sm font-black text-cyan-main hover:underline uppercase tracking-widest"
+              >
+                {t("查看全部 View All", "View All")}
               </button>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {projects.filter(p => p.id !== project.id).slice(0, 2).map(p => (
+                <motion.div 
+                  key={p.id}
+                  whileHover={{ y: -5, scale: 1.02 }}
+                  onClick={() => { playClick(); navigate(`/project/${p.id}`); window.scrollTo(0, 0); }}
+                  onMouseEnter={playHover}
+                  className="bg-white rounded-[2.5rem] p-4 shadow-sm border-2 border-white cursor-pointer group flex items-center gap-6"
+                >
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl overflow-hidden shrink-0">
+                    <img src={p.image} alt={p.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <h3 className="text-xl font-black text-cyan-dark group-hover:text-cyan-main transition-colors truncate">
+                      {language === 'zh' ? p.title : p.enTitle}
+                    </h3>
+                    <p className="text-[10px] font-black text-cyan-main/60 uppercase tracking-widest mb-2">
+                       {language === 'zh' ? p.enTitle : p.title}
+                    </p>
+                    <p className="text-sm text-cyan-dark/60 font-bold line-clamp-2 leading-snug">
+                       {language === 'zh' ? p.desc : p.enDesc}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
 

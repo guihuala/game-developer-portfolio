@@ -1,122 +1,183 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Gamepad2, Swords, GraduationCap, Cpu, MapPin, X } from 'lucide-react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { Gamepad2, Swords, GraduationCap, Cpu, Code2, Sparkles, Layers, Search, MapPin, X } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
 const milestones = [
   {
-    id: 'start',
-    year: "2016 - 2020",
-    title: "游戏设计毕业",
-    enTitle: "Graduated",
-    desc: "获得某大学游戏设计学位，参与多个Game Jam并获得最佳创意奖。这里是一切梦想开始的地方，学会了基础的代码与设计理论。",
-    enDesc: "Earned a Game Design degree, participated in multiple Game Jams. This is where the dream began, learning basic code and design theories.",
+    id: 'origin',
+    year: "2020 - 2021",
+    title: "兴趣起源：初探代码",
+    enTitle: "The Spark: First Step",
+    desc: "在正式进入大学前，我因为对游戏的热爱开始了自学。写下了第一个 'Hello World'，虽然那时还不明白逻辑背后的原理，但那种创造的快感让我确信了未来的方向。",
+    enDesc: "Self-study began with a passion for games. Wrote my first 'Hello World'. even without deep theory knowledge, the joy of creation confirmed my future path.",
+    icon: Search,
+    color: "#0284C7",
+    questType: "PROLOGUE",
+    x: 12,
+    y: 88
+  },
+  {
+    id: 'university',
+    year: "2021秋 - 至今",
+    title: "初露锋芒：大学生涯",
+    enTitle: "Lvl 1: University Era",
+    desc: "踏入游戏开发专业，从最基础的一行代码开始。在课程作业中第一次发现，原来创造世界比玩游戏更有趣。这个阶段我专注于吸收各种游戏逻辑和数学知识。",
+    enDesc: "Entered game dev program. Started from raw code. Realized that creating worlds is more fun than playing them. Focused on absorbing game logic and math.",
     icon: GraduationCap,
-    color: "#00BCD4", // uniform cyan
+    color: "#0284C7",
     questType: "TUTORIAL",
-    x: 10, // percentage position
-    y: 80
+    x: 42,
+    y: 82
   },
   {
-    id: 'client',
-    year: "2020 - 2022",
-    title: "游戏客户端开发",
-    enTitle: "Game Client Engineer",
-    desc: "参与大型MMORPG项目开发，负责UI系统重构、性能优化及动画状态机编写。积累了丰富的企业级实战经验和底层优化技巧。",
-    enDesc: "Participated in MMORPG dev, responsible for UI, performance, and animation. Gained rich enterprise experience.",
-    icon: Cpu,
-    color: "#FFD54F", // uniform yellow
+    id: 'technical',
+    year: "2022 上半年",
+    title: "技术磨砺：底层逻辑",
+    enTitle: "Grind: Core Logic",
+    desc: "开始深入研究 C++ 和数据结构。这不仅是枯燥的语法，更是理解游戏运行本质的钥匙。我学着如何更高效地管理内存，并尝试进行性能优化。",
+    enDesc: "Dove into C++ and data structures. It's more than syntax—it's the key to understanding how games run. Learned memory management and optimization.",
+    icon: Code2,
+    color: "#FFD54F",
     questType: "SIDE QUEST",
-    x: 40,
-    y: 60
+    x: 25,
+    y: 65
   },
   {
-    id: 'designer',
-    year: "2022 - 2024",
-    title: "主系统策划",
-    enTitle: "Lead Systems Designer",
-    desc: "就职于某知名游戏公司，负责核心战斗系统搭建、数值平衡以及角色技能设计。从代码执行者转变为规则制定者。",
-    enDesc: "Worked at a top game company, leading combat system design and balance. Transitioned from coder to rule-maker.",
-    icon: Swords,
-    color: "#00BCD4", // cyan
+    id: 'engine',
+    year: "2022 - 2023",
+    title: "深渊凝视：引擎探索",
+    enTitle: "The Void: Engine Study",
+    desc: "独立完成了几个简陋的小 Demo。虽然代码写得一团糟，但我在这段时间弄明白了渲染管线、物理引擎和那些让人头秃的 Bug。这是我从“玩家”向“开发者”转变的阵痛期。",
+    enDesc: "Created several small demos. Despite messy code, I learned about rendering pipelines, physics, and debugging. A painful but vital transition from player to developer.",
+    icon: Cpu,
+    color: "#FFD54F",
+    questType: "SIDE QUEST",
+    x: 55,
+    y: 52
+  },
+  {
+    id: 'fullstack',
+    year: "2023 上半年",
+    title: "领域扩张：全栈尝试",
+    enTitle: "Expansion: Full-stack",
+    desc: "不满足于客户端，我开始接触后端和 Web 技术。尝试构建了自己的第一个游戏配套管理系统，明白了数据在前后端之间流转的奥秘。",
+    enDesc: "Not content with just client-side, I explored backend and Web tech. Built my first integrated system, understanding data flow between client and server.",
+    icon: Layers,
+    color: "#0284C7",
     questType: "GUILD QUEST",
-    x: 70,
-    y: 30
+    x: 82,
+    y: 68
   },
   {
-    id: 'indie',
-    year: "2024 - 至今",
-    title: "独立制作人",
-    enTitle: "Indie Game Dev",
-    desc: "成立个人工作室，发布首款商业独立游戏《星界编年史》。负责全栈开发、游戏设计与美术指导，全面把控游戏品质。",
-    enDesc: "Founded an indie studio. Responsible for full-stack dev, design, and art direction.",
-    icon: Gamepad2,
-    color: "#FFD54F", // yellow
-    questType: "MAIN QUEST",
+    id: 'gamejam',
+    year: "2023 - 2024",
+    title: "磨砺意志：Game Jam",
+    enTitle: "Trial by Fire: Game Jams",
+    desc: "第一次走出校园象牙塔，在 48 小时内和队友极限产出。学会了如何在资源匮乏的情况下进行取舍，也明白了团队协作中沟通的重要性远胜于单打独斗。",
+    enDesc: "Stepped out of secondary school bubble. Created games in 48-hour jams. Learned how to make trade-offs under pressure and the power of teamwork over solo dev.",
+    icon: Swords,
+    color: "#0284C7",
+    questType: "GUILD QUEST",
     x: 90,
-    y: 10
+    y: 35
+  },
+  {
+    id: 'gradproject',
+    year: "2024 - 2025",
+    title: "毕业课题：最后的试炼",
+    enTitle: "Final Boss: Grad Project",
+    desc: "正在进行的毕业设计。我将这几年学到的所有技能都倾注其中。这不仅是一份作业，更是一份向行业递出的敲门砖。虽然还没毕业，但我已经做好了进入新手村的准备。",
+    enDesc: "Ongoing graduation project. Pouring every skill I've learned into this. It's more than an assignment; it's my first actual stepping stone into the industry.",
+    icon: Gamepad2,
+    color: "#FFD54F",
+    questType: "MAIN QUEST",
+    x: 65,
+    y: 15
   }
 ];
 
 export const Timeline: React.FC = () => {
   const [activeNode, setActiveNode] = useState<typeof milestones[0] | null>(null);
-  const [playerPos, setPlayerPos] = useState({ x: 50, y: 50 });
   const mapRef = useRef<HTMLDivElement>(null);
+  const { language, t } = useLanguage();
+  const { playHover, playSuccess } = useSoundEffects();
+
+  // Optimized Position handling with MotionValues
+  const mouseX = useMotionValue(50);
+  const mouseY = useMotionValue(50);
+  const springX = useSpring(mouseX, { stiffness: 150, damping: 25, mass: 0.5 });
+  const springY = useSpring(mouseY, { stiffness: 150, damping: 25, mass: 0.5 });
+
+  // Convert to percentage strings for CSS
+  const xPercent = useTransform(springX, (val) => `${val}%`);
+  const yPercent = useTransform(springY, (val) => `${val}%`);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    let lastCheckTime = 0;
+    const CHECK_INTERVAL = 50; // Only check distance every 50ms
+
+    const handleMouseMove = (e: MouseEvent | Touch) => {
       if (!mapRef.current) return;
+
       const rect = mapRef.current.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-      // Restrict player inside the map container
       const boundedX = Math.max(0, Math.min(100, x));
       const boundedY = Math.max(0, Math.min(100, y));
-      
-      setPlayerPos({ x: boundedX, y: boundedY });
 
-      // Check distance to nodes
-      let foundActive = false;
-      for (const node of milestones) {
-        // Simple distance calculation (percentage based)
-        const dist = Math.sqrt(Math.pow(boundedX - node.x, 2) + Math.pow(boundedY - node.y, 2));
-        if (dist < 12) { // trigger radius 12%
-          setActiveNode(node);
-          foundActive = true;
-          break;
+      // Update MotionValues directly (no re-render)
+      mouseX.set(boundedX);
+      mouseY.set(boundedY);
+
+      // Throttled Distance Check
+      const now = performance.now();
+      if (now - lastCheckTime > CHECK_INTERVAL) {
+        lastCheckTime = now;
+        
+        let foundActive = false;
+        for (const node of milestones) {
+          const dist = Math.sqrt(Math.pow(boundedX - node.x, 2) + Math.pow(boundedY - node.y, 2));
+          if (dist < 12) {
+            if (activeNode?.id !== node.id) {
+              setActiveNode(node);
+              playSuccess();
+            }
+            foundActive = true;
+            break;
+          }
         }
-      }
-      if (!foundActive) {
-        setActiveNode(null);
+        if (!foundActive && activeNode !== null) {
+          setActiveNode(null);
+        }
       }
     };
 
     const mapEl = mapRef.current;
     if (mapEl) {
-      mapEl.addEventListener('mousemove', handleMouseMove);
-      // Optional: touch support
-      mapEl.addEventListener('touchmove', (e) => {
-        if(e.touches[0]) handleMouseMove(e.touches[0] as any);
-      });
-    }
+      const onMove = (e: MouseEvent) => handleMouseMove(e);
+      const onTouch = (e: TouchEvent) => {
+        if (e.touches[0]) handleMouseMove(e.touches[0]);
+      };
 
-    return () => {
-      if (mapEl) {
-        mapEl.removeEventListener('mousemove', handleMouseMove);
-        mapEl.removeEventListener('touchmove', handleMouseMove as any);
-      }
-    };
-  }, []);
+      mapEl.addEventListener('mousemove', onMove, { passive: true });
+      mapEl.addEventListener('touchmove', onTouch, { passive: true });
+      
+      return () => {
+        mapEl.removeEventListener('mousemove', onMove);
+        mapEl.removeEventListener('touchmove', onTouch);
+      };
+    }
+  }, [activeNode, mouseX, mouseY, playSuccess]);
 
   // Draw dash lines between nodes
   const renderPath = () => {
     return (
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ preserveAspectRatio: "none" }}>
-        <path
-          d={`M ${milestones[0].x}% ${milestones[0].y}% 
-             L ${milestones[1].x}% ${milestones[1].y}% 
-             L ${milestones[2].x}% ${milestones[2].y}% 
-             L ${milestones[3].x}% ${milestones[3].y}%`}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 drop-shadow-md" preserveAspectRatio="none">
+        <polyline
+          points={milestones.map(m => `${m.x}%,${m.y}%`).join(' ')}
           fill="none"
           stroke="#00BCD4"
           strokeWidth="4"
@@ -128,55 +189,57 @@ export const Timeline: React.FC = () => {
   };
 
   return (
-    <section id="timeline" className="relative py-20 lg:py-32 z-10 overflow-hidden bg-white">
+    <section id="timeline" className="relative pt-24 pb-12 z-10 overflow-hidden bg-white">
       {/* Subtle Game Map Background */}
       <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(#00BCD4 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        
-        {/* Header */}
-        <div className="mb-12 flex flex-col items-center text-center">
-          <h2 className="text-4xl md:text-5xl font-black font-sans text-cyan-dark mb-2 uppercase tracking-tighter drop-shadow-sm">
-            工作<span className="text-yellow-main">经历</span>地图
+
+        {/* Header - Compact style like About page */}
+        <div className="mb-10 flex flex-col items-center text-center">
+          <h2 className="text-4xl md:text-5xl font-black font-sans text-cyan-dark mb-4 uppercase tracking-tighter">
+            成长<span className="text-cyan-main">历程</span>
           </h2>
-          <p className="text-xl font-black text-cyan-main uppercase tracking-widest mb-6">World Map</p>
-          <div className="w-24 h-1.5 rounded-full bg-yellow-main shadow-sm"></div>
           
-          <p className="mt-6 text-cyan-dark/50 text-sm font-bold tracking-widest uppercase">
-            移动鼠标控制角色，靠近据点查看详情
-          </p>
+          <div className="flex flex-col items-center">
+            <p className="text-[10px] font-black text-cyan-main uppercase tracking-[0.3em] mb-2">{t("Journey Map", "Adventurer's Path")}</p>
+            <div className="w-12 h-1 bg-cyan-main/30 rounded-full mb-4"></div>
+            <p className="text-cyan-dark/40 text-[10px] font-bold tracking-widest uppercase bg-cyan-light/30 px-4 py-1.5 rounded-full border border-cyan-main/10">
+              {t("移动鼠标控制角色 · 靠近据点查看详情", "Mouse to control · Near nodes for info")}
+            </p>
+          </div>
         </div>
 
         {/* The Game Map Container */}
-        <div 
+        <div
           ref={mapRef}
           className="relative w-full aspect-[4/5] md:aspect-video bg-cyan-dark rounded-[3rem] border-8 border-yellow-main/50 shadow-2xl overflow-hidden cursor-crosshair touch-none"
         >
-          
+
           {/* Topographical / Fantasy Map texture */}
           <div className="absolute inset-0 opacity-40 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900 via-cyan-dark to-black"></div>
-          
+
           {renderPath()}
 
           {/* Render Nodes (Locations) */}
           {milestones.map((node) => {
             const Icon = node.icon;
             const isActive = activeNode?.id === node.id;
-            
+
             return (
-              <div 
-                key={node.id} 
+              <div
+                key={node.id}
                 className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
                 style={{ left: `${node.x}%`, top: `${node.y}%` }}
               >
                 <div className="relative group">
                   {/* Location Pin Bounce animation */}
-                  <motion.div 
+                  <motion.div
                     animate={{ y: isActive ? [0, -10, 0] : 0, scale: isActive ? 1.2 : 1 }}
                     transition={{ repeat: isActive ? Infinity : 0, duration: 1.5, ease: "easeInOut" }}
                     className="flex flex-col items-center"
                   >
-                    <div 
+                    <div
                       className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-4 flex items-center justify-center shadow-lg transition-colors duration-300`}
                       style={{ backgroundColor: isActive ? node.color : 'rgba(255,255,255,0.1)', borderColor: node.color, color: isActive ? 'white' : node.color }}
                     >
@@ -184,10 +247,10 @@ export const Timeline: React.FC = () => {
                     </div>
                     {/* Glowing effect under node */}
                     <div className="absolute inset-0 bg-current opacity-20 blur-xl -z-10 rounded-full" style={{ color: node.color }}></div>
-                    
+
                     {/* Node Label */}
                     <div className={`mt-2 px-3 py-1 rounded-full text-xs font-black shadow-md border-2 whitespace-nowrap transition-opacity ${isActive ? 'opacity-100 bg-white text-cyan-dark' : 'opacity-80 bg-cyan-dark/80 text-white'}`} style={{ borderColor: node.color }}>
-                      {node.title}
+                      {language === 'zh' ? node.title : node.enTitle}
                     </div>
                   </motion.div>
                 </div>
@@ -195,19 +258,26 @@ export const Timeline: React.FC = () => {
             );
           })}
 
-          {/* The Player Avatar (Follows Mouse) */}
+          {/* The Player Avatar (Follows Mouse) - Now using Osmanthus Clay Icon */}
           <motion.div
-            className="absolute z-20 w-10 h-10 md:w-14 md:h-14 bg-white rounded-full border-4 border-yellow-main shadow-[0_0_20px_rgba(255,213,79,1)] flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-            animate={{ left: `${playerPos.x}%`, top: `${playerPos.y}%` }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.5 }}
+            className="absolute z-20 w-16 h-16 md:w-24 md:h-24 flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            style={{ left: xPercent, top: yPercent }}
           >
-            <div className="w-6 h-6 md:w-8 md:h-8 bg-cyan-dark rounded-full flex items-center justify-center relative overflow-hidden">
-                <motion.div 
-                   animate={{ rotate: 360 }} 
-                   transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                   className="absolute inset-0 bg-gradient-to-tr from-cyan-main to-yellow-main opacity-50"
+            <div className="relative w-full h-full flex items-center justify-center">
+              {/* Outer Glow (Adjusted to follow raw icon) */}
+              <div className="absolute inset-0 bg-yellow-main/30 blur-2xl rounded-full scale-110 animate-pulse"></div>
+              
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                className="relative w-full h-full"
+              >
+                <img 
+                  src="/桂花泥图标.png" 
+                  alt="Player" 
+                  className="w-full h-full object-contain filter drop-shadow-[0_5px_15px_rgba(255,213,79,0.5)]"
                 />
-              <div className="w-3 h-3 md:w-4 md:h-4 bg-white rounded-full z-10 shadow-sm animate-pulse"></div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -223,7 +293,7 @@ export const Timeline: React.FC = () => {
                 style={{ borderColor: activeNode.color }}
               >
                 <div className="flex items-start gap-4 md:gap-6">
-                  <div 
+                  <div
                     className="hidden md:flex w-16 h-16 rounded-2xl shrink-0 items-center justify-center text-white shadow-md relative overflow-hidden"
                     style={{ backgroundColor: activeNode.color }}
                   >
@@ -237,15 +307,12 @@ export const Timeline: React.FC = () => {
                       </span>
                       <span className="text-cyan-dark/50 font-bold text-sm tracking-widest">{activeNode.year}</span>
                     </div>
-                    
-                    <h3 className="text-2xl md:text-3xl font-black text-cyan-dark mb-1">{activeNode.title}</h3>
-                    <p className="text-xs font-black text-cyan-main uppercase tracking-widest mb-4">{activeNode.enTitle}</p>
-                    
+
+                    <h3 className="text-2xl md:text-3xl font-black text-cyan-dark mb-1">{language === 'zh' ? activeNode.title : activeNode.enTitle}</h3>
+                    <p className="text-xs font-black text-cyan-main uppercase tracking-widest mb-4">{language === 'zh' ? activeNode.enTitle : activeNode.title}</p>
+
                     <p className="text-cyan-dark/80 font-sans font-bold text-sm md:text-base leading-relaxed mb-2 max-w-3xl">
-                      {activeNode.desc}
-                    </p>
-                    <p className="text-cyan-dark/50 font-sans font-semibold text-xs md:text-sm leading-relaxed max-w-3xl">
-                      {activeNode.enDesc}
+                      {language === 'zh' ? activeNode.desc : activeNode.enDesc}
                     </p>
                   </div>
                 </div>

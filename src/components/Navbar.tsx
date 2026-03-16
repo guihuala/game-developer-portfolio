@@ -1,14 +1,16 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Flower2, Sparkles } from 'lucide-react';
+import { Flower2, Sparkles, Languages } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { useSettings } from '../context/SettingsContext';
+import { useSoundEffects } from '../hooks/useSoundEffects';
 
-interface NavbarProps {
-  particleIntensity: 'off' | 'low' | 'high';
-  setParticleIntensity: (val: 'off' | 'low' | 'high') => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ particleIntensity, setParticleIntensity }) => {
+export const Navbar: React.FC = () => {
+  const { language, toggleLanguage, t } = useLanguage();
+  const { particleIntensity, setParticleIntensity } = useSettings();
+  const { playHover, playClick } = useSoundEffects();
+  
   const navItems = [
     { zh: '主页', en: 'Home', path: '/' },
     { zh: '作品', en: 'Works', path: '/works' },
@@ -17,10 +19,16 @@ export const Navbar: React.FC<NavbarProps> = ({ particleIntensity, setParticleIn
   ];
 
   const cycleIntensity = () => {
+    playClick();
     if (particleIntensity === 'high') setParticleIntensity('low');
     else if (particleIntensity === 'low') setParticleIntensity('off');
     else setParticleIntensity('high');
   };
+
+  const currentNavItems = navItems.map(item => ({
+    ...item,
+    display: language === 'zh' ? item.zh : item.en
+  }));
 
   return (
     <motion.nav
@@ -35,29 +43,38 @@ export const Navbar: React.FC<NavbarProps> = ({ particleIntensity, setParticleIn
             whileHover={{ scale: 1.05, rotate: 5 }}
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-3 cursor-pointer group"
+            onMouseEnter={playHover}
+            onClick={playClick}
           >
-            <div className="relative w-12 h-12 flex items-center justify-center bg-yellow-main rounded-full border-4 border-white shadow-md group-hover:shadow-lg transition-all">
-              <Flower2 className="text-white w-6 h-6" />
-            </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              className="w-12 h-12 flex items-center justify-center transition-all"
+            >
+              <span className="text-yellow-main text-4xl" style={{ transform: "rotate(45deg)", display: "inline-block" }}>✤</span>
+            </motion.div>
             <span className="font-sans font-black text-2xl tracking-wide text-cyan-dark group-hover:text-cyan-main transition-colors">
-              桂花<span className="text-yellow-main">拉糕</span>
+              {t("桂花", "moku")}
+              <span className="text-yellow-main">{t("拉糕", "keki")}</span>
             </span>
           </motion.div>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {currentNavItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
+              onMouseEnter={playHover}
+              onClick={playClick}
               className={({ isActive }) => `relative flex flex-col items-center group ${isActive ? 'is-active' : ''}`}
             >
               {({ isActive }) => (
                 <>
                   <span className={`font-sans font-black text-base transition-colors ${isActive ? 'text-cyan-main' : 'text-cyan-dark/80 group-hover:text-cyan-main'}`}>
-                    {item.zh}
+                    {item.display}
                   </span>
-                  <span className={`font-sans font-bold text-[10px] uppercase tracking-widest transition-colors -mt-1 ${isActive ? 'text-yellow-main' : 'text-cyan-dark/40 group-hover:text-yellow-main'}`}>
+                  <span className={`font-sans font-bold text-[10px] uppercase tracking-widest transition-colors -mt-1 ${isActive ? 'text-yellow-main' : 'text-cyan-dark/40 group-hover:text-yellow-main'} opacity-0 group-hover:opacity-100 transition-opacity`}>
                     {item.en}
                   </span>
                   <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1.5 bg-yellow-main rounded-full transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
@@ -69,6 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({ particleIntensity, setParticleIn
           {/* Particle Toggle Button */}
           <button
             onClick={cycleIntensity}
+            onMouseEnter={playHover}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
             title="Toggle Particle Intensity"
           >
@@ -76,6 +94,20 @@ export const Navbar: React.FC<NavbarProps> = ({ particleIntensity, setParticleIn
             <span className="font-sans font-bold text-xs uppercase tracking-widest">
               FX: {particleIntensity}
             </span>
+          </button>
+
+          {/* Language Switch Button */}
+          <button
+            onClick={() => {
+              playClick();
+              toggleLanguage();
+            }}
+            onMouseEnter={playHover}
+            className="flex items-center justify-center p-2 rounded-full bg-cyan-light/30 hover:bg-cyan-light/60 transition-colors text-cyan-dark border border-cyan-main/20"
+            title="Toggle Language"
+          >
+            <Languages className="w-5 h-5 text-cyan-dark" />
+            <span className="ml-1 font-sans font-black text-xs uppercase">{language === 'zh' ? 'EN' : '中'}</span>
           </button>
         </div>
 
@@ -86,10 +118,8 @@ export const Navbar: React.FC<NavbarProps> = ({ particleIntensity, setParticleIn
           >
             <Sparkles className={`w-5 h-5 ${particleIntensity === 'off' ? 'opacity-40' : 'text-yellow-main'}`} />
           </button>
-          <button className="text-cyan-dark hover:text-cyan-main bg-white p-2 rounded-full shadow-sm">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+          <button onClick={() => { playClick(); toggleLanguage(); }} className="text-cyan-dark hover:text-cyan-main bg-cyan-light/30 p-2 rounded-full shadow-sm">
+            <Languages className="w-5 h-5" />
           </button>
         </div>
       </div>
