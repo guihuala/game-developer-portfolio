@@ -83,7 +83,7 @@ const AppContent = () => {
           <ParticleBackground />
           <Navbar />
           
-          <main className="relative z-20 min-h-screen flex flex-col">
+          <main className="relative z-20 flex flex-col">
             <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
                 <Route path="/" element={<PageTransition><Home /></PageTransition>} />

@@ -127,7 +127,7 @@ export const PersonalIntro: React.FC = () => {
               className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[450px] md:h-[450px] lg:w-[650px] lg:h-[650px] -mb-8 sm:-mb-16 lg:-mb-24"
             >
               <img 
-                src="/avatar.png" 
+                src="/avatar.webp" 
                 alt="Avatar" 
                 className="w-full h-full object-contain filter drop-shadow-[0_10px_30px_rgba(2,132,199,0.1)]" 
               />

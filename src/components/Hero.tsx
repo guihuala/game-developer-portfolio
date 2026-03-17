@@ -58,7 +58,18 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section id="start" className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-12 overflow-hidden z-10">
+    <section id="start" className="relative min-h-[75vh] flex items-center justify-center pt-20 overflow-hidden z-10">
+      {/* Background Decorations */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Animated Grid / Dots */}
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, var(--cyan-main) 1px, transparent 0)',
+            backgroundSize: '48px 48px'
+          }}
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {/* Left Content */}
@@ -66,22 +77,22 @@ export const Hero: React.FC = () => {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-col items-start z-20"
+          className="flex flex-col items-start z-20 relative"
         >
 
           <h1 className="font-sans font-black text-cyan-dark leading-tight mb-2">
             <span className="block text-cyan-main text-2xl sm:text-4xl md:text-5xl mb-1">
               {text}<span className="typing-cursor"></span>
             </span>
-            <span className="block text-3xl sm:text-5xl md:text-6xl">{t("专注于游戏设计", "Focusing on Game Design")}</span>
-            <span className="block text-3xl sm:text-5xl md:text-6xl text-yellow-main drop-shadow-sm">{t("与开发.", "& Development.")}</span>
+            <span className="block text-3xl sm:text-5xl md:text-6xl">{t("热爱游戏设计", "Love Game Design")}</span>
+            <span className="block text-3xl sm:text-5xl md:text-6xl text-yellow-main drop-shadow-sm">{t("与开发", "& Development")}</span>
           </h1>
 
           <div className="space-y-2 mb-10">
             <p className="text-base md:text-xl text-cyan-dark/80 max-w-lg font-sans font-bold leading-relaxed">
               {t(
-                "我致力于打造有趣的游戏机制和温馨的视觉体验。用代码和创意构建美好的数字世界。",
-                "Dedicated to crafting engaging game mechanics and cozy visual experiences. Building beautiful digital worlds with code and creativity."
+                "我希望能够打造有趣的游戏机制和温馨的视觉体验。",
+                "I hope to create engaging game mechanics and cozy visual experiences."
               )}
             </p>
           </div>
@@ -116,7 +127,7 @@ export const Hero: React.FC = () => {
         </motion.div>
 
         {/* Right Content - 3D Osmanthus Flower */}
-        <div className="hidden lg:block relative z-10 w-full lg:w-[calc(100%+10rem)] xl:w-[calc(100%+12rem)] lg:-mr-24 xl:-mr-48 h-[700px] xl:h-[850px] 2xl:h-[1000px]">
+        <div className="hidden lg:block relative z-10 w-full lg:w-[calc(100%+6rem)] xl:w-[calc(100%+6rem)] lg:-mr-24 xl:-mr-48 h-[700px] xl:h-[800px] 2xl:h-[900px]">
           {/* Glowing backdrop */}
           <div className="absolute inset-0 bg-yellow-main/20 blur-[120px] rounded-full w-full h-full m-auto pointer-events-none"></div>
 

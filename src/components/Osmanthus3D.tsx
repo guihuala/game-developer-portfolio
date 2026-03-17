@@ -44,7 +44,7 @@ const FloatingFlowers = () => {
     return Array.from({ length: 6 }).map((_, i) => {
       const angle = (i / 6) * Math.PI * 2;
       return {
-        radius: 1.8 + Math.random() * 0.4,
+        radius: 1 + Math.random() * 0.4,
         baseAngle: angle,
         speed: 0.3 + Math.random() * 0.2,
         yOffset: (Math.random() - 0.5) * 1.5,

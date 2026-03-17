@@ -73,10 +73,10 @@ export const ProjectDetail: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative w-full aspect-video rounded-[3rem] overflow-hidden bg-cyan-dark shadow-2xl mb-12 border-8 border-white"
+          className="relative w-full aspect-video rounded-[3rem] overflow-hidden bg-cyan-dark shadow-2xl mb-12 border-8 border-white group/hero"
         >
           <div 
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
             style={{ backgroundImage: `url(${project.image})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-cyan-dark/80 via-transparent to-transparent"></div>
@@ -201,45 +201,33 @@ export const ProjectDetail: React.FC = () => {
                 <div className="relative group/scroll">
                    {/* Horizontal Scroll Area */}
                   <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2 snap-x">
-                    {project.details.designModules.map((module, idx) => {
-                      const isMain = idx === 0 && module.image;
-                      const Icon = module.icon === 'code' ? Code2 : 
-                                  module.icon === 'cpu' ? Cpu : 
-                                  module.icon === 'star' ? Star : 
-                                  module.icon === 'trophy' ? Trophy : 
-                                  module.icon === 'play' ? PlayCircle : PenTool;
-
-                      if (isMain) {
-                        return (
-                          <div key={idx} className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
-                            <h3 className="text-2xl font-black text-cyan-dark mb-6">
-                              {language === 'zh' ? module.title : module.enTitle}
-                            </h3>
-                            <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
-                              {language === 'zh' ? module.content : module.enContent}
-                            </p>
-                            {module.image && (
-                              <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
-                                <img src={module.image} alt="Design" className="w-full h-full object-cover" />
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-
-                      return (
-                        <div key={idx} className={`min-w-[280px] md:min-w-[400px] rounded-[3rem] p-8 md:p-10 shadow-xl border-4 snap-center flex flex-col justify-end relative overflow-hidden ${idx % 2 === 1 ? 'bg-cyan-dark border-cyan-main/50 text-white' : 'bg-white border-white text-cyan-dark'}`}>
-                           {idx % 2 === 1 && <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-main/20 blur-3xl rounded-full translate-x-10 -translate-y-10" />}
-                           <Icon className={`w-12 h-12 mb-6 ${idx % 2 === 1 ? 'text-cyan-main' : 'text-yellow-main'}`} fill={module.icon === 'star' ? 'currentColor' : 'none'} />
-                           <h4 className="text-xl font-black mb-2 uppercase tracking-tight">
-                             {language === 'zh' ? module.title : module.enTitle}
-                           </h4>
-                           <p className={`${idx % 2 === 1 ? 'text-white/60' : 'text-cyan-dark/60'} text-sm font-bold leading-relaxed`}>
+                    {project.details.designModules.map((module, idx) => (
+                      <motion.div 
+                        key={idx} 
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        className={`min-w-[320px] md:min-w-[550px] rounded-[2.5rem] p-8 md:p-10 shadow-sm border-2 snap-center flex flex-col justify-between overflow-hidden cursor-default transition-all ${idx % 2 === 0 ? 'bg-white border-white' : 'bg-cyan-dark border-cyan-main/10 text-white'}`}
+                      >
+                         <div>
+                           <div className="flex items-center gap-4 mb-6">
+                             <div className={`p-3 rounded-2xl ${idx % 2 === 0 ? 'bg-cyan-main/10 text-cyan-main' : 'bg-cyan-main/20 text-cyan-main'}`}>
+                               <IconForType type={module.icon} />
+                             </div>
+                             <h4 className="text-xl font-black uppercase tracking-tight">
+                               {language === 'zh' ? module.title : module.enTitle}
+                             </h4>
+                           </div>
+                           <p className={`${idx % 2 === 0 ? 'text-cyan-dark/70' : 'text-white/60'} text-sm font-bold leading-relaxed mb-8`}>
                               {language === 'zh' ? module.content : module.enContent}
                            </p>
-                        </div>
-                      );
-                    })}
+                         </div>
+
+                         {module.image && (
+                            <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/10 mt-auto">
+                              <img src={module.image} alt={module.title} className="w-full h-full object-cover" />
+                            </div>
+                         )}
+                      </motion.div>
+                    ))}
                   </div>
                   
                   {/* Visual Indicator */}
@@ -264,47 +252,33 @@ export const ProjectDetail: React.FC = () => {
                 
                 <div className="relative group/scroll-tech">
                   <div className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 -mx-2 snap-x">
-                    {project.details.techModules.map((module, idx) => {
-                      const isMain = idx === 0 && module.image;
-                      const Icon = module.icon === 'code' ? Code2 : 
-                                  module.icon === 'cpu' ? Cpu : 
-                                  module.icon === 'star' ? Star : 
-                                  module.icon === 'trophy' ? Trophy : 
-                                  module.icon === 'play' ? PlayCircle : PenTool;
-
-                      if (isMain) {
-                        return (
-                          <div key={idx} className="min-w-[320px] md:min-w-[700px] bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border-2 border-white snap-center">
-                            <h3 className="text-2xl font-black text-cyan-dark mb-6">
-                              {language === 'zh' ? module.title : module.enTitle}
-                            </h3>
-                            <p className="text-cyan-dark/80 font-bold text-base md:text-lg leading-relaxed mb-8 text-justify">
-                              {language === 'zh' ? module.content : module.enContent}
-                            </p>
-                            {module.image && (
-                              <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/20">
-                                <img src={module.image} alt="Tech" className="w-full h-full object-cover" />
-                              </div>
-                            )}
-                          </div>
-                        );
-                      }
-
-                      return (
-                        <div key={idx} className={`min-w-[280px] md:min-w-[400px] rounded-[3rem] p-8 md:p-10 shadow-xl border-4 snap-center flex flex-col justify-end relative overflow-hidden ${idx % 2 === 1 ? 'bg-cyan-dark border-cyan-main/50 text-white' : 'bg-yellow-main border-white text-cyan-dark'}`}>
-                           {idx % 2 === 1 ? (
-                             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
-                           ) : null}
-                           <Icon className={`w-12 h-12 mb-6 ${idx % 2 === 1 ? 'text-cyan-main' : 'text-cyan-dark'}`} fill={module.icon === 'star' ? 'currentColor' : 'none'} />
-                           <h4 className="text-xl font-black mb-2 uppercase tracking-tight">
-                             {language === 'zh' ? module.title : module.enTitle}
-                           </h4>
-                           <p className={`${idx % 2 === 1 ? 'text-white/60' : 'text-cyan-dark/70'} text-sm font-bold leading-relaxed`}>
-                              {language === 'zh' ? module.content : module.enContent}
+                    {project.details.techModules.map((module, idx) => (
+                      <motion.div 
+                        key={idx} 
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        className={`min-w-[320px] md:min-w-[550px] rounded-[2.5rem] p-8 md:p-10 shadow-sm border-2 snap-center flex flex-col justify-between overflow-hidden cursor-default transition-all ${idx % 2 === 0 ? 'bg-white border-white' : 'bg-cyan-dark border-cyan-main/10 text-white'}`}
+                      >
+                         <div>
+                           <div className="flex items-center gap-4 mb-6">
+                             <div className={`p-3 rounded-2xl ${idx % 2 === 0 ? 'bg-cyan-main/10 text-cyan-main' : 'bg-cyan-main/20 text-cyan-main'}`}>
+                               <IconForType type={module.icon} />
+                             </div>
+                             <h4 className="text-xl font-black uppercase tracking-tight">
+                               {language === 'zh' ? module.title : module.enTitle}
+                             </h4>
+                           </div>
+                           <p className={`${idx % 2 === 0 ? 'text-cyan-dark/70' : 'text-white/60'} text-sm font-bold leading-relaxed mb-8`}>
+                             {language === 'zh' ? module.content : module.enContent}
                            </p>
-                        </div>
-                      );
-                    })}
+                         </div>
+
+                         {module.image && (
+                            <div className="w-full aspect-[21/9] rounded-2xl overflow-hidden bg-cyan-dark/5 border-2 border-cyan-light/10 mt-auto">
+                              <img src={module.image} alt={module.title} className="w-full h-full object-cover" />
+                            </div>
+                         )}
+                      </motion.div>
+                    ))}
                   </div>
                   
                   {/* Visual Indicator */}
@@ -392,4 +366,16 @@ export const ProjectDetail: React.FC = () => {
       </div>
     </div>
   );
+};
+
+// Unified Icon Selector
+const IconForType = ({ type }: { type?: string }) => {
+  switch (type) {
+    case 'code': return <Code2 className="w-6 h-6" />;
+    case 'cpu': return <Cpu className="w-6 h-6" />;
+    case 'star': return <Star className="w-6 h-6" fill="currentColor" />;
+    case 'trophy': return <Trophy className="w-6 h-6" />;
+    case 'play': return <PlayCircle className="w-6 h-6" />;
+    default: return <PenTool className="w-6 h-6" />;
+  }
 };

@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <footer id="contact" className="relative py-12 z-10 overflow-hidden bg-white/50 backdrop-blur-sm border-t border-cyan-light/30">
+    <footer id="contact" className="relative py-8 z-10 overflow-hidden bg-white/50 backdrop-blur-sm border-t border-cyan-light/30">
       <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
 
         {/* Left Section: Branding & Contact Info Combined */}

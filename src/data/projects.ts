@@ -57,47 +57,47 @@ export const projects: Project[] = [
       ],
       enFeatures: [
         "Diverse terrain like swamps and quicksand, requiring stamina and step management",
-        "Collect folklore items scaterred across the world to unlock extra story levels",
+        "Collect folklore items scattered across the world to unlock extra story levels",
         "Enemy line-of-sight detection and countdown escape sequence"
       ],
       designModules: [
         {
-          title: "玩法机制设计",
-          enTitle: "Gameplay Mechanic Design",
-          content: "地形交互包含沼泽、流沙等多样化地形，玩家需要管理步数与体力防止角色下陷。敌人系统为敌人拥有视线检测，玩家需在倒计时结束前逃离视线范围。",
-          enContent: "Terrain interactions include swamps and quicksand where players manage stamina to prevent sinking. Exploration involves collecting folklore items. Enemies use line-of-sight detection requiring players to escape before a countdown ends.",
+          title: "地形交互与体力管理",
+          enTitle: "Terrain & Overworld",
+          content: "设计了沼泽、流沙等多样化地形，玩家需精准管理步数与体力。这种“步步为营”的设计不仅增加了探索的厚度，也完美契合了游戏生存的主题。",
+          enContent: "Designed diverse terrains like swamps and quicksand. Players must manage steps and stamina, adding tactical depth to exploration that fits the survival theme.",
           image: "/Work/1/sos_gameplay_1.webp",
           icon: 'star'
         },
         {
-          title: "游戏目标",
-          enTitle: "Game Goal",
-          content: "探索机制涉及收集民俗收藏品解锁额外剧情关卡；",
-          enContent: "Exploration involves collecting folklore items.",
+          title: "民俗叙事与收集系统",
+          enTitle: "Folklore & Collection",
+          content: "通过散落在地图各处的民俗收藏品作为驱动力，引导玩家主动探索。收集特定的物品组合不仅能补全世界观，还能解锁独有的剧情分支关卡。",
+          enContent: "Used folklore items as drivers for exploration. Collecting specific sets not only completes world-building but also unlocks unique narrative branches.",
           icon: 'pen'
         },
         {
-          title: "游戏目标",
-          enTitle: "Game Goal",
-          content: "探索机制涉及收集民俗收藏品解锁额外剧情关卡；",
-          enContent: "Exploration involves collecting folklore items.",
-          icon: 'pen'
+          title: "潜行逃脱与视线检测",
+          enTitle: "Stealth & Escape",
+          content: "敌人拥有动态视线渲染。一旦进入警戒区，玩家必须冷静规划路径在倒计时结束前脱离，营造了极强的紧张感与心跳反馈。",
+          enContent: "Enemies feature dynamic LoS detection. Once alerted, players must plan paths to escape before the countdown, creating intense tension and gameplay feedback.",
+          icon: 'trophy'
         }
       ],
       techModules: [
         {
-          title: "渲染管线与核心系统技术实现",
-          enTitle: "Rendering Pipeline & Core Tech",
-          content: "使用了基于 MK Toon 框架定制的 2.5D 风格化渲染；实现了带路径缓存（Path Cache）优化的 A* 寻路算法，显著提升性能；自研地图编辑器，支持自由绘制、矩形绘制与实时预览。",
-          enContent: "Customized 2.5D stylized rendering based on MK Toon framework. Implemented A* pathfinding algorithm optimized with Path Cache, significantly boosting performance. Developed an in-house map editor supporting freehand drawing, rectangle drawing, and real-time previews.",
+          title: "2.5D 风格化渲染管线",
+          enTitle: "2.5D Stylized Pipeline",
+          content: "基于 MK Toon 框架定制了手绘感材质。通过自研 Shader 处理高度图与实时阴影，使 2D 的细腻感与 3D 的空间感在画面中达到平衡。",
+          enContent: "Customized hand-drawn materials via MK Toon. Used custom Shaders for heightmaps and shadows to balance 2D aesthetics with 3D spatial depth.",
           image: "https://picsum.photos/seed/step-tech/800/400",
           icon: 'cpu'
         },
         {
-          title: "后端与数据持久化",
-          enTitle: "Backend & Persistence",
-          content: "实现了轻量级的 JSON 本地化存储方案，用于保存玩家的收藏品状态与探索进度。同时优化了对象池管理，确保在大规模地图加载时依然保持稳定的帧率。",
-          enContent: "Implemented a lightweight JSON local storage solution for player collection status and exploration progress. Optimized object pooling to ensure stable frame rates during large-scale map loading.",
+          title: "A* 寻路优化与路径缓存",
+          enTitle: "Pathfinding & Cache",
+          content: "针对复杂地形优化了 A* 寻路。引入路径缓存（Path Cache）机制，即便在大量单位同时寻路的情况下也能保持稳定性能。",
+          enContent: "Optimized A* for complex terrains. Introduced Path Cache to maintain 60+ FPS even with numerous entities performing pathfinding simultaneously.",
           icon: 'code'
         }
       ],
@@ -136,22 +136,36 @@ export const projects: Project[] = [
       ],
       designModules: [
         {
-          title: "光影解谜与关卡设计",
-          enTitle: "Light Puzzle & Level Design",
-          content: "光影解谜：被光照亮的区域会呈现“过去完整”的状态（内层），而未被照亮的区域则是“现在破败”的状态（外层），玩家需在两层之间切换以解决谜题。沙盒关卡：采用互联的沙盒区域设计，支持自由探索、场景交互及快速旅行系统。",
-          enContent: "Illuminated areas reveal a 'complete past' state (inner layer), while unlit areas show a 'ruined present' state (outer layer). Players switch between layers to solve puzzles. The interconnected sandbox level design supports free exploration and fast travel.",
+          title: "双层光影解谜机制",
+          enTitle: "Dual-Layer Light Logic",
+          content: "创新的“光照即真相”机制：被照亮区域呈现“过去完整”状态，阴影中则是“现在破败”状态。玩家需寻找光源，在两个时空层级中拆解谜题。",
+          enContent: "Innovative mechanism: Lit areas show the 'intact past' while shadows hide the 'ruined present.' Players must find light sources to bridge these two timelines.",
           image: "https://picsum.photos/seed/list-design/800/400",
+          icon: 'star'
+        },
+        {
+          title: "互联沙盒关卡设计",
+          enTitle: "Sandbox Exploration",
+          content: "摒弃了传统的线性关卡，采用了区域互联的沙盒模式。支持自由探索、场景深度交互及配套的地图快速旅行系统，大幅提升了叙事沉浸感。",
+          enContent: "Shifted from linear levels to Interconnected regions. Supports free exploration, deep scene interaction, and fast travel, boosting narrative immersion.",
           icon: 'pen'
         }
       ],
       techModules: [
         {
-          title: "实时光影计算与交互系统集成",
-          enTitle: "Real-time Lighting & Interaction System",
-          enContent: "Real-time lighting system: Gathered light source and occluder data via C# and passed to custom Shaders, achieving pixel-level transparency calculations for 'visible only when lit'. Interaction architecture: All objects inherit from a common base class supporting state saving, visual hints, and complex item consumption validation.",
-          content: "实时光影系统：通过 C# 收集光源与遮光物数据并传递给自定义 Shader，实现“仅光照可见”的像素级透明度计算。交互架构：所有交互对象均继承自通用基类，支持状态保存、视觉提示及复杂的物品消耗验证。",
+          title: "实时光影像素计算",
+          enTitle: "Pixel-Perfect Lighting",
+          content: "通过 C# 收集光源与遮光物数据并传递给自定义 Shader。实现了基于光线遮挡的高效像素级透明度反向计算，攻克了“仅光照可见”的视觉难题。",
+          enContent: "Collected light & occluder data in C# passed to custom Shaders. Achieved pixel-level transparency logic for the 'lit-only' effect via reversed ray-logic.",
           image: "https://picsum.photos/seed/list-tech/800/400",
           icon: 'code'
+        },
+        {
+          title: "通用交互框架架构",
+          enTitle: "Universal Interaction",
+          content: "构建了高度可扩展的交互基类。支持物品状态保存、视觉提示及复杂的物品消耗验证，不仅减少了冗余代码，也确保了玩家在长程解谜中的反馈一致性。",
+          enContent: "Built a scalable interaction base class. Supports state persistence, visual hints, and complex item validation, ensuring logical consistency across gameplay.",
+          icon: 'cpu'
         }
       ],
       gallery: [
@@ -201,7 +215,7 @@ export const projects: Project[] = [
       ],
       techModules: [
         {
-          title: "Shader编写与视差滚动系统",
+          title: "Shader编写与视察滚动系统",
           enTitle: "Shader Programming & Parallax System",
           content: "设计和绘制了 11 种基于现实或原创功能的可爱蘑菇资产；实现了多层视差滚动背景与动态天气系统，渲染了治愈清新的视觉氛围。",
           enContent: "Designed and drew 11 cute mushroom assets based on real/original functions. Implemented a multi-layer parallax scrolling background and dynamic weather system, rendering a healing and fresh visual atmosphere.",
@@ -254,7 +268,7 @@ export const projects: Project[] = [
         {
           title: "非线性对象生成与UI性能优化",
           enTitle: "Non-linear Spawning & UI Optimization",
-          content: "非线性生成系统：票据生成策略会根据游戏时间动态调整，模拟人流高峰期的自然感。性能优化：UI 渲染采用了对象池模式，避免频繁实例化造成的卡顿. 自定义编辑器：为关卡设计师开发了自定义 Inspector 工具，可快速调整参数。",
+          content: "非线性生成系统：票据生成策略会根据游戏时间动态调整，模拟人流高峰期的自然感。性能优化：UI 渲染采用了对象池模式，避免频繁实例化造成的卡顿。自定义编辑器：为关卡设计师开发了自定义 Inspector 工具，可快速调整参数。",
           enContent: "Non-linear spawning system dynamically adjusts ticket generation strategies based on in-game time to simulate rush hour crowds naturally. Performance optimization featured an Object Pool pattern for UI rendering. Created a custom Inspector tool for level designers.",
           icon: 'code'
         }
@@ -281,21 +295,35 @@ export const projects: Project[] = [
       enAbout: "This encompasses various projects I contributed to, as well as several smaller independent games. Notable titles include 'Family Defense' (card game about internet debates, CUSGO prelims, Art Design); 'Dream Agency' (puzzle strategy, won G-bits University Dev Challenge 'Best Art', Programming/Art/Level Design); and several solo doujin games like 'Minute Through Dimensions' (Programming/Art/Music).",
       features: [
         "《家人保卫战》：CUSGA 初赛入围者",
-        "《梦格事务所》：吉比特高校“最佳美术奖”",
+        "《梦境事务所》：吉比特高校“最佳美术奖”",
         "《Minute Through Dimensions》：个人全栈作品"
       ],
       enFeatures: [
-        "'Family Defense': CUSGO prelims project",
+        "'Family Defense': CUSGA prelims project",
         "'Dream Agency': G-bits University 'Best Art' award",
         "'Minute Through Dimensions': Solo full-stack project"
       ],
       designModules: [
         {
-          title: "多方位设计与打磨",
-          enTitle: "Multi-faceted Design & Polish",
-          content: "在《家人保卫战》中负责风格化美术构建；在《梦境事务所》中深度结合 dream 概念与策略解谜，设计了精巧的关卡；而个人同人游戏则锻炼了从策划到整体视觉音效统筹的全要素能力。",
-          enContent: "In 'Family Defense', I handled stylized art construction; in 'Dream Agency', I deeply integrated dream concepts with puzzle strategy. Solo projects trained my full-pipeline abilities from design to overall composition.",
+          title: "家人保卫战",
+          enTitle: "Family Defense",
+          content: "网络辩论题材的卡牌对决游戏。入围 2025 CUSGA 初赛。我作为美术负责人，构建了极具张力的卡通渲染风格及全套 UI 交互框架，旨在通过视觉语言传递辩论的激烈感。",
+          enContent: "A card battle game themed around internet debates. 2025 CUSGA Preliminaries Finalist. As the Art Lead, I developed a high-energy cartoon-styled visual language and full UI framework to convey the intensity of debates.",
+          icon: 'star'
+        },
+        {
+          title: "梦境事务所",
+          enTitle: "Dream Agency",
+          content: "梦境主题的策略解谜游戏，荣获吉比特高校开发挑战赛“最佳美术奖”。我统筹了程序底座、场景原画与关卡机制，通过创新的解谜逻辑模拟了梦境的非线性叙事。",
+          enContent: "A dream-themed strategy puzzle game, winner of the G-bits University Dev Challenge 'Best Art' award. I orchestrated the programming base, scene art, and level mechanics, simulating non-linear dream logic.",
           icon: 'pen'
+        },
+        {
+          title: "Minute Through Dimensions",
+          enTitle: "Minute Through Dimensions",
+          content: "个人独立完成的全栈作品。涵盖了从 C# 玩法逻辑架构到 Spine 动画制作、BGM 编曲及音效设计。这是一个探索跨维度互动的快节奏关卡作品，展示了全流程统筹能力。",
+          enContent: "A solo full-stack project covering everything from C# architecture to Spine animation, BGM composition, and sound design. It features fast-paced cross-dimensional interaction, showcasing full-pipeline integration.",
+          icon: 'play'
         }
       ],
       techModules: [
