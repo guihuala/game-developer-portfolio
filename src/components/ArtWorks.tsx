@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { siteContent } from '../content/siteContent';
 
 interface ArtItem {
   id: number;
@@ -9,16 +10,7 @@ interface ArtItem {
 }
 
 // 您现在只需添加图片路径，系统会自动根据高度适配宽度，确保图片不被裁切
-const artworks: ArtItem[] = [
-  { id: 1, image: "/art/鹤喰.webp" },
-  { id: 2, image: "/art/bg.webp" },
-  { id: 3, image: "/art/Image_658224922644321.webp" },
-  { id: 4, image: "/art/156828.webp" },
-  { id: 5, image: "/art/158419.webp" },
-  { id: 6, image: "/art/honakana.webp" },
-  { id: 7, image: "/art/1.webp" },
-  { id: 8, image: "/art/2.webp" },
-];
+const artworks: ArtItem[] = siteContent.artGallery.images.map((image, index) => ({ id: index + 1, image }));
 
 export const ArtWorks: React.FC = () => {
   const { t } = useLanguage();
@@ -41,7 +33,7 @@ export const ArtWorks: React.FC = () => {
       <div className="absolute top-6 lg:top-8 left-6 lg:left-10 z-50 pointer-events-none">
         <h3 className="text-lg lg:text-xl font-black text-cyan-dark uppercase tracking-tighter flex items-center gap-3">
           <span className="w-8 lg:w-10 h-1 bg-cyan-main rounded-full" />
-          {t("图库展示", "ART GALLERY")}
+          {t(siteContent.artGallery.title.zh, siteContent.artGallery.title.en)}
         </h3>
       </div>
 

@@ -5,7 +5,8 @@ import { Star, Plus } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 
-import { projects, Project } from '../data/projects';
+import { projects, Project } from '../content/projects';
+import { siteContent } from '../content/siteContent';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -98,7 +99,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           
           <div className="mt-auto flex items-center gap-2 text-sm font-black font-sans uppercase tracking-wider group-hover:underline" style={{ color: project.color }}>
             <Plus className="w-4 h-4" />
-            {t("查看详情", "Details View")}
+            {siteContent.portfolio.detailsButton[language]}
           </div>
         </div>
         
@@ -116,13 +117,15 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 };
 
 export const Portfolio: React.FC = () => {
-  const { t } = useLanguage();
-  const [selectedTag, setSelectedTag] = useState<string>(t('全部', 'All'));
+  const { language } = useLanguage();
+  const content = siteContent.portfolio;
+  const allLabel = content.allFilter[language];
+  const [selectedTag, setSelectedTag] = useState<string>(allLabel);
   const { playHover, playClick } = useSoundEffects();
 
-  const allTags = [t('全部', 'All'), ...Array.from(new Set(projects.flatMap(p => p.tags)))];
+  const allTags = [allLabel, ...Array.from(new Set(projects.flatMap(p => p.tags)))];
 
-  const filteredProjects = selectedTag === t('全部', 'All') 
+  const filteredProjects = selectedTag === allLabel
     ? projects 
     : projects.filter(p => p.tags.includes(selectedTag));
 
@@ -131,13 +134,13 @@ export const Portfolio: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-16 flex flex-col items-center text-center">
           <h2 className="text-4xl md:text-6xl font-black font-sans text-cyan-dark mb-2 uppercase tracking-tighter">
-            {t("项目", "Selected ")}<span className="text-cyan-main">{t("展示", "Works")}</span>
+            {content.titlePrefix[language]}<span className="text-cyan-main">{content.titleHighlight[language]}</span>
           </h2>
-          <p className="text-xl font-black text-cyan-main uppercase tracking-widest mb-6">{t("Selected Works", "Portfolio")}</p>
+          <p className="text-xl font-black text-cyan-main uppercase tracking-widest mb-6">{content.subtitle[language]}</p>
           <div className="w-24 h-1.5 rounded-full bg-cyan-main shadow-sm"></div>
           <div className="mt-6 space-y-1">
             <p className="text-cyan-dark/80 font-sans font-bold text-lg max-w-2xl">
-              {t("已完成的原型和发布的项目。点击卡片查看详情。", "Completed prototypes and shipped titles. Click cards to inspect details.")}
+              {content.description[language]}
             </p>
           </div>
         </div>

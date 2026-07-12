@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { Gamepad2, Swords, GraduationCap, Cpu, Code2, Sparkles, Layers, Search, MapPin, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
+import { siteContent } from '../content/siteContent';
 
 const milestones = [
   {
@@ -299,7 +300,7 @@ export const Timeline: React.FC = () => {
                 className="relative w-full h-full"
               >
                 <img 
-                  src="/桂花泥图标.png" 
+                  src={siteContent.assets.playerIcon}
                   alt="Player" 
                   className="w-full h-full object-contain filter drop-shadow-[0_5px_15px_rgba(255,213,79,0.5)]"
                 />

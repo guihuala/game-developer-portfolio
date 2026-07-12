@@ -29,6 +29,8 @@ export const ParticleBackground: React.FC = () => {
 
     let particles: Particle[] = [];
     let animationFrameId: number;
+    let lastFrameTime = 0;
+    const frameInterval = 1000 / 30;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -70,10 +72,6 @@ export const ParticleBackground: React.FC = () => {
       ctx.globalAlpha = p.opacity;
       ctx.fillStyle = p.color;
       
-      // Soft shadow for a cute, floating look
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = p.color;
-
       ctx.beginPath();
       // Draw a cute, plump petal shape
       ctx.ellipse(0, 0, p.size * 1.5, p.size, 0, 0, Math.PI * 2);
@@ -81,7 +79,11 @@ export const ParticleBackground: React.FC = () => {
       ctx.restore();
     };
 
-    const update = () => {
+    const update = (time = 0) => {
+      animationFrameId = requestAnimationFrame(update);
+      if (document.hidden || time - lastFrameTime < frameInterval) return;
+      lastFrameTime = time;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < particles.length; i++) {
@@ -121,7 +123,6 @@ export const ParticleBackground: React.FC = () => {
         drawPetal(p);
       }
 
-      animationFrameId = requestAnimationFrame(update);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -158,7 +159,7 @@ export const ParticleBackground: React.FC = () => {
     window.addEventListener('click', handleMouseClick);
     
     resize();
-    update();
+    animationFrameId = requestAnimationFrame(update);
 
     return () => {
       window.removeEventListener('resize', resize);

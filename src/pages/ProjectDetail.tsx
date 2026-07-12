@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'motion/react';
 import { ArrowLeft, Star, PlayCircle, ExternalLink, Code2, PenTool, Cpu, Trophy } from 'lucide-react';
-import { projects } from '../data/projects';
+import { projects } from '../content/projects';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { SEO } from '../components/SEO';

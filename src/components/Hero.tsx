@@ -1,22 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play } from 'lucide-react';
-import { Osmanthus3D } from './Osmanthus3D';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { useToast } from '../context/ToastContext';
+import { siteContent } from '../content/siteContent';
+
+const Osmanthus3D = lazy(() => import('./Osmanthus3D').then((module) => ({
+  default: module.Osmanthus3D,
+})));
 
 export const Hero: React.FC = () => {
   const [text, setText] = useState('');
   const [clickCount, setClickCount] = useState(0);
   const [showBubble, setShowBubble] = useState(false);
+  const [show3D, setShow3D] = useState(false);
   const { language, t } = useLanguage();
   const { playHover, playClick, playSuccess } = useSoundEffects();
   const { showToast } = useToast();
 
-  const fullText = language === 'zh' ? "你好，我是桂花拉糕" : "Hello, I'm mokukeki";
+  const content = siteContent.hero;
+  const fullText = content.greeting[language];
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)');
+    const update3DVisibility = () => setShow3D(mediaQuery.matches);
+    update3DVisibility();
+    mediaQuery.addEventListener('change', update3DVisibility);
+    return () => mediaQuery.removeEventListener('change', update3DVisibility);
+  }, []);
 
   useEffect(() => {
     setText(''); // Reset text when language changes
@@ -40,8 +54,8 @@ export const Hero: React.FC = () => {
         setClickCount(0);
         playSuccess();
         showToast(
-          language === 'zh' ? '成就达成！' : 'Achievement!',
-          language === 'zh' ? '你发现了一个喜欢被戳的桂花。' : 'You found a flower that likes to be poked.',
+          content.achievementTitle[language],
+          content.achievementDescription[language],
           'achievement'
         );
       }
@@ -50,11 +64,6 @@ export const Hero: React.FC = () => {
       const timer = setTimeout(() => setShowBubble(false), 3000);
       return () => clearTimeout(timer);
     }
-  };
-
-  const bubbleMessage = {
-    zh: "再戳就要变成拉糕了...",
-    en: "Stop poking... I'll turn into a cake..."
   };
 
   return (
@@ -84,16 +93,13 @@ export const Hero: React.FC = () => {
             <span className="block text-cyan-main text-2xl sm:text-4xl md:text-5xl mb-1">
               {text}<span className="typing-cursor"></span>
             </span>
-            <span className="block text-3xl sm:text-5xl md:text-6xl">{t("热爱游戏设计", "Love Game Design")}</span>
-            <span className="block text-3xl sm:text-5xl md:text-6xl text-yellow-main drop-shadow-sm">{t("与开发", "& Development")}</span>
+            <span className="block text-3xl sm:text-5xl md:text-6xl">{content.titleLine1[language]}</span>
+            <span className="block text-3xl sm:text-5xl md:text-6xl text-yellow-main drop-shadow-sm">{content.titleLine2[language]}</span>
           </h1>
 
           <div className="space-y-2 mb-10">
             <p className="text-base md:text-xl text-cyan-dark/80 max-w-lg font-sans font-bold leading-relaxed">
-              {t(
-                "我希望能够打造有趣的游戏机制和温馨的视觉体验。",
-                "I hope to create engaging game mechanics and cozy visual experiences."
-              )}
+              {content.description[language]}
             </p>
           </div>
 
@@ -107,8 +113,8 @@ export const Hero: React.FC = () => {
             >
               <Play className="w-5 h-5 fill-current" />
               <div className="flex flex-col items-start leading-none">
-                <span>{t("查看项目", "View Projects")}</span>
-                <span className="text-[10px] uppercase opacity-70 mt-1">{t("View Projects", "Portfolio")}</span>
+                <span>{content.projectsButton[language]}</span>
+                <span className="text-[10px] uppercase opacity-70 mt-1">{content.projectsButtonCaption[language]}</span>
               </div>
             </motion.button>
             <motion.button
@@ -119,8 +125,8 @@ export const Hero: React.FC = () => {
               className="px-8 py-4 bg-white/80 border-2 border-cyan-main text-cyan-main font-black font-sans tracking-wider rounded-full shadow-md transition-all flex items-center justify-center gap-2"
             >
               <div className="flex flex-col items-start leading-none">
-                <span>{t("关于我", "About Me")}</span>
-                <span className="text-[10px] uppercase opacity-70 mt-1">{t("About Me", "Profile")}</span>
+                <span>{content.aboutButton[language]}</span>
+                <span className="text-[10px] uppercase opacity-70 mt-1">{content.aboutButtonCaption[language]}</span>
               </div>
             </motion.button>
           </div>
@@ -146,7 +152,11 @@ export const Hero: React.FC = () => {
             onClick={handleModelClick}
             className="w-full h-full cursor-pointer relative pointer-events-auto"
           >
-            <Osmanthus3D />
+            {show3D && (
+              <Suspense fallback={null}>
+                <Osmanthus3D />
+              </Suspense>
+            )}
 
             {/* Speech Bubble */}
             <AnimatePresence>
@@ -159,7 +169,7 @@ export const Hero: React.FC = () => {
                 >
                   <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full border-[15px] border-transparent border-t-yellow-main"></div>
                   <span className="text-cyan-dark font-black text-sm">
-                    {language === 'zh' ? bubbleMessage.zh : bubbleMessage.en}
+                    {content.bubble[language]}
                   </span>
                 </motion.div>
               )}

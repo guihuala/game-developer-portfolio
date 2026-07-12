@@ -47,14 +47,17 @@ const AppContent = () => {
       touchMultiplier: 2,
     });
 
+    let animationFrameId: number;
+
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      animationFrameId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    animationFrameId = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       lenis.destroy();
     };
   }, []);
@@ -85,7 +88,7 @@ const AppContent = () => {
           
           <main className="relative z-20 flex flex-col">
             <AnimatePresence mode="wait">
-              <Routes location={location} key={location.pathname}>
+              <Routes location={location}>
                 <Route path="/" element={<PageTransition><Home /></PageTransition>} />
                 <Route path="/about" element={<PageTransition><About /></PageTransition>} />
                 <Route path="/works" element={<PageTransition><Works /></PageTransition>} />

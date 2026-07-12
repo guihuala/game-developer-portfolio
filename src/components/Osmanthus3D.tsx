@@ -2,9 +2,10 @@ import React, { useRef, Suspense, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Environment, ContactShadows, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import { siteContent } from '../content/siteContent';
 
 const Model = () => {
-  const { scene } = useGLTF('/小桂花.glb');
+  const { scene } = useGLTF(siteContent.assets.flowerModel);
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -82,12 +83,16 @@ const FloatingFlowers = () => {
   );
 };
 
-useGLTF.preload('/小桂花.glb');
+useGLTF.preload(siteContent.assets.flowerModel);
 
 export const Osmanthus3D: React.FC = () => {
   return (
     <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
-      <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
+      <Canvas
+        camera={{ position: [0, 0, 4], fov: 50 }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, powerPreference: 'high-performance' }}
+      >
         <Suspense fallback={null}>
           <ambientLight intensity={0.8} />
           <directionalLight position={[10, 10, 5]} intensity={1.0} color="#ffffff" />
@@ -113,7 +118,7 @@ export const Osmanthus3D: React.FC = () => {
             autoRotate={false}
           />
           <Environment preset="city" />
-          <ContactShadows position={[0, -1.5, 0]} opacity={0.3} scale={10} blur={2} far={4} color="#00BCD4" />
+          <ContactShadows frames={1} position={[0, -1.5, 0]} opacity={0.3} scale={10} blur={2} far={4} color="#00BCD4" />
         </Suspense>
       </Canvas>
     </div>
