@@ -5,6 +5,6 @@ export const CONTACT_INFO = {
   twitter: "https://twitter.com/mokukeki",
   bilibili: "https://space.bilibili.com/39258274",
   itch: "https://guihuala.itch.io/",
-  blog: "https://ghlg.fun",
+  blog: "https://guihuala.github.io/",
   name: "桂花拉糕"
 };

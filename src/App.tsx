@@ -98,7 +98,7 @@ const AppContent = () => {
             </AnimatePresence>
           </main>
           
-          <Footer />
+          {location.pathname === '/' && <Footer />}
 
           {/* Late Night Overlay Glow */}
           <AnimatePresence>

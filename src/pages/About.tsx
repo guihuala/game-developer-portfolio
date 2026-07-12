@@ -49,20 +49,20 @@ export const About: React.FC = () => {
   };
 
   return (
-    <div id="about-me" className="pt-24 min-h-screen flex flex-col">
+    <div id="about-me" className="pt-20 lg:pt-24 min-h-screen lg:h-screen lg:overflow-hidden">
       <SEO 
         title="About Me" 
         description="Learn more about Mokukeki's background as a game developer, design philosophy, and technical skill set."
       />
-      <div className="max-w-6xl mx-auto w-full px-6 flex-1 flex flex-col">
+      <div className="max-w-7xl mx-auto w-full h-full px-4 md:px-6 pb-4 lg:pb-8 flex flex-col lg:flex-row gap-4 lg:gap-10">
         
         {/* Header & Tabs */}
-        <div className="flex flex-col items-center mb-8">
-          <h2 className="text-4xl md:text-5xl font-black font-sans text-cyan-dark mb-8 uppercase tracking-tighter">
+        <aside className="flex lg:w-52 xl:w-60 lg:shrink-0 flex-col items-center lg:items-start lg:pt-8">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black font-sans text-cyan-dark mb-4 lg:mb-10 uppercase tracking-tighter">
             {t("关于", "ABOUT")}<span className="text-cyan-main">{t("我", "ME")}</span>
           </h2>
           
-          <div className="grid grid-cols-4 md:flex md:flex-row gap-2 mb-6 p-2 bg-white/50 backdrop-blur-md rounded-[2.5rem] border-2 border-cyan-light/30 shadow-inner max-w-fit mx-auto overflow-x-auto no-scrollbar justify-between">
+          <nav className="grid grid-cols-2 md:grid-cols-4 lg:flex lg:flex-col gap-2 w-full max-w-2xl lg:max-w-none" aria-label={t('关于我分类', 'About sections')}>
             {tabs.map((tab, index) => {
               const isActive = activeTab === tab.id;
               const Icon = tab.icon;
@@ -70,32 +70,29 @@ export const About: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(index, tab.id)}
-                  className={`relative flex-1 flex flex-col items-center justify-center py-4 px-6 rounded-full transition-colors duration-300 min-w-[120px] ${
+                  className={`relative flex items-center lg:justify-start justify-center py-3 px-4 rounded-xl transition-colors duration-300 ${
                     isActive ? "text-cyan-dark" : "text-cyan-dark/50 hover:text-cyan-main"
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activeTabBubble"
-                      className="absolute inset-0 bg-white shadow-md rounded-full border-2 border-cyan-light"
+                      className="absolute inset-0 bg-cyan-light rounded-xl"
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                  <span className="relative z-10 flex items-center gap-2 font-black text-lg">
+                  <span className="relative z-10 flex items-center gap-3 font-black text-sm md:text-base">
                     <Icon className="w-5 h-5" />
                     {language === 'zh' ? tab.label : tab.enLabel}
-                  </span>
-                  <span className="relative z-10 text-[10px] uppercase font-bold tracking-widest opacity-60 mt-1">
-                    {language === 'zh' ? tab.enLabel : tab.label}
                   </span>
                 </button>
               );
             })}
-          </div>
-        </div>
+          </nav>
+        </aside>
 
         {/* Content Area */}
-        <div className="relative w-full flex-1 min-h-[300px] lg:min-h-[400px] rounded-[2rem] lg:rounded-[3rem] bg-white/30 backdrop-blur-sm border-2 border-white shadow-xl flex flex-col mb-4 overflow-hidden">
+        <main className="relative w-full flex-1 min-h-[520px] lg:min-h-0 lg:h-full flex flex-col overflow-hidden">
           <AnimatePresence custom={direction} mode="popLayout" initial={false}>
             <motion.div
               key={activeTab}
@@ -110,12 +107,12 @@ export const About: React.FC = () => {
               }}
               className="w-full h-full flex flex-col items-center justify-center"
             >
-              <div className="w-full p-4 md:p-6 lg:p-10 overflow-y-auto max-h-full">
+              <div className="w-full h-full p-2 md:p-4 overflow-hidden">
                 <ActiveComponent />
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
+        </main>
 
       </div>
     </div>

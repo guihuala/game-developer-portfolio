@@ -23,7 +23,7 @@ export const ArtWorks: React.FC = () => {
   const row2 = [...row2Items, ...row2Items, ...row2Items];
 
   return (
-    <div className="w-full min-h-[500px] lg:h-[750px] relative bg-cyan-dark/[0.03] rounded-[2rem] lg:rounded-[3rem] border-4 border-cyan-main/10 shadow-inner overflow-hidden flex flex-col justify-center gap-6 lg:gap-12 py-12 lg:py-16">
+    <div className="w-full h-full min-h-[500px] relative bg-cyan-dark/[0.03] rounded-2xl border border-cyan-main/10 overflow-hidden flex flex-col justify-center gap-5 lg:gap-8 py-10 lg:py-12">
       
       {/* Dynamic Background */}
       <div className="absolute inset-0 pointer-events-none" 
@@ -38,7 +38,7 @@ export const ArtWorks: React.FC = () => {
       </div>
 
       {/* Row 1: Leftward */}
-      <div className="flex items-center h-40 lg:h-64">
+      <div className="flex items-center h-36 lg:h-[32%]">
         <motion.div 
           className="flex gap-6 lg:gap-10 px-6 lg:px-10 items-center h-full"
           animate={{ x: ["0%", "-33.333%"] }}
@@ -66,7 +66,7 @@ export const ArtWorks: React.FC = () => {
       </div>
 
       {/* Row 2: Rightward */}
-      <div className="flex items-center h-40 lg:h-64">
+      <div className="flex items-center h-36 lg:h-[32%]">
         <motion.div 
           className="flex gap-6 lg:gap-10 px-6 lg:px-10 items-center h-full"
           animate={{ x: ["-33.333%", "0%"] }}

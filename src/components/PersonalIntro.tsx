@@ -51,7 +51,7 @@ export const PersonalIntro: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-[600px] flex flex-col items-center justify-start pt-12 lg:pt-20 p-4 relative overflow-hidden">
+    <div className="w-full h-full min-h-[500px] flex flex-col items-center justify-start p-2 md:p-4 relative overflow-hidden">
       {/* Background Bottom Patterns (底纹) */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
         style={{ 
@@ -77,14 +77,14 @@ export const PersonalIntro: React.FC = () => {
         </div>
         
         {/* Character Portrait Layer */}
-        <div className="flex-1 w-full flex items-center justify-center relative min-h-[400px]">
+        <div className="flex-1 w-full flex items-center justify-center relative min-h-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentNodeId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[450px] md:h-[450px] lg:w-[650px] lg:h-[650px] -mb-8 sm:-mb-16 lg:-mb-24"
+              className="relative w-64 h-64 md:w-[360px] md:h-[360px] lg:w-[430px] lg:h-[430px] -mb-8 md:-mb-12"
             >
               <img 
                 src={siteContent.assets.avatar}
@@ -97,7 +97,7 @@ export const PersonalIntro: React.FC = () => {
 
         {/* Floating Choices - Flat Style & Centered */}
         {!isTyping && currentNode.choices && (
-          <div className="absolute inset-0 flex flex-col items-end justify-center gap-3 z-40 pointer-events-none pb-32 sm:pb-40 pr-6 sm:pr-10 lg:pr-8">
+          <div className="absolute inset-0 flex flex-col items-end justify-center gap-2 z-40 pointer-events-none pb-24 pr-2 md:pr-8">
             <AnimatePresence>
               {currentNode.choices.map((choice, i) => (
                 <motion.button
@@ -118,11 +118,11 @@ export const PersonalIntro: React.FC = () => {
         )}
 
         {/* AVG Dialogue Box - More Impactful Scale */}
-        <div className="w-full pb-6 lg:pb-10 relative z-30 max-w-5xl -mt-16 sm:-mt-24 lg:-mt-40">
+        <div className="w-full pb-2 relative z-30 max-w-4xl -mt-12 md:-mt-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full bg-white rounded-3xl border-2 border-cyan-main p-6 sm:p-8 lg:p-10 flex flex-col gap-1 shadow-2xl relative"
+            className="w-full bg-white rounded-2xl border-2 border-cyan-main p-5 md:p-6 flex flex-col gap-1 shadow-sm relative"
           >
             {/* Name Box */}
             <div className="absolute -top-3.5 left-8 px-4 py-1 bg-cyan-dark rounded-lg border-2 border-cyan-main shadow-md">

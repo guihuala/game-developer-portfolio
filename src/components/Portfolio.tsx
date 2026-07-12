@@ -56,7 +56,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     >
       {/* Card Body */}
       <div 
-        className="absolute inset-0 rounded-[2rem] overflow-hidden bg-white shadow-xl transition-all duration-300 border-4 border-white group-hover:shadow-2xl flex flex-col"
+        className="absolute inset-0 rounded-[2rem] overflow-hidden bg-white border-4 border-white flex flex-col"
         style={{ transform: "translateZ(20px)" }}
       >
         {/* Image Top Half */}
@@ -123,47 +123,43 @@ export const Portfolio: React.FC = () => {
   const [selectedTag, setSelectedTag] = useState<string>(allLabel);
   const { playHover, playClick } = useSoundEffects();
 
-  const allTags = [allLabel, ...Array.from(new Set(projects.flatMap(p => p.tags)))];
+  const usefulTags = ['Unity', 'C#', 'Art'];
+  const allTags = [allLabel, ...usefulTags];
 
   const filteredProjects = selectedTag === allLabel
     ? projects 
     : projects.filter(p => p.tags.includes(selectedTag));
 
   return (
-    <section id="quests" className="relative py-32 z-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-16 flex flex-col items-center text-center">
-          <h2 className="text-4xl md:text-6xl font-black font-sans text-cyan-dark mb-2 uppercase tracking-tighter">
+    <section id="quests" className="relative h-full z-10">
+      <div className="max-w-7xl mx-auto h-full px-4 md:px-6 pb-4 lg:pb-8 flex flex-col lg:flex-row gap-5 lg:gap-10">
+        <aside className="lg:w-60 xl:w-64 lg:shrink-0 lg:pt-8">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black font-sans text-cyan-dark mb-2 uppercase tracking-tighter">
             {content.titlePrefix[language]}<span className="text-cyan-main">{content.titleHighlight[language]}</span>
           </h2>
-          <p className="text-xl font-black text-cyan-main uppercase tracking-widest mb-6">{content.subtitle[language]}</p>
-          <div className="w-24 h-1.5 rounded-full bg-cyan-main shadow-sm"></div>
-          <div className="mt-6 space-y-1">
-            <p className="text-cyan-dark/80 font-sans font-bold text-lg max-w-2xl">
-              {content.description[language]}
-            </p>
-          </div>
-        </div>
-
-        {/* Filter Tags */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          <div className="flex lg:flex-col flex-wrap gap-2 mt-5 lg:mt-8">
           {allTags.map(tag => (
             <button
               key={tag}
               onClick={() => { playClick(); setSelectedTag(tag); }}
               onMouseEnter={playHover}
-              className={`px-5 py-2 rounded-full font-sans font-bold text-sm transition-all duration-300 ${
+              className={`px-4 py-2 rounded-lg font-sans font-bold text-sm text-left transition-colors duration-200 ${
                 selectedTag === tag 
-                  ? 'bg-cyan-main text-white shadow-md shadow-cyan-main/30' 
-                  : 'bg-white text-cyan-dark/70 hover:bg-cyan-light hover:text-cyan-main shadow-sm'
+                  ? 'bg-cyan-light text-cyan-dark' 
+                  : 'text-cyan-dark/55 hover:text-cyan-dark'
               }`}
             >
               {tag}
             </button>
           ))}
-        </div>
+          </div>
+        </aside>
 
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 perspective-1000">
+        <motion.div
+          layout
+          data-lenis-prevent
+          className="flex-1 min-h-0 h-full overflow-y-auto overscroll-contain lg:pr-3 pb-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 content-start perspective-1000"
+        >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, i) => (
               <motion.div

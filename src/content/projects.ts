@@ -49,7 +49,7 @@ export const projects: Project[] = [
     enDesc: "Terrain exploration game with unique interaction logic.",
     tags: ["Unity", "Blender", "Photoshop", "Spine", "C#"],
     details: {
-      about: "这个项目最早是参加 GameJam 时做的 Demo，后来又花了大约三个月扩展成完整版。算是自己又爱又恨的一个项目，大部分内容都由我完成。我担任主制作人和主程序，负责核心玩法、交互逻辑、部分美术资产、场景渲染，也参与了世界观和关卡机制的设计。",
+      about: "这个项目最早是参加 GameJam 时做的 Demo，后来又花了大约三个月扩展成完整版。我担任制作人和主程序，负责核心玩法、交互逻辑、部分美术资产、场景渲染，也参与了世界观和关卡机制的设计。",
       enAbout: "This project originated from a GameJam event and was later expanded into a full product. Designed from scratch, it features unique gameplay mechanics and art style. I served as the lead producer, responsible for core programming, interaction logic, parts of art creation, scene rendering, world-building, and level mechanism design.",
       features: [
         "包含沼泽、流沙等多样化地形，需要管理步数与体力",
@@ -106,7 +106,9 @@ export const projects: Project[] = [
         "https://img.itch.zone/aW1hZ2UvMzU2NzQxNy8yMTIzOTI0NS5qcGc=/original/FNIrOP.jpg",
         "https://img.itch.zone/aW1hZ2UvMzU2NzQxNy8yMTIzOTI0Ni5qcGc=/original/ZqC2K4.jpg",
         "https://img.itch.zone/aW1hZ2UvMzU2NzQxNy8yMTIzOTI0OC5qcGc=/original/ZmvoDr.jpg"
-      ]
+      ],
+      honors: ["莉莉丝高校开发大赛入围","2025萌芽gamejam最佳视听"],
+      enHonors: ["Lilith University Dev Award Finalist","2025 UGOA Best Audio-Visual"],
     },
     trailerUrl: "https://www.bilibili.com/video/BV18wE2zVE7z/?spm_id_from=333.1387.favlist.content.click&vd_source=b9c1f0d495c34533b22289bd32c99a18",
     liveUrl: "https://guihuala.itch.io/step-or-sink2"
@@ -123,8 +125,8 @@ export const projects: Project[] = [
     enDesc: "Narrative puzzle game featuring light and shadow interaction.",
     tags: ["Unity", "Photoshop", "C#", "HLSL"],
     details: {
-      about: "《遗愿清单》是一款 2D 横版叙事解谜游戏，目前的 Demo 包含 5 个章节。玩家扮演摄影师 Canis，在 Oryon 去世一年后出发完成她留下的遗愿清单。我主要负责核心玩法程序、交互系统、部分美术设计，以及团队进度协调。",
-      enAbout: "A narrative puzzle game centered around 'light and shadow interaction.' The demo version encompasses 5 chapters and received widespread acclaim. I was responsible for core programming, interactive systems, partial art design, and team coordination. Photographer Canis embarks on a journey to fulfill her partner Oryon's last bucket list a year after she passed away from illness.",
+      about: "《遗愿清单》是一款 2D 横版叙事解谜游戏，目前的 Demo 包含 8 个章节。我担任制作人，负责的部分有系统设计、核心玩法程序、部分美术设计，以及团队进度协调。玩家扮演摄影师 Canis，在 Oryon 去世一年后出发完成她留下的遗愿清单。",
+      enAbout: "The Bucket List is a 2D side-scrolling narrative puzzle game. The current demo includes 8 chapters. I served as the lead producer, responsible for system design, core gameplay programming, some art design, and team coordination. Players take on the role of photographer Canis, embarking on a journey to fulfill Oryon's bucket list one year after her passing.",
       features: [
         "光影交互系统",
         "互联的区域探秘",
@@ -175,9 +177,10 @@ export const projects: Project[] = [
         "https://picsum.photos/seed/list3/800/600",
         "https://picsum.photos/seed/list4/800/600"
       ],
-      honors: ["2026开拓芯双赛道入围", "2026CUSGA最佳剧情入围", "2026mini-game入围"],
-      enHonors: ["Demo version highly acclaimed by players", "2026CUSGA Finalist"]
+      honors: ["2026开拓芯双赛道入围", "2026CUSGA最佳剧情入围", "2026mini-game入围", "2025CUSGA初赛入围入围"],
+      enHonors: ["2026 CoreBlazer Double Track Finalist", "2026 CUSGA Best Narrative Finalist", "2026 Mini-Game Finalist"]
     },
+    trailerUrl: "https://www.bilibili.com/video/BV1didKB7EMn/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=b9c1f0d495c34533b22289bd32c99a18",
     liveUrl: "https://guihuala.itch.io/the-bucket-list-demo"
   },
   {
@@ -192,7 +195,7 @@ export const projects: Project[] = [
     enDesc: "Cozy and healing automated factory simulation game.",
     tags: ["Unity", "Photoshop", "C#", "HLSL"],
     details: {
-      about: "这是一个自己独立开发的工厂模拟游戏。最开始只是突然想到，可以把菌丝管道和自动化流水线放在一起，于是就做了出来。玩法、程序和美术都由我完成，整体规模不大，主要用来验证这套想法能不能成立。",
+      about: "这是一个自己独立开发的工厂模拟游戏。最开始只是突然想到，可以把菌丝管道和自动化流水线放在一起，于是就做了出来。玩法、程序和美术都由我完成。",
       enAbout: "An automated simulation game combining a love for mushrooms with factory gameplay, emphasizing a relaxing and creative experience. Independently responsible for gameplay design, art design, and all programming.",
       features: [
         "培育与利用不同功能的蘑菇自动化加工",
@@ -244,7 +247,7 @@ export const projects: Project[] = [
     enDesc: "Play as a ticket inspector handling forged tickets in a time-limited challenge.",
     tags: ["Unity", "Photoshop", "C#"],
     details: {
-      about: "这是参加 Ludum Dare 58 时在 72 小时内完成的游戏，主题是“收集者”。玩家要当电影院检票员，在限定时间里判断电影票是真是假。我主要负责程序、动画、音效接入和 UX 设计。",
+      about: "这是参加 Ludum Dare 58 时在 72 小时内完成的游戏，主题是“收集者”。玩家要当电影院检票员，在限定时间里判断电影票是真是假。我主要负责程序、动画、音效接入和UX设计。",
       enAbout: "Developed for Ludum Dare 58 over 72 hours, themed 'Collector'. I was primarily responsible for programming (engine work, animation, audio) and UX design.",
       features: [
         "检定电影名、放映日期等细节查验真伪",
@@ -277,78 +280,125 @@ export const projects: Project[] = [
       gallery: [
         "https://picsum.photos/seed/ticket1/800/600",
         "https://picsum.photos/seed/ticket2/800/600"
-      ]
+      ],
+      honors: ["LD58综合排名前2%","2025中国大学生游戏开发大赛金辰奖主机游戏赛道银奖", "2025中国大学生游戏开发大赛金辰奖UI设计赛道铜奖"],
+      enHonors: ["LD58 Overall Top 2%","2025 CUSGA Golden Morning Award Console Game Track Second Place", "2025 CUSGA Golden Morning Award UI Design Track Third Place"]
     }
   },
   {
     id: 5,
-    title: "其他作品",
-    enTitle: "Other Projects",
-    type: "综合设计",
-    enType: "Misc Games",
-    image: "https://picsum.photos/seed/other-games/800/600",
+    title: "家人保卫战",
+    enTitle: "Family Defense",
+    type: "卡牌对战",
+    enType: "Card Battle",
+    image: "https://picsum.photos/seed/family-defense/800/600",
     color: "#00BCD4",
-    desc: "参与制作的多个项目及独立开发的小品级游戏集锦。",
-    enDesc: "Collection of various creative projects contributed to or developed independently.",
-    tags: ["Game Design", "Art", "Programming"],
+    desc: "以网络辩论为题材的卡牌对战游戏。",
+    enDesc: "A card battle game themed around online debates.",
+    tags: ["Unity", "Art", "UI"],
     details: {
-      about: "这里放的是一些规模比较小，或者我只负责了其中一部分的项目。《家人保卫战》里我主要做美术；《梦境事务所》里负责程序、美术和关卡设计；另外还有几款自己独立完成的同人小游戏，包括《Minute Through Dimensions》。",
-      enAbout: "This encompasses various projects I contributed to, as well as several smaller independent games. Notable titles include 'Family Defense' (card game about internet debates, CUSGO prelims, Art Design); 'Dream Agency' (puzzle strategy, won G-bits University Dev Challenge 'Best Art', Programming/Art/Level Design); and several solo doujin games like 'Minute Through Dimensions' (Programming/Art/Music).",
-      features: [
-        "《家人保卫战》：CUSGA 初赛入围者",
-        "《梦境事务所》：吉比特高校“最佳美术奖”",
-        "《Minute Through Dimensions》：个人全栈作品"
-      ],
-      enFeatures: [
-        "'Family Defense': CUSGA prelims project",
-        "'Dream Agency': G-bits University 'Best Art' award",
-        "'Minute Through Dimensions': Solo full-stack project"
-      ],
+      about: "这个项目最早来自一次 GGJ，后来扩展成了参加 CUSGA 的版本。我是后期加入团队的美术，主要负责角色、卡牌和 UI 资源。",
+      enAbout: "The project began at a GGJ and was later expanded for CUSGA. I joined the team as an artist and worked mainly on characters, cards, and UI assets.",
+      features: ["网络辩论题材的卡牌玩法", "负责角色、卡牌及 UI 美术", "团队合作项目"],
+      enFeatures: ["Card combat based on online debates", "Character, card, and UI art", "Team project"],
       designModules: [
         {
-          title: "家人保卫战",
-          enTitle: "Family Defense",
+          title: "卡牌与 UI 美术",
+          enTitle: "Card and UI Art",
           content: "这是一款以网络辩论为题材的卡牌游戏，入围了 2025 CUSGA 初赛。我是后来加入团队的美术，主要负责角色和卡牌的卡通风格，以及游戏中的 UI 资源。",
-          enContent: "A card battle game themed around internet debates. 2025 CUSGA Preliminaries Finalist. As the Art Lead, I developed a high-energy cartoon-styled visual language and full UI framework to convey the intensity of debates.",
+          enContent: "I joined the team as an artist and worked on the cartoon style for characters and cards, along with UI assets used throughout the game.",
           icon: 'star'
-        },
+        }
+      ],
+      techModules: [],
+      gallery: ["https://picsum.photos/seed/family-defense-1/800/600"],
+      honors: ["2025 CUSGA 初赛入围"],
+      enHonors: ["2025 CUSGA Preliminary Finalist"]
+    }
+  },
+  {
+    id: 6,
+    title: "梦格事务所",
+    enTitle: "Dream Agency",
+    type: "策略解谜",
+    enType: "Strategy Puzzle",
+    image: "https://picsum.photos/seed/dream-agency/800/600",
+    color: "#FFD54F",
+    desc: "以梦境为主题的策略解谜游戏。",
+    enDesc: "A dream-themed strategy puzzle game.",
+    tags: ["Unity", "C#", "Art"],
+    details: {
+      about: "这是和同学合作参加 2024 吉比特高校开发挑战赛时制作的项目。我负责程序、场景美术和一部分关卡设计。",
+      enAbout: "A team project made for the 2024 G-bits University Game Development Challenge. I worked on programming, environment art, and part of the level design.",
+      features: ["梦境主题策略解谜", "程序与场景美术", "部分关卡设计"],
+      enFeatures: ["Dream-themed strategy puzzles", "Programming and environment art", "Level design"],
+      designModules: [
         {
-          title: "梦境事务所",
-          enTitle: "Dream Agency",
+          title: "场景与关卡",
+          enTitle: "Environment and Levels",
           content: "这是和同学合作参加吉比特高校开发挑战赛时做的策略解谜游戏，最后获得了“最佳美术奖”。我负责程序、场景美术和一部分关卡设计。",
-          enContent: "A dream-themed strategy puzzle game, winner of the G-bits University Dev Challenge 'Best Art' award. I orchestrated the programming base, scene art, and level mechanics, simulating non-linear dream logic.",
+          enContent: "I handled programming, environment art, and part of the level design for this dream-themed puzzle game.",
           icon: 'pen'
-        },
+        }
+      ],
+      techModules: [],
+      gallery: ["https://picsum.photos/seed/dream-agency-1/800/600"],
+      honors: ["2024 吉比特高校开发挑战赛最佳美术奖"],
+      enHonors: ["2024 G-bits University Game Development Challenge — Best Art"]
+    }
+  },
+  {
+    id: 7,
+    title: "Minute Through Dimensions",
+    enTitle: "Minute Through Dimensions",
+    type: "同人小游戏",
+    enType: "Doujin Game",
+    image: "https://picsum.photos/seed/minute-dimensions/800/600",
+    color: "#00BCD4",
+    desc: "在不同维度间快速切换的个人开发作品。",
+    enDesc: "A solo game about rapidly switching between dimensions.",
+    tags: ["Unity", "C#", "Art"],
+    details: {
+      about: "这是一款自己独立完成的同人小游戏。从玩法程序、美术资产到BGM和音效都由我制作。",
+      enAbout: "A small fan game developed entirely by me, including gameplay programming, Spine animation, music, and sound effects.",
+      features: ["维度切换玩法", "个人独立开发", "程序、美术与音乐制作"],
+      enFeatures: ["Dimension-switching gameplay", "Solo development", "Programming, art, and music"],
+      designModules: [
         {
-          title: "Minute Through Dimensions",
-          enTitle: "Minute Through Dimensions",
-          content: "这是一款自己独立完成的同人小游戏。从 C# 玩法逻辑、Spine 动画到 BGM 和音效都是自己做的，主要玩法是在不同维度之间快速切换并通过关卡。",
-          enContent: "A solo full-stack project covering everything from C# architecture to Spine animation, BGM composition, and sound design. It features fast-paced cross-dimensional interaction, showcasing full-pipeline integration.",
+          title: "维度切换",
+          enTitle: "Dimension Switching",
+          content: "这是一款自己独立完成的同人小游戏。从C#玩法逻辑、美术资产到BGM和音效都是自己做的，主要玩法是在不同维度之间快速切换并通过关卡。",
+          enContent: "The core mechanic is rapidly switching between dimensions to move through each level.",
           icon: 'play'
         }
       ],
-      techModules: [
-        {
-          title: "工具流与泛能力拓展",
-          enTitle: "Toolchains & Pipeline Expansion",
-          content: "这些项目的规模和分工都不太一样。因为小团队经常缺人，我除了程序之外也做过美术资产、动画和音效，慢慢整理出了一套比较适合小项目的制作流程。",
-          enContent: "By participating in games of varying scales, I expanded beyond just programming, learning to quickly build workflows for art assets and audio processing, finding optimal solutions for small indie teams.",
-          icon: 'code'
-        }
-      ],
-      gallery: [
-        "https://picsum.photos/seed/misc1/800/600",
-        "https://picsum.photos/seed/misc2/800/600",
-        "https://picsum.photos/seed/misc3/800/600"
-      ],
-      honors: [
-        "《家人保卫战》：2025CUSGA 初赛入围",
-        "《梦境事务所》：吉比特高校开发挑战赛“最佳美术奖”"
-      ],
-      enHonors: [
-        "'Family Defense': 2025CUSGA Preliminaries Finalist",
-        "'Dream Agency': G-bits University Dev Challenge 'Best Art' Award"
-      ]
+      techModules: [],
+      gallery: ["https://picsum.photos/seed/minute-dimensions-1/800/600"],
+      honors: ["2024 福师大 Game Jam 三等奖"],
+      enHonors: ["2024 FJNU Game Jam Third Place"]
+    }
+  },
+  {
+    id: 8,
+    title: "The Hotel in the Woods",
+    enTitle: "The Hotel in the Woods",
+    type: "合作项目",
+    enType: "Collaborative Project",
+    image: "https://picsum.photos/seed/hotel-woods/800/600",
+    color: "#FFD54F",
+    desc: "与同学合作完成的小型游戏项目。",
+    enDesc: "A small game developed in collaboration with a classmate.",
+    tags: ["Unity", "C#", "Game Design"],
+    details: {
+      about: "这是第一次和同学比较正式地合作完成游戏。项目体量不大，我同时处理了多个开发部分，最后在比赛结束前完成。",
+      enAbout: "My first formal game collaboration with a classmate. It was a small project, and I worked across several parts of development to finish it before the competition deadline.",
+      features: ["双人合作开发", "小型完整项目", "程序与玩法实现"],
+      enFeatures: ["Two-person collaboration", "Small complete project", "Programming and gameplay implementation"],
+      designModules: [],
+      techModules: [],
+      gallery: ["https://picsum.photos/seed/hotel-woods-1/800/600"],
+      honors: ["2026 点触高校游戏开发大赛优秀奖"],
+      enHonors: ["2026 Touch University Game Development Competition — Excellence Award"]
     }
   }
 ];
