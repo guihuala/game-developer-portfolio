@@ -4,7 +4,7 @@ import { SEO } from '../components/SEO';
 
 export const Works: React.FC = () => {
   return (
-    <div className="pt-28 min-h-screen">
+    <div className="works-page">
       <SEO 
         title="Works" 
         description="A list of featured game projects by Mokukeki, including 3D RPGs, narrative puzzles, and simulation games."

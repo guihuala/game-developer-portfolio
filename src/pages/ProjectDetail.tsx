@@ -1,146 +1,30 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { motion, useScroll, useSpring } from 'motion/react';
-import { ExternalLink, PlayCircle, Star } from 'lucide-react';
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { ExternalLink, PlayCircle } from 'lucide-react';
 import { projects, featuredProjects } from '../content/projects';
 import { useLanguage } from '../context/LanguageContext';
 import { SEO } from '../components/SEO';
+import { ReadingDeck, ReadingPage } from '../components/ReadingDeck';
 
-export const ProjectDetail: React.FC = () => {
+export const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { language, t } = useLanguage();
   const project = projects.find((item) => item.id === Number(id));
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]);
-
-  if (!project) {
-    return (
-      <div className="min-h-screen pt-32 flex flex-col items-center justify-center px-6">
-        <h1 className="text-4xl font-black text-cyan-dark mb-6">{t('项目未找到', 'Project Not Found')}</h1>
-        <button onClick={() => navigate('/works')} className="font-black text-cyan-main">{t('返回作品集', 'Back to Works')}</button>
-      </div>
-    );
-  }
-
+  if (!project) return <section className="project-missing"><h1>{t('项目未找到', 'Project not found')}</h1><Link to="/works">{t('返回作品集', 'Back to works')}</Link></section>;
   const local = <T,>(zh: T, en: T) => language === 'zh' ? zh : en;
-
-  return (
-    <main className="pt-24 pb-24 min-h-screen">
-      <SEO title={project.enTitle} description={project.enDesc} image={project.image} keywords={`${project.tags.join(', ')}, ${project.enType}, game developer`} />
-      <motion.div className="fixed top-0 left-0 right-0 h-1 bg-cyan-main origin-left z-[60]" style={{ scaleX }} />
-
-      <article className="max-w-4xl mx-auto px-5 md:px-8">
-
-
-        <header className="relative w-full aspect-video overflow-hidden bg-cyan-dark mb-8 group rounded-[2rem] md:rounded-[3rem]">
-          {project.image && <img src={project.image} alt={local(project.title, project.enTitle)} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" />}
-          <div className="absolute inset-0 bg-gradient-to-t from-cyan-dark/90 via-cyan-dark/10 to-transparent" />
-          <div className="absolute bottom-6 md:bottom-9 left-6 md:left-9 right-6 md:right-9 flex items-end justify-between gap-6">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full mb-4">
-                <Star className="w-4 h-4" style={{ color: project.color, fill: project.color }} />
-                <span className="text-xs font-black text-cyan-dark uppercase tracking-wider">{local(project.type, project.enType)}</span>
-              </div>
-              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">{local(project.title, project.enTitle)}</h1>
-              <p className="mt-2 text-sm md:text-lg font-black text-white/65 uppercase tracking-widest">{local(project.enTitle, project.title)}</p>
-            </div>
-            {project.trailerUrl && (
-              <a href={project.trailerUrl} target="_blank" rel="noreferrer" className="hidden md:inline-flex items-center gap-2 bg-white text-cyan-dark px-5 py-3 rounded-full font-black text-sm">
-                <PlayCircle className="w-5 h-5 text-yellow-main" />{t('观看视频', 'Watch video')}
-              </a>
-            )}
-          </div>
-        </header>
-
-        <nav className="flex flex-wrap items-center justify-between gap-5 bg-white border border-cyan-main/10 rounded-2xl px-5 py-4 md:px-6 mb-16" aria-label={t('项目快速信息', 'Project quick links')}>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-black text-cyan-dark/40 uppercase tracking-widest mr-1">{t('技术栈', 'Stack')}</span>
-            {project.tags.map((tag) => <span key={tag} className="px-3 py-1 bg-cyan-light rounded-full text-xs font-bold text-cyan-dark">{tag}</span>)}
-          </div>
-          <div className="flex gap-3">
-            {project.trailerUrl && <a href={project.trailerUrl} target="_blank" rel="noreferrer" className="md:hidden inline-flex items-center gap-1 font-black text-sm text-cyan-main"><PlayCircle className="w-4 h-4" />{t('视频', 'Video')}</a>}
-            {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-cyan-dark text-white px-4 py-2 rounded-xl font-black text-sm">{t('体验 Demo', 'Try Demo')}<ExternalLink className="w-4 h-4" /></a>}
-          </div>
-        </nav>
-
-        <ArticleSection title={t('项目介绍', 'Project Overview')}>
-          <p>{local(project.details.about, project.details.enAbout)}</p>
-        </ArticleSection>
-
-        {project.details.honors?.length ? (
-          <ArticleSection title={t('奖项与成绩', 'Awards')}>
-            <ul className="space-y-2 text-sm md:text-base">
-              {project.details.honors.map((honor, index) => (
-                <li key={honor}>{local(honor, project.details.enHonors?.[index] ?? honor)}</li>
-              ))}
-            </ul>
-          </ArticleSection>
-        ) : null}
-
-        {project.details.designModules.length > 0 && (
-          <ArticleSection title={t('玩法与系统设计', 'Gameplay and System Design')}>
-            {project.details.designModules.map((module) => (
-              <ContentBlock key={module.title} title={local(module.title, module.enTitle)} text={local(module.content, module.enContent)} image={module.image} />
-            ))}
-          </ArticleSection>
-        )}
-
-        {project.details.techModules.length > 0 && (
-          <ArticleSection title={t('技术实现', 'Technical Implementation')}>
-            {project.details.techModules.map((module) => (
-              <ContentBlock key={module.title} title={local(module.title, module.enTitle)} text={local(module.content, module.enContent)} image={module.image} />
-            ))}
-          </ArticleSection>
-        )}
-
-        {project.details.gallery?.length ? (
-          <ArticleSection title={t('项目截图', 'Gallery')}>
-            <div data-lenis-prevent className="flex gap-5 overflow-x-auto overscroll-x-contain snap-x snap-mandatory pb-5 scrollbar-hide">
-              {project.details.gallery.map((image, index) => (
-                <figure key={image} className="min-w-[85%] md:min-w-[70%] snap-center overflow-hidden rounded-2xl bg-white border-4 border-white">
-                  <img src={image} alt={`${local(project.title, project.enTitle)} ${index + 1}`} loading="lazy" className="w-full aspect-video object-cover" />
-                </figure>
-              ))}
-            </div>
-          </ArticleSection>
-        ) : null}
-
-        <nav className="pt-10 border-t border-cyan-main/20">
-          <p className="text-sm font-black text-cyan-main mb-5">{t('其他项目', 'Other Projects')}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {featuredProjects.filter((item) => item.id !== project.id).map((item) => (
-              <button key={item.id} onClick={() => navigate(`/project/${item.id}`)} className="text-left bg-white rounded-2xl overflow-hidden border border-cyan-main/10 group">
-                <img src={item.image} alt={local(item.title, item.enTitle)} loading="lazy" className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                <span className="block p-5">
-                  <span className="block text-[10px] font-black text-cyan-main uppercase tracking-widest mb-2">{local(item.type, item.enType)}</span>
-                  <span className="block text-xl font-black text-cyan-dark group-hover:text-cyan-main transition-colors mb-2">{local(item.title, item.enTitle)}</span>
-                  <span className="block text-sm font-semibold text-cyan-dark/55 leading-relaxed line-clamp-2">{local(item.desc, item.enDesc)}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </nav>
-      </article>
-    </main>
-  );
+  const pages: ReadingPage[] = [{ label: t('项目介绍', 'Overview'), title: local(project.title, project.enTitle), text: local(project.details.about, project.details.enAbout) }];
+  if (project.details.honors?.length) pages.push({ label: t('奖项与成绩', 'Awards'), title: t('奖项与成绩', 'Awards & recognition'), content: <ul className="reader-awards">{project.details.honors.map((honor, i) => <li key={honor}>{local(honor, project.details.enHonors?.[i] ?? honor)}</li>)}</ul> });
+  for (const [modules, label] of [[project.details.designModules, t('玩法设计', 'Game design')], [project.details.techModules, t('技术实现', 'Implementation')]] as const) {
+    modules.forEach((module) => pages.push({ label, title: local(module.title, module.enTitle), text: local(module.content, module.enContent), image: module.image }));
+  }
+  project.details.gallery?.forEach((image, i) => pages.push({ label: `${t('项目截图', 'Gallery')} ${i + 1}`, title: t('游戏画面', 'In-game gallery'), image }));
+  pages.push({ label: t('其他作品', 'More projects'), title: t('继续探索', 'Keep exploring'), content: <div className="reader-projects">{featuredProjects.filter((item) => item.id !== project.id).map((item) => <Link to={`/project/${item.id}`} key={item.id}><img src={item.image} alt="" /><span>{local(item.title, item.enTitle)} ↗</span></Link>)}</div> });
+  return <article className="project-reader">
+    <SEO title={project.enTitle} description={project.enDesc} image={project.image} />
+    <aside className="project-cover">
+      {project.image && <img src={project.image} alt={local(project.title, project.enTitle)} />}
+      <div className="project-cover-copy"><span>{local(project.type, project.enType)}</span><h1>{local(project.title, project.enTitle)}</h1><p>{local(project.desc, project.enDesc)}</p><div className="reader-tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><div className="reader-links">{project.trailerUrl && <a href={project.trailerUrl} target="_blank" rel="noreferrer"><PlayCircle size={17} />{t('观看视频', 'Watch video')}</a>}{project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">{t('体验 Demo', 'Try demo')}<ExternalLink size={16} /></a>}</div></div>
+    </aside>
+    <ReadingDeck key={project.id} pages={pages} name={local(project.title, project.enTitle)} />
+  </article>;
 };
-
-const ArticleSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <section className="mb-12">
-    <h2 className="text-2xl font-bold text-cyan-dark mb-5">{title}</h2>
-    <div className="text-base text-cyan-dark/80 leading-8">{children}</div>
-  </section>
-);
-
-const ContentBlock = ({ title, text, image }: { key?: React.Key; title: string; text: string; image?: string }) => (
-  <section className="mb-8 last:mb-0">
-    <h3 className="text-xl md:text-2xl font-black text-cyan-dark mb-4">{title}</h3>
-    <p>{text}</p>
-    {image && <img src={image} alt={title} loading="lazy" className="w-full h-auto mt-7" />}
-  </section>
-);

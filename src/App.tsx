@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import './studio.css';
+import './viewport.css';
 import { BrowserRouter, HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { PageTransition } from './components/PageTransition';
 import { ParticleBackground } from './components/ParticleBackground';
-import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
+import { FloatingTools } from './components/FloatingTools';
+import { BackButton } from './components/BackButton';
 import { Home } from './pages/Home';
 import { About } from './pages/About';
 import { Works } from './pages/Works';
@@ -27,7 +28,8 @@ const AppContent = () => {
   return (
     <div className={`atelier-app min-h-screen font-sans selection:bg-yellow-main selection:text-cyan-dark ${isLateNightMode ? 'dark-mode' : ''}`}>
       <ParticleBackground />
-      <Navbar />
+      <FloatingTools />
+      <BackButton />
       <PageTransition>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -37,7 +39,6 @@ const AppContent = () => {
           <Route path="/project/:id" element={<ProjectDetail />} />
         </Routes>
       </PageTransition>
-      {pathname === '/' && <Footer />}
     </div>
   );
 };

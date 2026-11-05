@@ -4,7 +4,7 @@ import { SEO } from '../components/SEO';
 
 export const Experience: React.FC = () => {
   return (
-    <div className="min-h-screen">
+    <div className="experience-shell">
       <SEO 
         title="Experience" 
         description="A journey through Mokukeki's professional experience, game jam participations, and academic milestones."

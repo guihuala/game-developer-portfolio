@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { ArrowUpRight, Play, X } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { assetUrl } from '../utils/assetUrl';
+import { ReadingDeck, ReadingPage } from './ReadingDeck';
 
 const photos = [
   {
@@ -54,34 +55,34 @@ export const Timeline: React.FC = () => {
     </figure>
   );
 
-  return (
-    <article className="experience-page">
-      <h1>{zh ? '经历' : 'Experience'}<span className="title-period" aria-hidden="true">.</span></h1>
+  const pages: ReadingPage[] = [
+{ label: '2024', title: '2024', content: <div className="experience-year">
 
-      <section className="experience-year" aria-labelledby="experience-2024">
-        <h2 id="experience-2024">2024</h2>
         <h3>{zh ? '开始做游戏' : 'Starting to make games'}</h3>
         <p>{zh ? '开始尝试独立开发，并全栈制作同人游戏。在创作中感受到了乐趣。' : 'I began exploring independent development, making fan games from start to finish and discovering the joy of creating.'}</p>
         <div className="experience-game-link">
           <a href="https://guihuala.itch.io/hebibibi" target="_blank" rel="noreferrer"><Play size={15} aria-hidden="true" /><span>{zh ? '试玩游戏' : 'Play a game'}</span><ArrowUpRight size={15} aria-hidden="true" /></a>
         </div>
         <p>{zh ? '参加了第一次gamejam，担任程序与美术，并在比赛中获得了最佳美术奖。' : 'I joined my first game jam as a programmer and artist, and the game won the Best Art award.'}</p>
-      </section>
+      </div> },
+{ label: '2025', title: '2025', content: <div className="experience-year">
 
-      <section className="experience-year" aria-labelledby="experience-2025">
-        <h2 id="experience-2025">2025</h2>
         <p>{zh ? '开始参加各类gj和比赛。第一次参加了ggj，担任程序。' : 'I started taking part in more game jams and competitions, including my first Global Game Jam as a programmer.'}</p>
         <p>{zh ? '开发了多款游戏，并申请传媒方向的硕士。' : 'I developed several games and applied for a master’s degree in media.'}</p>
-        {photoFigure(photos[0])}
-      </section>
 
-      <section className="experience-year" aria-labelledby="experience-2026">
-        <h2 id="experience-2026">2026</h2>
+      </div> },
+{ label: '2026', title: '2026', content: <div className="experience-year">
+
         <p>{zh ? '作为《遗愿清单》的制作人继续开发游戏。' : 'I continued developing The Bucket List as its producer.'}</p>
         <p>{zh ? '游戏入围了多项赛事，并得以展出。' : 'The game was shortlisted in several competitions and exhibited at events.'}</p>
-        <div className="experience-photo-row">{photos.slice(1).map(photoFigure)}</div>
+
         <p>{zh ? '开始攻读硕士学位，游戏开发依然作为兴趣在持续。' : 'I began my master’s degree, while continuing to make games as a personal interest.'}</p>
-      </section>
+      </div> },
+...photos.map((photo) => ({ label: zh ? '现场照片' : 'Event photos', title: zh ? photo.caption : photo.enCaption, content: photoFigure(photo) }))
+];
+  return (
+    <article className="experience-reader">
+      <ReadingDeck pages={pages} name={zh ? '经历与现场记录' : 'Experience & photos'} />
 
       <dialog ref={viewer} className="photo-viewer" aria-label={zh ? '现场照片' : 'Event photo'} onClick={(event) => { if (event.target === event.currentTarget) viewer.current?.close(); }}>
         <button className="photo-viewer-close" onClick={() => viewer.current?.close()} aria-label={zh ? '关闭照片' : 'Close photo'}><X size={22} /></button>
