@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
-import './studio.css';
-import './viewport.css';
-import { BrowserRouter, HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { PageTransition } from './components/PageTransition';
 import { ParticleBackground } from './components/ParticleBackground';
 import { FloatingTools } from './components/FloatingTools';
 import { BackButton } from './components/BackButton';
 import { Home } from './pages/Home';
 import { About } from './pages/About';
-import { Works } from './pages/Works';
 import { Experience } from './pages/Experience';
 import { ProjectDetail } from './pages/ProjectDetail';
 import { LanguageProvider } from './context/LanguageContext';
@@ -34,7 +31,7 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/works" element={<Works />} />
+          <Route path="/works" element={<Navigate to="/" replace />} />
           <Route path="/experience" element={<Experience />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
         </Routes>

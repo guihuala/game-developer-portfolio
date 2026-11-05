@@ -7,7 +7,7 @@ export const BackButton = () => {
   const { pathname } = useLocation();
   const { t } = useLanguage();
   if (pathname === '/') return null;
-  return <Link className="level-back" to={pathname.startsWith('/project/') ? '/works' : '/'}>
+  return <Link className="level-back" to="/">
     <ArrowLeft size={18} aria-hidden="true" />
     <span>{t('返回上一级', 'Back to parent')}</span>
   </Link>;

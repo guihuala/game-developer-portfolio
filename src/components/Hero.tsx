@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { featuredProjects } from '../content/projects';
 import { siteContent } from '../content/siteContent';
 import { useLanguage } from '../context/LanguageContext';
+import { StudioOrnament } from './StudioOrnament';
 
 const Osmanthus3D = lazy(() => import('./Osmanthus3D').then((module) => ({ default: module.Osmanthus3D })));
 
@@ -19,13 +20,14 @@ export const Hero: React.FC = () => {
   return (
     <section className={`studio-home ${language === 'en' ? 'studio-english' : ''}`}>
       <div className="studio-desk">
+        <div className="desk-ink desk-ink-one"><StudioOrnament variant={1} /></div>
         <div className="desk-note desk-object">
           <span className="desk-tape" aria-hidden="true" />
           <span className="note-kicker">{t('桂花拉糕 / moku', 'mokukeki / moku')}</span>
           <h1>{t('你好，我是', "Hi, I’m")}<br />{t('桂花拉糕。', 'moku.')}</h1>
           <p>{t('主要做游戏程序，也参与玩法和美术。做过团队项目，也独立做过游戏。这里放了一些作品。', 'I mainly work on game programming, and also do gameplay design and art. Here are some games I’ve made with teams and on my own.')}</p>
           <Link to="/about">{t('关于我', 'About me')}<ArrowUpRight size={16} aria-hidden="true" /></Link>
-          <svg className="note-scribble" viewBox="0 0 90 30" fill="none" aria-hidden="true"><path d="M3 18C22 2 48 3 44 13S14 29 20 18 64 2 85 17M73 5l13 13-17 6" stroke="currentColor" strokeWidth="1.5" /></svg>
+
         </div>
 
         {featuredProjects.map((project, index) => (

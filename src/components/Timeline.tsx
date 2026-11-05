@@ -56,7 +56,7 @@ export const Timeline: React.FC = () => {
   );
 
   const pages: ReadingPage[] = [
-{ label: '2024', title: '2024', content: <div className="experience-year">
+{ layout: 'feature', label: '2024', title: '2024', content: <div className="experience-year">
 
         <h3>{zh ? '开始做游戏' : 'Starting to make games'}</h3>
         <p>{zh ? '开始尝试独立开发，并全栈制作同人游戏。在创作中感受到了乐趣。' : 'I began exploring independent development, making fan games from start to finish and discovering the joy of creating.'}</p>
@@ -78,7 +78,7 @@ export const Timeline: React.FC = () => {
 
         <p>{zh ? '开始攻读硕士学位，游戏开发依然作为兴趣在持续。' : 'I began my master’s degree, while continuing to make games as a personal interest.'}</p>
       </div> },
-...photos.map((photo) => ({ label: zh ? '现场照片' : 'Event photos', title: zh ? photo.caption : photo.enCaption, content: photoFigure(photo) }))
+...photos.map((photo) => ({ layout: 'visual' as const, label: zh ? '现场照片' : 'Event photos', title: zh ? photo.caption : photo.enCaption, content: photoFigure(photo) }))
 ];
   return (
     <article className="experience-reader">

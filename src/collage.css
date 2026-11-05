@@ -1,0 +1,309 @@
+/* The content is a pinboard: taller visual pieces and pairs of shorter notes. */
+.atelier-app .reader-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-auto-columns: clamp(340px, 38vw, 580px);
+  gap: 26px 40px;
+  align-items: stretch;
+}
+.atelier-app .reader-track > .reader-content {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  padding: 26px 28px;
+  justify-content: center;
+  isolation: isolate;
+}
+.atelier-app .reader-track > :is(.reader-lead, .reader-feature, .reader-visual) { grid-row: span 2; }
+.atelier-app .reader-track > .reader-lead { padding: 10px 6px; }
+.atelier-app .reader-track > .reader-feature { padding-top: 10px; padding-bottom: 52px; }
+.atelier-app .reader-track > .reader-note { background: color-mix(in srgb, var(--studio-print) 76%, transparent); border-radius: var(--studio-radius); }
+.atelier-app .reader-track > .reader-note:nth-child(3n) { background: color-mix(in srgb, var(--color-cyan-light) 35%, var(--studio-print)); }
+.atelier-app .reader-track > .reader-recognition { background: color-mix(in srgb, var(--studio-note) 15%, var(--studio-paper)); border-radius: var(--studio-radius); }
+.atelier-app .reader-note h2, .atelier-app .reader-recognition h2 { font-size: clamp(21px, 2vw, 27px); margin-bottom: 14px; padding-right: 22px; }
+.atelier-app :is(.reader-note, .reader-recognition) .reader-body { font-size: 14px; line-height: 1.85; }
+.atelier-app :is(.reader-note, .reader-recognition) .reader-kicker { font-size: 10px; margin-bottom: 12px; }
+.atelier-app .reader-body .reader-awards { gap: 12px; font-size: 14px; }
+.atelier-app .reader-feature h2 { max-width: 16ch; font-size: clamp(28px, 3vw, 42px); }
+.atelier-app .reader-visual { padding-top: 48px; padding-bottom: 10px; }
+.atelier-app .reader-visual:nth-child(even) { padding-top: 8px; padding-bottom: 52px; }
+.atelier-app .reader-visual .reader-body > img { transform: rotate(-2deg); max-height: 44dvh; }
+.atelier-app .reader-visual:nth-child(even) .reader-body > img { transform: rotate(2deg); }
+.atelier-app .reader-projects { grid-template-columns: 1fr; gap: 24px; }
+.atelier-app .reader-projects a { display: grid; grid-template-columns: 58% 1fr; align-items: center; gap: 16px; }
+.atelier-app .reader-projects a:nth-child(even) { grid-template-columns: 1fr 58%; }
+.atelier-app .reader-projects a:nth-child(even) img { order: 2; }
+.atelier-app .reader-projects img { max-height: 22dvh; transform: rotate(-3deg); }
+.atelier-app .reader-projects a:nth-child(even) img { transform: rotate(3deg); }
+.atelier-app .reader-lead .project-cover > img { transform: rotate(-2deg); }
+.atelier-app .reader-tags span { background: var(--studio-grid); }
+
+/* Small, quiet marks leave the text and photographs in focus. */
+.studio-ornament { position: absolute; right: 12px; top: 6px; width: 58px; height: 47px; color: var(--studio-note); opacity: .65; pointer-events: none; z-index: -1; }
+.studio-ornament.ornament-1 { color: var(--studio-ink); opacity: .32; }
+.studio-ornament.ornament-2 { color: var(--studio-ink); opacity: .2; }
+.reader-feature > .studio-ornament { top: 5%; right: 7%; width: 90px; height: 72px; }
+.reader-visual > .studio-ornament { top: auto; bottom: 8%; right: 2%; width: 90px; height: 72px; }
+.reader-feature h2::after { content: ''; display: block; width: 52px; height: 7px; margin-top: 17px; border-radius: var(--studio-radius); background: var(--studio-note); transform: rotate(-4deg); }
+.desk-ink { position: absolute; width: 100px; height: 80px; pointer-events: none; }
+.desk-ink-one { top: 44%; left: 71%; transform: rotate(12deg); }
+.desk-ink-two { top: 77%; left: 33%; transform: rotate(-8deg); }
+.desk-ink .studio-ornament { inset: 0; width: 100%; height: 100%; z-index: auto; }
+.atelier-app .about-layout .about-artwork { width: min(100%, 340px); }
+.atelier-app .about-layout .about-print { transform: rotate(4deg); }
+.atelier-app .experience-reader .experience-photo { transform: rotate(-2deg); }
+.atelier-app .experience-reader .reader-content:nth-child(even) .experience-photo { transform: rotate(2deg); }
+.atelier-app .experience-reader .reader-feature h2 { font-size: clamp(46px, 6vw, 80px); }
+.atelier-app .reader-note .experience-year p { font-size: 14px; }
+
+/* A square SVG box removes font-bearing offsets from the old text glyph. */
+.atelier-app .tools-trigger { padding: 0; display: grid; place-items: center; transform: none; }
+.atelier-app .tools-trigger .tools-brand-flower { display: block; width: 28px; height: 28px; margin: 0; font-size: initial; color: var(--studio-note); transform-origin: 50% 50%; animation: osmanthus-turn 16s linear infinite; }
+.atelier-app .tools-trigger:hover { transform: none; }
+.atelier-app .tools-trigger:hover .tools-brand-flower { color: var(--studio-ink); }
+@keyframes osmanthus-turn { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+@media (max-width: 767px), (max-height: 650px) {
+  .atelier-app .reader-track { grid-template-rows: minmax(0, 1fr); grid-auto-columns: clamp(320px, 75vw, 480px); gap: 24px; }
+  .atelier-app .reader-track > .reader-content { grid-row: 1; width: 100%; padding: 24px 16px; }
+  .atelier-app .reader-track > .reader-lead { padding-inline: 0; }
+  .atelier-app .reader-track > .reader-note:nth-child(odd) { align-self: start; margin-top: 16px; }
+  .atelier-app .reader-track > .reader-note:nth-child(even) { align-self: end; margin-bottom: 16px; }
+  .atelier-app .reader-track > .reader-recognition { align-self: center; }
+  .atelier-app .reader-content .reader-body { font-size: 14px; line-height: 1.8; }
+  .atelier-app .reader-content h2 { font-size: 26px; }
+  .atelier-app .reader-feature > .studio-ornament { top: 0; width: 58px; }
+  .atelier-app .reader-visual > .studio-ornament { bottom: 0; }
+  .atelier-app .experience-reader .reader-feature h2 { font-size: 44px; }
+  .desk-ink-one { top: 35%; left: 62%; width: 60px; height: 45px; }
+  .desk-ink-two { display: none; }
+}
+@media (max-width: 767px) {
+  .atelier-app .reader-track { grid-auto-columns: calc(100vw - 48px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atelier-app .tools-trigger .tools-brand-flower { animation: none; }
+}
+@media (min-width: 768px) and (min-height: 651px) {
+  .atelier-app .about-layout .reader-feature { align-self: start; padding-top: 7vh; }
+  .atelier-app .about-layout .reader-visual { align-self: end; padding-bottom: 16px; }
+}
+
+/* Loose manuscript composition: no repeated columns or card baselines. */
+@media (min-width: 768px) and (min-height: 651px) {
+  .atelier-app .reader-track {
+    grid-template-rows: repeat(12, minmax(0, 1fr));
+    grid-auto-columns: clamp(42px, 4.4vw, 68px);
+    gap: 0 12px;
+    padding-top: 88px;
+    padding-bottom: 38px;
+  }
+  .atelier-app .reader-track > .reader-content {
+    grid-column: var(--pin-column);
+    grid-row: var(--pin-row);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    align-self: stretch;
+    padding: 18px 22px;
+    transform: rotate(var(--pin-tilt));
+    transform-origin: center;
+  }
+  .atelier-app .reader-track > .reader-feature { padding: 16px 12px 32px; justify-content: center; }
+  .atelier-app .reader-track > .reader-note,
+  .atelier-app .reader-track > .reader-note:nth-child(3n) { background: transparent; }
+  .atelier-app .reader-track > .reader-note:nth-child(4n) {
+    background: var(--studio-print);
+    padding: 26px;
+    box-shadow: 4px 14px 25px -22px #00606450;
+  }
+  .atelier-app .reader-track > .reader-recognition {
+    background: color-mix(in srgb, var(--studio-note) 58%, var(--studio-paper));
+    padding: 26px;
+    justify-content: center;
+    box-shadow: 4px 14px 25px -22px #00606450;
+  }
+  .atelier-app .reader-track > .reader-recognition::before {
+    content: '';
+    position: absolute;
+    width: 85px;
+    height: 25px;
+    left: 40%;
+    top: -12px;
+    border-radius: var(--studio-radius);
+    background: color-mix(in srgb, var(--color-cyan-main) 25%, transparent);
+    transform: rotate(8deg);
+  }
+  .atelier-app .reader-note h2 { font-size: clamp(25px, 2.5vw, 34px); line-height: 1.25; margin-bottom: 16px; padding-right: 0; }
+  .atelier-app .reader-note:nth-child(odd) h2 { max-width: 12ch; }
+  .atelier-app .reader-recognition h2 { font-size: clamp(27px, 2.7vw, 37px); margin-bottom: 20px; }
+  .atelier-app .reader-feature h2 { font-size: clamp(38px, 4.8vw, 68px); line-height: 1.12; max-width: 10ch; margin-bottom: 28px; letter-spacing: -.055em; }
+  .atelier-app .reader-note .reader-body { font-size: 15px; line-height: 1.9; }
+  .atelier-app .reader-feature .reader-body { font-size: 16px; line-height: 2; }
+  .atelier-app .reader-recognition .reader-awards { font-size: 14px; gap: 13px; }
+  .atelier-app .reader-lead .project-cover { gap: 16px; }
+  .atelier-app .reader-lead .project-cover h1 { font-size: clamp(34px, 4.6vw, 62px); }
+  .atelier-app .reader-lead .project-cover > img { max-height: 48%; transform: rotate(2deg); }
+  .atelier-app .reader-visual .reader-body > img { max-height: 46dvh; }
+  .atelier-app .reader-content > .studio-ornament { width: 96px; height: 77px; top: -25px; right: -18px; }
+  .atelier-app .reader-feature > .studio-ornament { width: 150px; height: 120px; top: 0; right: -25px; opacity: .8; }
+  .atelier-app .reader-note:nth-child(odd) > .studio-ornament { top: auto; bottom: -25px; right: 15px; transform: rotate(15deg); }
+  .atelier-app .reader-visual > .studio-ornament { top: auto; bottom: -15px; right: -18px; }
+  .atelier-app .about-layout .reader-feature,
+  .atelier-app .about-layout .reader-visual { align-self: stretch; padding: 16px 12px; }
+  .atelier-app .about-layout .reader-feature h2 { font-size: clamp(38px, 4vw, 56px); }
+  .atelier-app .experience-reader .reader-feature h2 { font-size: clamp(76px, 10vw, 144px); color: var(--studio-ink); line-height: .95; }
+  .atelier-app .experience-reader .experience-photo { transform: rotate(-4deg); }
+  .atelier-app .experience-reader .reader-content:nth-child(even) .experience-photo { transform: rotate(3deg); }
+  .atelier-app .reader-content .reader-projects { gap: 28px; }
+}
+@media (max-width: 767px), (max-height: 650px) {
+  .atelier-app .reader-track > .reader-note,
+  .atelier-app .reader-track > .reader-note:nth-child(3n) { background: transparent; }
+  .atelier-app .reader-track > .reader-note:nth-child(4n) { background: var(--studio-print); transform: rotate(-2deg); }
+  .atelier-app .reader-track > .reader-recognition { background: color-mix(in srgb, var(--studio-note) 45%, var(--studio-paper)); transform: rotate(2deg); }
+  .atelier-app .reader-feature h2 { font-size: 34px; }
+  .atelier-app .reader-note h2 { font-size: 27px; }
+}
+/* The home desk belongs to the same loose, overlapping world. */
+@media (min-width: 1100px) {
+  .atelier-app .studio-desk .desk-note { left: 7%; top: 5%; transform: rotate(-9deg); }
+  .atelier-app .studio-desk .desk-project-1 { left: 43%; top: 7%; transform: rotate(7deg); }
+  .atelier-app .studio-desk .desk-project-2 { left: 33%; top: 52%; width: 35%; transform: rotate(-11deg); }
+  .atelier-app .studio-desk .desk-project-3 { left: 71%; top: 62%; width: 27%; transform: rotate(9deg); }
+  .atelier-app .desk-ink-one { width: 135px; height: 100px; left: 76%; top: 44%; }
+}
+/* The yellow paper keeps dark ink in both themes. */
+.dark-mode .reader-track > .reader-recognition { background: #f1d474; }
+.dark-mode .reader-recognition,
+.dark-mode .reader-recognition h2,
+.dark-mode .reader-recognition .reader-body { color: #174c54; }
+.atelier-app .about-layout .reader-feature h2 { max-width: none; text-wrap: balance; }
+
+/* Scroll motion is isolated from each piece's intentional paper rotation. */
+.reader-motion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.reader-motion > .studio-ornament { top: -22px; right: -12px; width: 66px; height: 53px; }
+.reader-content:focus-within .reader-motion { opacity: 1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  .reader-motion { transform: none !important; opacity: 1 !important; }
+}
+.atelier-app .reader-track { position: relative; }
+.atelier-app .about-contact .about-phones { flex-wrap: wrap; gap: 0 18px; }
+.about-phones a { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
+
+/* Give the character its own large, unframed space beside the contact details. */
+.atelier-app .about-layout .about-print {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  transform: none;
+}
+.atelier-app .about-layout .about-print > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 58dvh;
+  padding: 0;
+  object-fit: contain;
+  transform: none;
+  border-radius: 0;
+}
+@media (min-width: 768px) and (min-height: 651px) {
+  .atelier-app .about-layout .reader-visual { grid-column: 10 / span 13; grid-row: 1 / span 12; }
+  .atelier-app .about-layout .about-artwork {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    width: 100%;
+    gap: 24px;
+  }
+  .atelier-app .about-layout .about-contact { margin-top: 0; font-size: 14px; }
+}
+@media (max-width: 767px) {
+  .atelier-app .about-layout .about-artwork { width: 100%; }
+  .atelier-app .about-layout .about-print > img { max-height: 42dvh; }
+  .atelier-app .about-layout .about-contact { margin-top: 12px; gap: 6px; }
+}
+
+/* About is two columns: introduction/contact, then the full-size character. */
+.atelier-app .about-layout .reader-track {
+  grid-template-columns: minmax(600px, 1fr) minmax(420px, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  grid-auto-columns: auto;
+  gap: 28px;
+}
+.atelier-app .about-layout .reader-track > .reader-content {
+  grid-column: auto;
+  grid-row: 1;
+  height: 100%;
+  width: 100%;
+  align-self: stretch;
+  margin: 0;
+  padding: 12px 0;
+  transform: none;
+}
+.atelier-app .about-layout .about-introduction { max-width: none; }
+.atelier-app .about-layout .about-contact {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 0;
+  font-size: 12px;
+}
+.atelier-app .about-layout .about-contact > a {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  white-space: nowrap;
+}
+.atelier-app .about-layout .reader-visual h2 { display: none; }
+.atelier-app .about-layout .reader-visual .reader-body,
+.atelier-app .about-layout .about-artwork,
+.atelier-app .about-layout .about-print { width: 100%; height: 100%; }
+.atelier-app .about-layout .about-artwork { display: flex; align-items: center; justify-content: center; gap: 0; }
+.atelier-app .about-layout .about-print { display: flex; align-items: center; justify-content: center; }
+.atelier-app .about-layout .about-print > img { width: 100%; height: 100%; max-height: 80dvh; object-fit: contain; }
+@media (max-width: 767px) {
+  .atelier-app .about-layout .reader-track { grid-template-columns: 600px calc(100vw - 48px); gap: 24px; }
+  .atelier-app .about-layout :is(.about-short-copy, .about-tool-line, .about-paths, .reader-feature h2) { max-width: calc(100vw - 48px); }
+  .atelier-app .about-layout .about-contact { gap: 14px; margin-top: 18px; font-size: 12px; }
+}
+
+/* Contact details only, in two simple columns. */
+.atelier-app .about-layout .about-contact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 440px);
+  gap: 0 28px;
+  margin-top: 20px;
+  padding: 0;
+}
+.atelier-app .about-layout .about-contact > a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--studio-ink);
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  .atelier-app .about-layout .about-contact { width: calc(100vw - 48px); gap: 0 16px; margin-top: 16px; }
+  .atelier-app .about-layout .about-contact > a { font-size: 12px; }
+}

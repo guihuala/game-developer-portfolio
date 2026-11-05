@@ -92,3 +92,81 @@ html, body, #root { width: 100%; height: 100%; overflow: hidden; }
   .level-back { top: 8px; left: 14px; min-height: 36px; padding-inline: 10px; font-size: 11px; }
   .project-reader, .atelier-app .about-layout, .experience-reader { padding-top: 58px; }
 }
+
+/* Full-page horizontal canvas: the cover travels with the rest of the article. */
+:root { --studio-radius: 20px; --reader-gutter: clamp(16px, 2vw, 28px); }
+.atelier-app :is(.project-reader, .about-layout, .experience-reader) {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.atelier-app .reading-deck { display: block; height: 100%; }
+.atelier-app .reader-track {
+  padding: max(80px, calc(env(safe-area-inset-top) + 64px)) var(--reader-gutter) max(20px, env(safe-area-inset-bottom));
+  gap: clamp(28px, 3vw, 48px);
+  scroll-padding-inline: var(--reader-gutter);
+  border-radius: 0;
+}
+.atelier-app .reader-track > .reader-content {
+  flex: 0 0 clamp(340px, 43vw, 640px);
+  width: clamp(340px, 43vw, 640px);
+  padding: 4px 0;
+}
+.atelier-app .reader-track > .reader-lead { flex-basis: clamp(360px, 44vw, 660px); }
+.atelier-app .reader-lead .project-cover { height: 100%; gap: 20px; }
+.atelier-app .reader-lead .project-cover > img { width: 100%; max-height: 48%; aspect-ratio: 16/9; object-fit: cover; transform: none; }
+.atelier-app .reader-lead .project-cover-copy { flex: none; }
+.atelier-app .reader-lead .project-cover p { display: block; }
+.atelier-app .reader-lead .reader-tags { display: flex; }
+.atelier-app .work-gallery { max-width: none; padding-inline: var(--reader-gutter); gap: 32px; }
+.atelier-app .studio-home { padding-inline: var(--reader-gutter); }
+
+/* Keep the introduction and its link in front of the transparent model canvas. */
+.atelier-app .studio-desk .desk-note { z-index: 30; }
+.atelier-app .studio-desk .desk-ticket { z-index: 30; }
+.atelier-app .desk-note a { position: relative; min-height: 44px; }
+.atelier-app .note-scribble { pointer-events: none; }
+
+/* One corner treatment across surfaces, images and controls, without frames. */
+.atelier-app :is(.desk-note, .desk-project, .desk-ticket, .desk-tape,
+  .project-print-image, .print-open, .tools-trigger, .tools-hint, .tools-popover,
+  .level-back, .project-cover > img, .reader-body > img, .reader-projects img,
+  .reader-tags span, .primary-link, .stage-image, .stage-image > a, .stage-image img,
+  .stage-open, .stage-pagination button, .about-print, .about-print > img,
+  .experience-photo, .experience-photo > img, .experience-photo > span,
+  .experience-game-link > a, .photo-viewer, .photo-viewer-close) {
+  border: 0;
+  border-radius: var(--studio-radius);
+}
+.atelier-app :is(.project-tab, .project-tab.selected, .project-tab:last-child,
+  .tools-settings, .about-contact > a, .reader-awards li, .secondary-link, .desk-note a) { border: 0; }
+.atelier-app .project-tab.selected { background: var(--studio-grid); }
+.atelier-app :is(.primary-link, .stage-image, .about-print, .experience-photo, .experience-game-link > a):hover { border: 0; border-radius: var(--studio-radius); }
+.atelier-app :is(.stage-visual, .about-print)::before { display: none; }
+.atelier-app .experience-photo { box-shadow: none; }
+.atelier-app .reader-awards li { padding-left: 0; }
+.atelier-app .desk-tape { border: 0; }
+
+@media (max-width: 767px) {
+  .atelier-app .reader-track { gap: 24px; padding-top: max(72px, calc(env(safe-area-inset-top) + 60px)); padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .atelier-app .reader-track > .reader-content,
+  .atelier-app .reader-track > .reader-lead { flex-basis: calc(100vw - 48px); width: calc(100vw - 48px); }
+  .atelier-app .reader-lead .project-cover { flex-direction: column; align-items: stretch; gap: 20px; }
+  .atelier-app .reader-lead .project-cover > img { max-height: 38%; }
+  .atelier-app .reader-lead .project-cover h1 { font-size: 30px; }
+  .atelier-app .reader-lead .project-cover p { font-size: 14px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .atelier-app .reader-track { padding-top: 58px; padding-bottom: 12px; }
+  .atelier-app .reader-track > .reader-content,
+  .atelier-app .reader-track > .reader-lead { flex-basis: clamp(320px, 58vw, 580px); width: clamp(320px, 58vw, 580px); }
+  .atelier-app .reader-lead .project-cover { display: grid; grid-template-columns: .8fr 1fr; gap: 16px; align-content: center; align-items: center; }
+  .atelier-app .reader-lead .project-cover > img { max-height: 45dvh; }
+  .atelier-app .reader-lead .project-cover h1 { font-size: 24px; }
+  .atelier-app .reader-lead .project-cover p { font-size: 12px; }
+  .atelier-app .reader-lead .reader-tags { margin-top: 8px; }
+}
+.atelier-app .tools-popover nav :is(a, button) { border-radius: var(--studio-radius); }

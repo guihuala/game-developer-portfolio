@@ -93,12 +93,12 @@ export const ContextMenu: React.FC = () => {
     { 
       label: t("导航至主页", "Go to Home"), 
       icon: Home, 
-      onClick: () => navigate('/') 
+      onClick: () => navigate('/')
     },
     { 
       label: t("查看作品", "View Works"), 
       icon: Briefcase, 
-      onClick: () => navigate('/works') 
+      onClick: () => navigate('/')
     },
   ];
 

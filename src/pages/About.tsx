@@ -14,8 +14,8 @@ export const About: React.FC = () => {
       <SEO title="About Me" description="Mokukeki is a game developer working across programming, gameplay design, and art." />
       <ReadingDeck name={t('关于我', 'About me')} pages={[
         {
-          label: t('自我介绍', 'Introduction'),
-          title: t('我是桂花拉糕，也叫 moku。', "I'm mokukeki, or moku."),
+          layout: 'feature', label: t('自我介绍', 'Introduction'),
+          title: '桂花拉糕/moku',
           content: <div className="about-introduction">
             <div className="about-short-copy">
               <p>{t('主要做游戏程序，也参与玩法设计和美术。', 'I mainly work on game programming, and also do gameplay design and art.')}</p>
@@ -23,23 +23,26 @@ export const About: React.FC = () => {
             </div>
             <p className="about-tool-line">Unity / C# · Blender · Photoshop · Spine · Shader</p>
             <div className="about-paths">
-              <Link to="/works" className="primary-link">{t('查看作品', 'View works')}<ArrowUpRight size={18} aria-hidden="true" /></Link>
+              <Link to="/" className="primary-link">{t('查看作品', 'View works')}<ArrowUpRight size={18} aria-hidden="true" /></Link>
               <Link to="/experience" className="secondary-link">{t('经历与现场记录', 'Experiences & photos')}<ArrowUpRight size={15} aria-hidden="true" /></Link>
+            </div>
+            <div className="about-contact" aria-label={t('联系方式', 'Contact details')}>
+              <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a>
+              <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`}>{CONTACT_INFO.phone}</a>
+              <a href={CONTACT_INFO.github} target="_blank" rel="noreferrer">GitHub</a>
+              <a href={`tel:${CONTACT_INFO.phoneHongKong.replace(/\s/g, '')}`}>{CONTACT_INFO.phoneHongKong}</a>
+              <a href={CONTACT_INFO.itch} target="_blank" rel="noreferrer">itch.io</a>
             </div>
           </div>,
         },
         {
-          label: t('角色与联系', 'Character & contact'), title: t('在这里找到我', 'Find me here'),
+          layout: 'visual', label: t('角色', 'Character'), title: t('桂花角色', 'Moku'),
           content: <div className="about-artwork">
             <div className="about-print">
-              <div className="about-print-dots" aria-hidden="true" />
               <img src={siteContent.assets.avatar} alt={t('桂花拉糕的手绘角色', 'Mokukeki’s illustrated character')} width={2048} height={2048} />
-              <svg className="about-spark" viewBox="0 0 90 90" fill="none" aria-hidden="true"><path d="M43 5c-3 24-9 33-35 37 23 4 33 15 36 41 3-24 16-36 39-40-23-3-36-16-40-38Z" stroke="currentColor" strokeWidth="2" /></svg>
+
             </div>
-            <div className="about-contact">
-              <a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}<ArrowUpRight size={14} aria-hidden="true" /></a>
-              <div><a href={CONTACT_INFO.github} target="_blank" rel="noreferrer">GitHub</a><a href={CONTACT_INFO.itch} target="_blank" rel="noreferrer">itch.io</a></div>
-            </div>
+
           </div>,
         },
       ]} />
