@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'motion/react';
-import { ArrowLeft, ExternalLink, PlayCircle, Star, Trophy } from 'lucide-react';
-import { projects } from '../content/projects';
+import { ArrowLeft, ExternalLink, PlayCircle, Star } from 'lucide-react';
+import { projects, featuredProjects } from '../content/projects';
 import { useLanguage } from '../context/LanguageContext';
 import { useSoundEffects } from '../hooks/useSoundEffects';
 import { SEO } from '../components/SEO';
@@ -16,7 +16,9 @@ export const ProjectDetail: React.FC = () => {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-  useEffect(() => window.scrollTo(0, 0), [id]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   if (!project) {
     return (
@@ -40,7 +42,7 @@ export const ProjectDetail: React.FC = () => {
         </button>
 
         <header className="relative w-full aspect-video overflow-hidden bg-cyan-dark mb-8 group rounded-[2rem] md:rounded-[3rem]">
-          <img src={project.image} alt={local(project.title, project.enTitle)} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" />
+          {project.image && <img src={project.image} alt={local(project.title, project.enTitle)} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" />}
           <div className="absolute inset-0 bg-gradient-to-t from-cyan-dark/90 via-cyan-dark/10 to-transparent" />
           <div className="absolute bottom-6 md:bottom-9 left-6 md:left-9 right-6 md:right-9 flex items-end justify-between gap-6">
             <div>
@@ -72,21 +74,15 @@ export const ProjectDetail: React.FC = () => {
 
         <ArticleSection title={t('项目介绍', 'Project Overview')}>
           <p>{local(project.details.about, project.details.enAbout)}</p>
-          <ul className="mt-8 space-y-3 list-disc pl-5">
-            {project.details.features.map((feature, index) => <li key={feature}>{local(feature, project.details.enFeatures[index])}</li>)}
-          </ul>
         </ArticleSection>
 
         {project.details.honors?.length ? (
           <ArticleSection title={t('奖项与成绩', 'Awards')}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="space-y-2 text-sm md:text-base">
               {project.details.honors.map((honor, index) => (
-                <div key={honor} className="flex items-center gap-4 bg-white border border-yellow-main/30 rounded-2xl p-5">
-                  <span className="w-11 h-11 rounded-xl bg-yellow-main/15 text-yellow-600 flex items-center justify-center shrink-0"><Trophy className="w-5 h-5" /></span>
-                  <span className="font-black text-cyan-dark text-sm md:text-base leading-relaxed">{local(honor, project.details.enHonors?.[index] ?? honor)}</span>
-                </div>
+                <li key={honor}>{local(honor, project.details.enHonors?.[index] ?? honor)}</li>
               ))}
-            </div>
+            </ul>
           </ArticleSection>
         ) : null}
 
@@ -120,8 +116,8 @@ export const ProjectDetail: React.FC = () => {
 
         <nav className="pt-10 border-t border-cyan-main/20">
           <p className="text-sm font-black text-cyan-main mb-5">{t('其他项目', 'Other Projects')}</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {projects.filter((item) => item.id !== project.id).slice(0, 3).map((item) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {featuredProjects.filter((item) => item.id !== project.id).map((item) => (
               <button key={item.id} onClick={() => navigate(`/project/${item.id}`)} className="text-left bg-white rounded-2xl overflow-hidden border border-cyan-main/10 group">
                 <img src={item.image} alt={local(item.title, item.enTitle)} loading="lazy" className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                 <span className="block p-5">
@@ -139,14 +135,14 @@ export const ProjectDetail: React.FC = () => {
 };
 
 const ArticleSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <section className="mb-20">
-    <h2 className="text-3xl md:text-4xl font-black text-cyan-dark mb-7">{title}</h2>
-    <div className="text-base md:text-lg text-cyan-dark/75 font-semibold leading-8">{children}</div>
+  <section className="mb-12">
+    <h2 className="text-2xl font-bold text-cyan-dark mb-5">{title}</h2>
+    <div className="text-base text-cyan-dark/80 leading-8">{children}</div>
   </section>
 );
 
 const ContentBlock = ({ title, text, image }: { key?: React.Key; title: string; text: string; image?: string }) => (
-  <section className="mb-14 last:mb-0">
+  <section className="mb-8 last:mb-0">
     <h3 className="text-xl md:text-2xl font-black text-cyan-dark mb-4">{title}</h3>
     <p>{text}</p>
     {image && <img src={image} alt={title} loading="lazy" className="w-full h-auto mt-7" />}

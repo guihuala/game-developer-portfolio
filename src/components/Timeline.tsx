@@ -6,42 +6,34 @@ const milestones = [
   {
     "id": "start",
     "year": "2024",
-    "title": "从一个想法开始动手",
-    "enTitle": "Turning ideas into something playable",
-    "desc": "2024 年开始正式学习游戏开发，从 Unity 和 C# 入手，把脑子里的想法一点点做成能玩的东西。比起单独学一项技术，我更喜欢带着一个具体的玩法去尝试，看看程序、画面和交互放在一起会是什么样子。",
-    "enDesc": "I started learning game development in 2024 with Unity and C#, gradually turning ideas into playable things. I like learning through a concrete gameplay idea and seeing how code, visuals, and interaction come together."
-  },
-  {
-    "id": "projects",
-    "year": "2024",
-    "title": "哪里需要，就多学一点",
-    "enTitle": "Learning what the project needs",
-    "desc": "最初做了《梦格事务所》和《Minute Through Dimensions》等项目，也开始和同学合作。程序是我的主要方向，但遇到项目里缺的部分，也会自己学着补上。后来画画、建模、动画和 Shader 都做了一些，慢慢习惯从整个作品的角度想问题。",
-    "enDesc": "Early projects included Dream Agency and Minute Through Dimensions, alongside collaborations with classmates. Programming is my main focus, but I also learn what a project is missing. That has led me into drawing, modeling, animation, and shaders, and into thinking about the game as a whole."
+    "title": "开始做游戏",
+    "enTitle": "Starting to make games",
+    "desc": "2024 年开始学习 Unity 和 C#，也和同学做起了游戏。程序是主要方向，项目需要时，也会学着补上美术、建模和动画。",
+    "enDesc": "I started learning Unity and C# in 2024 and making games with classmates. Programming is my main focus, with art, modeling, and animation learned along the way as projects needed them."
   },
   {
     "id": "jams",
     "year": "2024 - 2026",
-    "title": "从 Game Jam 到更完整的作品",
-    "enTitle": "From game jams to fuller games",
-    "desc": "这几年参加了 Game Jam 和高校游戏比赛，也尝试把短时间做出的原型继续做下去。《步入沼泽》就是从 Game Jam 的 Demo 开始，之后又花了大约三个月扩展。除了核心程序，我也参与玩法、关卡和美术，让最初的想法逐渐变成一个完整的游戏。后来也和团队带着《遗愿清单》参加活动，上台介绍我们的作品。",
-    "enDesc": "I took part in game jams and university game competitions, and kept developing some of those prototypes. Step or Sink began as a game jam demo and grew through roughly three more months of work. Alongside core programming, I contributed to gameplay, levels, and art to turn the initial idea into a complete game. I also joined the team in presenting The Bucket List at events."
+    "title": "把原型继续做下去",
+    "enTitle": "Taking prototypes further",
+    "desc": "参加过 Game Jam 和高校游戏比赛。《步入沼泽》从 Jam 的 Demo 开始，又花了大约三个月扩展；后来也和团队带着《遗愿清单》参加活动，上台分享作品。",
+    "enDesc": "I have taken part in game jams and university game competitions. Step or Sink grew from a jam demo through roughly three more months of development. With the team, I also presented The Bucket List at events."
   },
   {
     "id": "portfolio",
     "year": "2025 - 2026",
-    "title": "一起做游戏，也自己做游戏",
-    "enTitle": "Making games together, and on my own",
-    "desc": "在《遗愿清单》中，我担任制作人，参与系统设计、核心玩法程序和部分美术，也负责协调团队进度。这些照片记录了我们带着作品参加活动、上台分享的时刻。独立做《菌丝工厂》时，则从“菌丝能不能变成自动化管道”这个想法出发，把玩法、程序和美术都自己做了一遍。",
-    "enDesc": "On The Bucket List, I worked as producer on system design, core gameplay programming, some art, and team coordination. These photos capture us sharing the game at events. For my solo project Mycelium Mill, I started with the idea of turning mycelium into automation pipes and made the gameplay, code, and art myself."
+    "title": "团队合作与独立开发",
+    "enTitle": "With a team and on my own",
+    "desc": "在《遗愿清单》中负责制作、系统设计和核心程序，也协调团队进度。《菌丝工厂》则从菌丝管道的想法出发，玩法、程序和美术都由我独立完成。",
+    "enDesc": "On The Bucket List, I handled production, system design, core programming, and team coordination. Mycelium Mill began with an idea for mycelium pipes; I made its gameplay, code, and art on my own."
   },
   {
     "id": "study",
     "year": "2026",
-    "title": "接下来，继续做，也继续学",
-    "enTitle": "Continuing to make and learn",
-    "desc": "现在一边整理作品，一边申请传媒方向的留学。接下来想继续把已有项目做得更完整，也从内容表达和受众的角度多理解游戏。想做的事情还有很多，还是希望从一个个具体的作品开始，做出自己也会想玩的东西。",
-    "enDesc": "I am now organizing my portfolio and applying for further study in media. I want to keep developing my existing projects while learning more about how games communicate and reach their audiences. There is still plenty I want to explore, one project at a time, making games I would want to play myself."
+    "title": "接下来",
+    "enTitle": "What comes next",
+    "desc": "继续打磨已有项目，也在申请传媒方向的留学。想从内容表达和受众的角度多理解游戏，做出自己也会想玩的作品。",
+    "enDesc": "I am continuing to develop my projects and applying for further study in media. I want to understand games through expression and audiences, and make things I would want to play myself."
   }
 ];
 

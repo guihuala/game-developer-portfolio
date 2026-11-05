@@ -16,11 +16,11 @@ body {
   background-color: var(--color-cyan-light);
   color: var(--color-cyan-dark);
   overflow-x: hidden;
-  cursor: none;
+  cursor: auto;
 }
 
 a, button, [role="button"], input, select, textarea {
-  cursor: none;
+  cursor: pointer;
 }
 
 /* Custom Scrollbar */

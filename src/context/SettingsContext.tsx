@@ -17,8 +17,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   const [audioEnabled, setAudioEnabledState] = useState<boolean>(() => {
-    const saved = localStorage.getItem('audioEnabled');
-    return saved !== 'false'; // Default to true
+    return false; // Keep the portfolio quiet by default.
   });
 
   const toggleLateNightMode = () => {

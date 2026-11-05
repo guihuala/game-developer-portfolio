@@ -1,180 +1,58 @@
-import React, { useState, useRef } from 'react';
-import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
-import { Star, Plus } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { useSoundEffects } from '../hooks/useSoundEffects';
+import { featuredProjects } from '../content/projects';
 
-import { projects, Project } from '../content/projects';
-import { siteContent } from '../content/siteContent';
-
-const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 });
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  const navigate = useNavigate();
-  const { language, t } = useLanguage();
-  const { playHover, playClick } = useSoundEffects();
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onMouseEnter={playHover}
-      onClick={() => {
-        playClick();
-        navigate(`/project/${project.id}`);
-      }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="relative w-full aspect-[3/4] rounded-[2rem] cursor-pointer group perspective-1000"
-    >
-      {/* Card Body */}
-      <div 
-        className="absolute inset-0 rounded-[2rem] overflow-hidden bg-white border-4 border-white flex flex-col"
-        style={{ transform: "translateZ(20px)" }}
-      >
-        {/* Image Top Half */}
-        <div className="relative h-1/2 w-full overflow-hidden bg-cyan-light">
-          <div 
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-            style={{ backgroundImage: `url(${project.image})` }}
-          />
-          {/* Cute Badge */}
-          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-            <Star className="w-4 h-4" style={{ color: project.color, fill: project.color }} />
-            <span className="font-sans font-bold text-xs uppercase tracking-wider text-cyan-dark">
-              {language === 'zh' ? project.type : project.enType}
-            </span>
-          </div>
-        </div>
-
-        {/* Content Bottom Half */}
-        <div className="relative h-1/2 p-6 flex flex-col bg-white">
-          <h3 className="text-2xl font-black font-sans mb-1 text-cyan-dark tracking-tight group-hover:text-cyan-main transition-colors">
-            {language === 'zh' ? project.title : project.enTitle}
-          </h3>
-          <p className="text-[10px] font-black font-sans text-cyan-main/60 uppercase tracking-widest mb-3">
-            {language === 'zh' ? project.enTitle : project.title}
-          </p>
-          
-          <div className="space-y-1 mb-4">
-            <p className="text-sm text-cyan-dark/80 font-sans font-bold line-clamp-2">
-              {language === 'zh' ? project.desc : project.enDesc}
-            </p>
-          </div>
-          
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.tags.map(tag => (
-              <span key={tag} className="text-[11px] font-bold font-sans px-2.5 py-1 rounded-full bg-cyan-light text-cyan-dark">
-                {tag}
-              </span>
-            ))}
-          </div>
-          
-          <div className="mt-auto flex items-center gap-2 text-sm font-black font-sans uppercase tracking-wider group-hover:underline" style={{ color: project.color }}>
-            <Plus className="w-4 h-4" />
-            {siteContent.portfolio.detailsButton[language]}
-          </div>
-        </div>
-        
-        {/* Glare Effect */}
-        <motion.div 
-          className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/0 via-white/40 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2rem]"
-          style={{ 
-            x: useTransform(x, [-0.5, 0.5], ["-100%", "100%"]),
-            y: useTransform(y, [-0.5, 0.5], ["-100%", "100%"])
-          }}
-        />
-      </div>
-    </motion.div>
-  );
+const roles: Record<number, { zh: string; en: string }> = {
+  1: { zh: '制作人 · 主程序', en: 'Producer · Lead programmer' },
+  2: { zh: '制作人 · 系统设计 · 核心程序', en: 'Producer · System design · Gameplay programming' },
+  3: { zh: '独立开发 · 程序与美术', en: 'Solo development · Programming & art' },
 };
 
 export const Portfolio: React.FC = () => {
-  const { language } = useLanguage();
-  const content = siteContent.portfolio;
-  const allLabel = content.allFilter[language];
-  const [selectedTag, setSelectedTag] = useState<string>(allLabel);
-  const { playHover, playClick } = useSoundEffects();
-
-  const usefulTags = ['Unity', 'C#', 'Art'];
-  const allTags = [allLabel, ...usefulTags];
-
-  const filteredProjects = selectedTag === allLabel
-    ? projects 
-    : projects.filter(p => p.tags.includes(selectedTag));
+  const { language, t } = useLanguage();
 
   return (
-    <section id="quests" className="relative h-full z-10">
-      <div className="max-w-7xl mx-auto h-full px-4 md:px-6 pb-4 lg:pb-8 flex flex-col lg:flex-row gap-5 lg:gap-10">
-        <aside className="lg:w-60 xl:w-64 lg:shrink-0 lg:pt-8">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black font-sans text-cyan-dark mb-2 uppercase tracking-tighter">
-            {content.titlePrefix[language]}<span className="text-cyan-main">{content.titleHighlight[language]}</span>
-          </h2>
-          <div className="flex lg:flex-col flex-wrap gap-2 mt-5 lg:mt-8">
-          {allTags.map(tag => (
-            <button
-              key={tag}
-              onClick={() => { playClick(); setSelectedTag(tag); }}
-              onMouseEnter={playHover}
-              className={`px-4 py-2 rounded-lg font-sans font-bold text-sm text-left transition-colors duration-200 ${
-                selectedTag === tag 
-                  ? 'bg-cyan-light text-cyan-dark' 
-                  : 'text-cyan-dark/55 hover:text-cyan-dark'
-              }`}
-            >
-              {tag}
-            </button>
-          ))}
-          </div>
-        </aside>
+    <section className="max-w-5xl mx-auto px-5 md:px-8 pb-16">
+      <header className="mb-8 md:mb-10">
+        <h1 className="text-3xl md:text-4xl font-black text-cyan-dark">{t('精选作品', 'Selected Works')}</h1>
+        <div aria-hidden="true" className="w-9 h-1 rounded-full bg-yellow-main mt-5" />
+      </header>
 
-        <motion.div
-          layout
-          data-lenis-prevent
-          className="flex-1 min-h-0 h-full overflow-y-auto overscroll-contain lg:pr-3 pb-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 content-start perspective-1000"
-        >
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, i) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
-              >
-                <ProjectCard project={project} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+      <div className="space-y-5 md:space-y-6">
+        {featuredProjects.map((project, index) => (
+          <Link
+            key={project.id}
+            to={`/project/${project.id}`}
+            className="group grid md:grid-cols-[1.15fr_1fr] gap-2 md:gap-0 p-3 rounded-2xl border border-cyan-dark/10 bg-white/80 shadow-[0_4px_20px_-12px_rgba(2,132,199,0.15)] transition-[border-color,box-shadow] duration-300 hover:border-cyan-main/40 hover:shadow-[0_12px_32px_-20px_rgba(2,132,199,0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-dark"
+          >
+            <div className="overflow-hidden rounded-xl bg-cyan-light/30 self-center">
+              <img
+                src={project.image}
+                alt={language === 'zh' ? project.title : project.enTitle}
+                className="w-full aspect-[16/10] object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.025]"
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
+            <div className="flex flex-col justify-center px-2 py-4 md:px-7 md:py-5 lg:px-9">
+              <div className="flex items-center gap-3 text-xs mb-3 md:mb-4">
+                <span aria-hidden="true" className="font-mono text-cyan-dark/45">0{index + 1}</span>
+                <span aria-hidden="true" className="w-5 h-px bg-cyan-dark/20" />
+                <span className="font-bold text-cyan-main">{language === 'zh' ? project.type : project.enType}</span>
+              </div>
+              <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-cyan-dark group-hover:text-cyan-main transition-colors">{language === 'zh' ? project.title : project.enTitle}</h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">{language === 'zh' ? project.desc : project.enDesc}</p>
+              <p className="mt-4 text-xs leading-relaxed text-slate-500">{roles[project.id][language]}</p>
+              <div className="mt-5 pt-4 border-t border-cyan-dark/10 flex items-center justify-between gap-4">
+                <span className="text-xs font-bold text-cyan-dark">{t('查看项目', 'View project')}</span>
+                <span className="w-8 h-8 rounded-full bg-cyan-light/50 text-cyan-dark flex items-center justify-center transition-colors group-hover:bg-cyan-dark group-hover:text-white">
+                  <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                </span>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );

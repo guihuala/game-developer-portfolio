@@ -47,8 +47,8 @@ export const projects: Project[] = [
     enType: "3D RPG",
     image: assetUrl("/Work/1/sos_cover.webp"),
     color: "#00BCD4",
-    desc: "拥有独特交互逻辑的地形探索游戏。",
-    enDesc: "Terrain exploration game with unique interaction logic.",
+    desc: "在沼泽与流沙中规划路线，管理步数和体力。",
+    enDesc: "Plan routes through swamps and quicksand while managing steps and stamina.",
     tags: ["Unity", "Blender", "Photoshop", "Spine", "C#"],
     details: {
       about: "这个项目最早是参加 GameJam 时做的 Demo，后来又花了大约三个月扩展成完整版。我担任制作人和主程序，负责核心玩法、交互逻辑、部分美术资产、场景渲染，也参与了世界观和关卡机制的设计。",
@@ -93,7 +93,7 @@ export const projects: Project[] = [
           enTitle: "2.5D Stylized Pipeline",
           content: "项目使用 MK Toon，并在这个基础上调整了材质和 Shader。主要处理了高度图、阴影和手绘贴图的显示，让 2D 素材放进 3D 场景后不会显得太突兀。",
           enContent: "Customized hand-drawn materials via MK Toon. Used custom Shaders for heightmaps and shadows to balance 2D aesthetics with 3D spatial depth.",
-          image: "https://picsum.photos/seed/step-tech/800/400",
+
           icon: 'cpu'
         },
         {
@@ -145,7 +145,7 @@ export const projects: Project[] = [
           enTitle: "Dual-Layer Light Logic",
           content: "游戏的主要机制围绕光照展开。被照亮的区域会显示过去的状态，阴影里则保留现在的样子。玩家需要移动或寻找光源，对照两个状态来解谜。",
           enContent: "Innovative mechanism: Lit areas show the 'intact past' while shadows hide the 'ruined present.' Players must find light sources to bridge these two timelines.",
-          image: "https://picsum.photos/seed/list-design/800/400",
+
           icon: 'star'
         },
         {
@@ -162,7 +162,7 @@ export const projects: Project[] = [
           enTitle: "Pixel-Perfect Lighting",
           content: "我用 C# 收集光源和遮挡物的数据，再传给自定义 Shader，按像素计算哪些内容应该被光照显示。这个系统主要用来实现“只有被照亮时才看得见”的场景物件。",
           enContent: "Collected light & occluder data in C# passed to custom Shaders. Achieved pixel-level transparency logic for the 'lit-only' effect via reversed ray-logic.",
-          image: "https://picsum.photos/seed/list-tech/800/400",
+
           icon: 'code'
         },
         {
@@ -174,12 +174,12 @@ export const projects: Project[] = [
         }
       ],
       gallery: [
-        "https://picsum.photos/seed/list1/800/600",
-        "https://picsum.photos/seed/list2/800/600",
-        "https://picsum.photos/seed/list3/800/600",
-        "https://picsum.photos/seed/list4/800/600"
+
+
+
+
       ],
-      honors: ["2026开拓芯双赛道入围", "2026CUSGA最佳剧情入围", "2026mini-game入围", "2025CUSGA初赛入围入围"],
+      honors: ["2026开拓芯双赛道入围", "2026CUSGA最佳剧情入围", "2026mini-game入围", "2025CUSGA初赛入围"],
       enHonors: ["2026 CoreBlazer Double Track Finalist", "2026 CUSGA Best Narrative Finalist", "2026 Mini-Game Finalist"]
     },
     trailerUrl: "https://www.bilibili.com/video/BV1didKB7EMn/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=b9c1f0d495c34533b22289bd32c99a18",
@@ -193,8 +193,8 @@ export const projects: Project[] = [
     enType: "2D Factory Simulation",
     image: assetUrl("/Work/3/mm_cover.webp"),
     color: "#00BCD4",
-    desc: "结合轻松治愈的工厂自动化模拟游戏。",
-    enDesc: "Cozy and healing automated factory simulation game.",
+    desc: "用菌丝搭建管道，培育蘑菇与自动化流水线。",
+    enDesc: "Build mycelium pipes, grow mushrooms, and automate production.",
     tags: ["Unity", "Photoshop", "C#", "HLSL"],
     details: {
       about: "这是一个自己独立开发的工厂模拟游戏。最开始只是突然想到，可以把菌丝管道和自动化流水线放在一起，于是就做了出来。玩法、程序和美术都由我完成。",
@@ -215,7 +215,7 @@ export const projects: Project[] = [
           enTitle: "Mycelium Logistics & Logic Gates",
           content: "玩家用菌丝管道采集和运输土壤里的原料，再培育不同功能的蘑菇。灯笼菇负责照明，能量菇可以发电和加速，裂解菇则负责回收资源。流水线里还加入了分流器和过滤器，分别对应比较简单的 OR、AND 逻辑。",
           enContent: "Players use mycelium pipes to harvest and process raw materials from the soil to cultivate mushrooms like Lantern Mushrooms (lighting), Energy Mushrooms (power/acceleration), and Fission Mushrooms (recycling). Setup automated lines using Mycelium Splitters (OR logic) and Spore Filters (AND logic).",
-          image: "https://picsum.photos/seed/mill-design/800/400",
+
           icon: 'pen'
         }
       ],
@@ -225,14 +225,14 @@ export const projects: Project[] = [
           enTitle: "Shader Programming & Parallax System",
           content: "我一共设计并绘制了 11 种蘑菇，也做了多层视差背景和动态天气。因为项目是自己一个人做的，所以美术方案尽量保持简单，方便后续继续增加资产。",
           enContent: "Designed and drew 11 cute mushroom assets based on real/original functions. Implemented a multi-layer parallax scrolling background and dynamic weather system, rendering a healing and fresh visual atmosphere.",
-          image: "https://picsum.photos/seed/mill-tech/800/400",
+
           icon: 'code'
         }
       ],
       gallery: [
-        "https://picsum.photos/seed/mill1/800/600",
-        "https://picsum.photos/seed/mill2/800/600",
-        "https://picsum.photos/seed/mill3/800/600"
+
+
+
       ]
     },
     liveUrl: "https://guihuala.itch.io/mycelium-mill"
@@ -280,8 +280,8 @@ export const projects: Project[] = [
         }
       ],
       gallery: [
-        "https://picsum.photos/seed/ticket1/800/600",
-        "https://picsum.photos/seed/ticket2/800/600"
+
+
       ],
       honors: ["LD58综合排名前2%","2025中国大学生游戏开发大赛金辰奖主机游戏赛道银奖", "2025中国大学生游戏开发大赛金辰奖UI设计赛道铜奖"],
       enHonors: ["LD58 Overall Top 2%","2025 CUSGA Golden Morning Award Console Game Track Second Place", "2025 CUSGA Golden Morning Award UI Design Track Third Place"]
@@ -293,7 +293,8 @@ export const projects: Project[] = [
     enTitle: "Family Defense",
     type: "卡牌对战",
     enType: "Card Battle",
-    image: "https://picsum.photos/seed/family-defense/800/600",
+
+    image: '',
     color: "#00BCD4",
     desc: "以网络辩论为题材的卡牌对战游戏。",
     enDesc: "A card battle game themed around online debates.",
@@ -313,7 +314,7 @@ export const projects: Project[] = [
         }
       ],
       techModules: [],
-      gallery: ["https://picsum.photos/seed/family-defense-1/800/600"],
+      gallery: [],
       honors: ["2025 CUSGA 初赛入围"],
       enHonors: ["2025 CUSGA Preliminary Finalist"]
     }
@@ -324,7 +325,8 @@ export const projects: Project[] = [
     enTitle: "Dream Agency",
     type: "策略解谜",
     enType: "Strategy Puzzle",
-    image: "https://picsum.photos/seed/dream-agency/800/600",
+
+    image: '',
     color: "#FFD54F",
     desc: "以梦境为主题的策略解谜游戏。",
     enDesc: "A dream-themed strategy puzzle game.",
@@ -344,7 +346,7 @@ export const projects: Project[] = [
         }
       ],
       techModules: [],
-      gallery: ["https://picsum.photos/seed/dream-agency-1/800/600"],
+      gallery: [],
       honors: ["2024 吉比特高校开发挑战赛最佳美术奖"],
       enHonors: ["2024 G-bits University Game Development Challenge — Best Art"]
     }
@@ -355,7 +357,8 @@ export const projects: Project[] = [
     enTitle: "Minute Through Dimensions",
     type: "同人小游戏",
     enType: "Doujin Game",
-    image: "https://picsum.photos/seed/minute-dimensions/800/600",
+
+    image: '',
     color: "#00BCD4",
     desc: "在不同维度间快速切换的个人开发作品。",
     enDesc: "A solo game about rapidly switching between dimensions.",
@@ -375,7 +378,7 @@ export const projects: Project[] = [
         }
       ],
       techModules: [],
-      gallery: ["https://picsum.photos/seed/minute-dimensions-1/800/600"],
+      gallery: [],
       honors: ["2024 福师大 Game Jam 三等奖"],
       enHonors: ["2024 FJNU Game Jam Third Place"]
     }
@@ -386,7 +389,8 @@ export const projects: Project[] = [
     enTitle: "The Hotel in the Woods",
     type: "合作项目",
     enType: "Collaborative Project",
-    image: "https://picsum.photos/seed/hotel-woods/800/600",
+
+    image: '',
     color: "#FFD54F",
     desc: "与同学合作完成的小型游戏项目。",
     enDesc: "A small game developed in collaboration with a classmate.",
@@ -398,9 +402,12 @@ export const projects: Project[] = [
       enFeatures: ["Two-person collaboration", "Small complete project", "Programming and gameplay implementation"],
       designModules: [],
       techModules: [],
-      gallery: ["https://picsum.photos/seed/hotel-woods-1/800/600"],
+      gallery: [],
       honors: ["2026 点触高校游戏开发大赛优秀奖"],
       enHonors: ["2026 Touch University Game Development Competition — Excellence Award"]
     }
   }
 ];
+
+// Keep older projects available at their existing URLs; show only this selection.
+export const featuredProjects = [2, 1, 3].map((id) => projects.find((project) => project.id === id)!);
