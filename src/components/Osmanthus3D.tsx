@@ -115,6 +115,10 @@ export const Osmanthus3D: React.FC = () => {
             enableZoom={false}
             enablePan={false}
             enableRotate={true}
+            minAzimuthAngle={THREE.MathUtils.degToRad(-45)}
+            maxAzimuthAngle={THREE.MathUtils.degToRad(45)}
+            minPolarAngle={THREE.MathUtils.degToRad(65)}
+            maxPolarAngle={THREE.MathUtils.degToRad(115)}
             autoRotate={false}
           />
           <Environment preset="city" />

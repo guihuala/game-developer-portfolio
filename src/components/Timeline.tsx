@@ -1,106 +1,118 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { Code2, Gamepad2, GraduationCap, Layers, Swords } from 'lucide-react';
+import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { useSoundEffects } from '../hooks/useSoundEffects';
-import { siteContent } from '../content/siteContent';
+import { assetUrl } from '../utils/assetUrl';
 
 const milestones = [
-  { id: 'start', year: '2024', title: '开始学习游戏开发', enTitle: 'Started Game Development', desc: '2024 年开始正式学习游戏开发。最初主要从 Unity 和 C# 入手，一边补编程基础，一边用课程作业和小 Demo 熟悉完整的制作流程。', enDesc: 'I began studying game development in 2024, starting with Unity and C#. I learned programming fundamentals while using coursework and small demos to understand the full development process.', icon: GraduationCap, x: 14, y: 55 },
-  { id: 'projects', year: '2024', title: '完成最初的游戏项目', enTitle: 'First Game Projects', desc: '开始和同学合作，也尝试独立完成小游戏。这一年做了《梦格事务所》和《Minute Through Dimensions》等项目，逐渐接触程序、美术和关卡设计之间的配合。', enDesc: 'I began collaborating with classmates and making small games independently, including Dream Agency and Minute Through Dimensions. These projects helped me connect programming, art, and level design.', icon: Code2, x: 36, y: 40 },
-  { id: 'jams', year: '2024 - 2025', title: '比赛与 Game Jam', enTitle: 'Competitions and Game Jams', desc: '之后参加了多次 Game Jam 和高校游戏比赛。在时间有限的情况下做项目，让我更熟悉范围控制、团队分工，以及如何先完成一个真正能玩的版本。', enDesc: 'I joined several game jams and university game competitions. Working under short deadlines taught me scope control, team coordination, and how to finish a genuinely playable build first.', icon: Swords, x: 62, y: 52 },
-  { id: 'portfolio', year: '2025 - 2026', title: '独立开发与作品整理', enTitle: 'Solo Development and Portfolio', desc: '这一阶段继续完成《步入沼泽》《遗愿清单》《菌丝工厂》等项目，也开始整理作品集。相比继续增加 Demo，我更希望把已有玩法做完整，并把自己具体负责的内容说明白。', enDesc: 'I continued working on Step or Sink, The Bucket List, Mycelium Mill, and other projects while organizing my portfolio. I became more interested in completing existing ideas than simply adding more demos.', icon: Gamepad2, x: 82, y: 35 },
-  { id: 'study', year: '2026', title: '申请传媒方向留学', enTitle: 'Applying for Media Studies', desc: '2026 年开始申请传媒方向的留学深造。游戏开发仍然是我重要的实践经历，而接下来也希望从传媒、内容和受众的角度继续理解互动作品。', enDesc: 'In 2026, I began applying for further study in media. Game development remains an important part of my practice, and I hope to understand interactive work more deeply through media, content, and audience studies.', icon: Layers, x: 72, y: 15 },
+  {
+    "id": "start",
+    "year": "2024",
+    "title": "从一个想法开始动手",
+    "enTitle": "Turning ideas into something playable",
+    "desc": "2024 年开始正式学习游戏开发，从 Unity 和 C# 入手，把脑子里的想法一点点做成能玩的东西。比起单独学一项技术，我更喜欢带着一个具体的玩法去尝试，看看程序、画面和交互放在一起会是什么样子。",
+    "enDesc": "I started learning game development in 2024 with Unity and C#, gradually turning ideas into playable things. I like learning through a concrete gameplay idea and seeing how code, visuals, and interaction come together."
+  },
+  {
+    "id": "projects",
+    "year": "2024",
+    "title": "哪里需要，就多学一点",
+    "enTitle": "Learning what the project needs",
+    "desc": "最初做了《梦格事务所》和《Minute Through Dimensions》等项目，也开始和同学合作。程序是我的主要方向，但遇到项目里缺的部分，也会自己学着补上。后来画画、建模、动画和 Shader 都做了一些，慢慢习惯从整个作品的角度想问题。",
+    "enDesc": "Early projects included Dream Agency and Minute Through Dimensions, alongside collaborations with classmates. Programming is my main focus, but I also learn what a project is missing. That has led me into drawing, modeling, animation, and shaders, and into thinking about the game as a whole."
+  },
+  {
+    "id": "jams",
+    "year": "2024 - 2026",
+    "title": "从 Game Jam 到更完整的作品",
+    "enTitle": "From game jams to fuller games",
+    "desc": "这几年参加了 Game Jam 和高校游戏比赛，也尝试把短时间做出的原型继续做下去。《步入沼泽》就是从 Game Jam 的 Demo 开始，之后又花了大约三个月扩展。除了核心程序，我也参与玩法、关卡和美术，让最初的想法逐渐变成一个完整的游戏。后来也和团队带着《遗愿清单》参加活动，上台介绍我们的作品。",
+    "enDesc": "I took part in game jams and university game competitions, and kept developing some of those prototypes. Step or Sink began as a game jam demo and grew through roughly three more months of work. Alongside core programming, I contributed to gameplay, levels, and art to turn the initial idea into a complete game. I also joined the team in presenting The Bucket List at events."
+  },
+  {
+    "id": "portfolio",
+    "year": "2025 - 2026",
+    "title": "一起做游戏，也自己做游戏",
+    "enTitle": "Making games together, and on my own",
+    "desc": "在《遗愿清单》中，我担任制作人，参与系统设计、核心玩法程序和部分美术，也负责协调团队进度。这些照片记录了我们带着作品参加活动、上台分享的时刻。独立做《菌丝工厂》时，则从“菌丝能不能变成自动化管道”这个想法出发，把玩法、程序和美术都自己做了一遍。",
+    "enDesc": "On The Bucket List, I worked as producer on system design, core gameplay programming, some art, and team coordination. These photos capture us sharing the game at events. For my solo project Mycelium Mill, I started with the idea of turning mycelium into automation pipes and made the gameplay, code, and art myself."
+  },
+  {
+    "id": "study",
+    "year": "2026",
+    "title": "接下来，继续做，也继续学",
+    "enTitle": "Continuing to make and learn",
+    "desc": "现在一边整理作品，一边申请传媒方向的留学。接下来想继续把已有项目做得更完整，也从内容表达和受众的角度多理解游戏。想做的事情还有很多，还是希望从一个个具体的作品开始，做出自己也会想玩的东西。",
+    "enDesc": "I am now organizing my portfolio and applying for further study in media. I want to keep developing my existing projects while learning more about how games communicate and reach their audiences. There is still plenty I want to explore, one project at a time, making games I would want to play myself."
+  }
+];
+
+const photos = [
+  {
+    src: assetUrl('/experience/bucket-list-presentation.jpg'),
+    height: 1281,
+    caption: '和团队一起介绍《遗愿清单》。',
+    enCaption: 'Presenting The Bucket List with the team.',
+    alt: '团队在舞台上介绍《遗愿清单》，背景屏幕展示游戏画面',
+    enAlt: 'The team presenting The Bucket List on stage with the game on screen',
+  },
+  {
+    src: assetUrl('/experience/coreblazer-stage.jpg'),
+    height: 1278,
+    caption: '《遗愿清单》在开拓芯活动现场。',
+    enCaption: 'The Bucket List at the Coreblazer event.',
+    alt: '开拓芯活动舞台上的团队，背景屏幕展示《遗愿清单》',
+    enAlt: 'The team on the Coreblazer stage with The Bucket List on screen',
+  },
+  {
+    src: assetUrl('/experience/event-moment.jpg'),
+    height: 1406,
+    caption: '活动现场，和团队一起留下的记录。',
+    enCaption: 'Another moment from the event with the team.',
+    alt: '活动现场的舞台记录，参与者站在彩色背景屏幕前',
+    enAlt: 'Event participants on stage in front of a colorful screen',
+  },
 ];
 
 export const Timeline: React.FC = () => {
   const { language } = useLanguage();
-  const [activeId, setActiveId] = useState(milestones[milestones.length - 1].id);
-  const mapRef = useRef<HTMLDivElement>(null);
-  const { playSuccess } = useSoundEffects();
-  const mouseX = useMotionValue(50);
-  const mouseY = useMotionValue(50);
-  const springX = useSpring(mouseX, { stiffness: 150, damping: 25 });
-  const springY = useSpring(mouseY, { stiffness: 150, damping: 25 });
-  const xPercent = useTransform(springX, (value) => `${value}%`);
-  const yPercent = useTransform(springY, (value) => `${value}%`);
-  const active = milestones.find((item) => item.id === activeId) ?? milestones[0];
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    let previousId = activeId;
-    const move = (clientX: number, clientY: number) => {
-      const rect = map.getBoundingClientRect();
-      const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
-      const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
-      mouseX.set(x);
-      mouseY.set(y);
-      const nearby = milestones.find((item) => Math.hypot(x - item.x, y - item.y) < 9);
-      if (nearby && nearby.id !== previousId) {
-        previousId = nearby.id;
-        setActiveId(nearby.id);
-        playSuccess();
-      }
-    };
-    const onMouseMove = (event: MouseEvent) => move(event.clientX, event.clientY);
-    const onTouchMove = (event: TouchEvent) => event.touches[0] && move(event.touches[0].clientX, event.touches[0].clientY);
-    map.addEventListener('mousemove', onMouseMove, { passive: true });
-    map.addEventListener('touchmove', onTouchMove, { passive: true });
-    return () => {
-      map.removeEventListener('mousemove', onMouseMove);
-      map.removeEventListener('touchmove', onTouchMove);
-    };
-  }, [activeId, mouseX, mouseY, playSuccess]);
+  const zh = language === 'zh';
 
   return (
-    <section className="h-full max-w-7xl mx-auto px-4 md:px-6 pb-4 lg:pb-8 flex flex-col lg:flex-row gap-4 lg:gap-10">
-      <aside className="lg:w-72 xl:w-80 shrink-0 lg:pt-8">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-cyan-dark mb-4 lg:mb-8">
-          {language === 'zh' ? <>成长<span className="text-cyan-main">经历</span></> : <>My <span className="text-cyan-main">Journey</span></>}
-        </h1>
-        <nav className="grid grid-cols-2 md:grid-cols-4 lg:flex lg:flex-col gap-1" aria-label={language === 'zh' ? '经历阶段' : 'Experience stages'}>
-          {milestones.map((item) => {
-            const selected = item.id === activeId;
-            return (
-              <button key={item.id} onClick={() => setActiveId(item.id)} className={`text-left rounded-xl px-4 py-3 transition-colors ${selected ? 'bg-cyan-light text-cyan-dark' : 'text-cyan-dark/55 hover:text-cyan-dark'}`}>
-                <span className="block min-w-0">
-                  <span className="block text-[11px] font-bold opacity-55">{item.year}</span>
-                  <span className="block text-sm font-black truncate">{language === 'zh' ? item.title : item.enTitle}</span>
-                </span>
-              </button>
-            );
-          })}
-        </nav>
-      </aside>
+    <article className="max-w-3xl mx-auto px-5 md:px-8 pb-12 lg:pb-16">
+      <h1 className="text-3xl md:text-4xl font-black text-cyan-dark mb-10">
+        {zh ? '成长经历' : 'My Journey'}
+      </h1>
 
-      <div ref={mapRef} className="relative flex-1 min-h-[500px] lg:min-h-0 h-full overflow-hidden rounded-3xl bg-cyan-dark cursor-crosshair touch-none">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(to right, #00BCD4 1px, transparent 1px), linear-gradient(to bottom, #00BCD4 1px, transparent 1px)', backgroundSize: '72px 72px' }} />
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-          <polyline points={milestones.map((item) => `${item.x}%,${item.y}%`).join(' ')} fill="none" stroke="#00BCD4" strokeWidth="3" strokeDasharray="8 12" opacity="0.45" />
-        </svg>
+      {milestones.map((item) => {
+        const images = item.id === 'jams' ? [photos[0]] : item.id === 'portfolio' ? [photos[1], photos[2]] : [];
 
-        {milestones.map((item) => {
-          const Icon = item.icon;
-          const selected = item.id === activeId;
-          return (
-            <button key={item.id} onClick={() => setActiveId(item.id)} className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1" style={{ left: `${item.x}%`, top: `${item.y}%` }}>
-              <span className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-colors ${selected ? 'bg-yellow-main border-yellow-main text-cyan-dark' : 'bg-cyan-dark border-cyan-main text-cyan-main'}`}>
-                <Icon className="w-5 h-5" />
-              </span>
-              <span className="hidden xl:block text-[10px] font-black text-white/70 whitespace-nowrap">{language === 'zh' ? item.title : item.enTitle}</span>
-            </button>
-          );
-        })}
+        return (
+          <section key={item.id} className="mb-9 last:mb-0">
+            <p className="text-xs font-bold text-cyan-main mb-2">{item.year}</p>
+            <h2 className="text-lg md:text-xl font-bold text-cyan-dark mb-3">{zh ? item.title : item.enTitle}</h2>
+            <p className="text-sm md:text-base leading-loose text-cyan-dark/80">{zh ? item.desc : item.enDesc}</p>
 
-        <motion.img src={siteContent.assets.playerIcon} alt="" className="absolute z-20 w-16 h-16 object-contain pointer-events-none -translate-x-1/2 -translate-y-1/2" style={{ left: xPercent, top: yPercent }} />
-
-        <article className="absolute left-5 right-5 bottom-5 md:left-8 md:right-8 md:bottom-8 bg-white rounded-2xl p-5 md:p-6 shadow-lg">
-          <div className="flex items-center gap-3 mb-2 text-sm font-black text-cyan-main"><span>{active.year}</span></div>
-          <h2 className="text-xl md:text-3xl font-black text-cyan-dark mb-2">{language === 'zh' ? active.title : active.enTitle}</h2>
-          <p className="text-sm md:text-base leading-relaxed font-bold text-cyan-dark/65 max-w-3xl">{language === 'zh' ? active.desc : active.enDesc}</p>
-        </article>
-      </div>
-    </section>
+            {images.length > 0 && (
+              <div className={`mt-6 grid gap-4 ${images.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+                {images.map((photo) => (
+                  <figure key={photo.src} className="min-w-0">
+                    <img
+                      src={photo.src}
+                      alt={zh ? photo.alt : photo.enAlt}
+                      width={1920}
+                      height={photo.height}
+                      className="w-full h-auto rounded-lg"
+                      loading="lazy"
+                    />
+                    <figcaption className="mt-2 text-xs leading-relaxed text-cyan-dark/65">
+                      {zh ? photo.caption : photo.enCaption}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
+    </article>
   );
 };

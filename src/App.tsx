@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import { CustomCursor } from './components/CustomCursor';
 import { Navbar } from './components/Navbar';
@@ -21,6 +21,9 @@ import { HelmetProvider } from 'react-helmet-async';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { ToastProvider, useToast } from './context/ToastContext';
 import { ContextMenu } from './components/ContextMenu';
+
+// Pages cannot serve arbitrary SPA paths; hash routes also work on refresh.
+const Router = import.meta.env.VITE_GITHUB_PAGES === 'true' ? HashRouter : BrowserRouter;
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();

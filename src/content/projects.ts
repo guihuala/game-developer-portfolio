@@ -1,3 +1,5 @@
+import { assetUrl } from '../utils/assetUrl';
+
 /** 项目案例统一编辑入口；本地图片建议放在 public/Work 下。 */
 export interface ProjectModule {
   title: string;
@@ -43,7 +45,7 @@ export const projects: Project[] = [
     enTitle: "Step or Sink",
     type: "3D 角色扮演",
     enType: "3D RPG",
-    image: "/Work/1/sos_cover.webp",
+    image: assetUrl("/Work/1/sos_cover.webp"),
     color: "#00BCD4",
     desc: "拥有独特交互逻辑的地形探索游戏。",
     enDesc: "Terrain exploration game with unique interaction logic.",
@@ -67,7 +69,7 @@ export const projects: Project[] = [
           enTitle: "Terrain & Overworld",
           content: "地图里有沼泽、流沙等不同地形，经过时会消耗不同数量的步数和体力。玩家需要先观察路线，再决定要不要绕路，探索本身也是玩法的一部分。",
           enContent: "Designed diverse terrains like swamps and quicksand. Players must manage steps and stamina, adding tactical depth to exploration that fits the survival theme.",
-          image: "/Work/1/sos_gameplay_1.webp",
+          image: assetUrl("/Work/1/sos_gameplay_1.webp"),
           icon: 'star'
         },
         {
@@ -119,7 +121,7 @@ export const projects: Project[] = [
     enTitle: "The Bucket List",
     type: "2D 剧情解谜",
     enType: "2D Narrative Puzzle",
-    image: "/Work/2/tbl_cover.webp",
+    image: assetUrl("/Work/2/tbl_cover.webp"),
     color: "#FFD54F",
     desc: "以“光影交互”为核心的叙事解谜游戏。",
     enDesc: "Narrative puzzle game featuring light and shadow interaction.",
@@ -189,7 +191,7 @@ export const projects: Project[] = [
     enTitle: "Mycelium Mill",
     type: "2D 模拟工厂",
     enType: "2D Factory Simulation",
-    image: "/Work/3/mm_cover.webp",
+    image: assetUrl("/Work/3/mm_cover.webp"),
     color: "#00BCD4",
     desc: "结合轻松治愈的工厂自动化模拟游戏。",
     enDesc: "Cozy and healing automated factory simulation game.",
@@ -241,7 +243,7 @@ export const projects: Project[] = [
     enTitle: "Check my tickets",
     type: "2D 休闲模拟",
     enType: "2D Casual Sim",
-    image: "/Work/4/cyt_cover.webp",
+    image: assetUrl("/Work/4/cyt_cover.webp"),
     color: "#FFD54F",
     desc: "扮演检票员快速处理各种伪造票的限时挑战作。",
     enDesc: "Play as a ticket inspector handling forged tickets in a time-limited challenge.",

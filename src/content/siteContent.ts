@@ -1,3 +1,5 @@
+import { assetUrl } from '../utils/assetUrl';
+
 /**
  * 网站内容统一编辑入口。
  *
@@ -8,9 +10,9 @@ export type LocalizedText = { zh: string; en: string };
 
 export const siteContent = {
   assets: {
-    avatar: '/avatar.webp',
-    playerIcon: '/桂花泥图标.png',
-    flowerModel: '/小桂花.glb',
+    avatar: assetUrl('/avatar.webp'),
+    playerIcon: assetUrl('/桂花泥图标.png'),
+    flowerModel: assetUrl('/小桂花.glb'),
   },
 
   hero: {
@@ -82,14 +84,14 @@ export const siteContent = {
   artGallery: {
     title: { zh: '图库展示', en: 'ART GALLERY' },
     images: [
-      '/art/鹤喰.webp',
-      '/art/bg.webp',
-      '/art/Image_658224922644321.webp',
-      '/art/156828.webp',
-      '/art/158419.webp',
-      '/art/honakana.webp',
-      '/art/1.webp',
-      '/art/2.webp',
+      assetUrl('/art/鹤喰.webp'),
+      assetUrl('/art/bg.webp'),
+      assetUrl('/art/Image_658224922644321.webp'),
+      assetUrl('/art/156828.webp'),
+      assetUrl('/art/158419.webp'),
+      assetUrl('/art/honakana.webp'),
+      assetUrl('/art/1.webp'),
+      assetUrl('/art/2.webp'),
     ],
   },
   portfolio: {
