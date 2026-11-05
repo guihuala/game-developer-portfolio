@@ -1,12 +1,13 @@
-import React, { useRef, Suspense, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Float, Environment, ContactShadows, useGLTF } from '@react-three/drei';
+import React, { useRef, Suspense, useMemo, useEffect, useState, useCallback } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls, Float, ContactShadows, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { siteContent } from '../content/siteContent';
 
-const Model = () => {
+const Model = ({ onReady }: { onReady: () => void }) => {
   const { scene } = useGLTF(siteContent.assets.flowerModel);
   const groupRef = useRef<THREE.Group>(null);
+  useEffect(() => { onReady(); }, [onReady]);
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -30,7 +31,7 @@ const ProceduralOsmanthus = () => (
     {[0, 1, 2, 3].map((i) => (
       <mesh key={i} rotation={[0, 0, (Math.PI / 2) * i]} position={[Math.cos((Math.PI / 2) * i) * 0.12, Math.sin((Math.PI / 2) * i) * 0.12, 0]} scale={[1.2, 0.6, 0.2]}>
         <sphereGeometry args={[0.08, 16, 16]} />
-        <meshPhysicalMaterial color="#FFF59D" emissive="#FBC02D" emissiveIntensity={0.5} roughness={0.2} metalness={0.1} clearcoat={1} clearcoatRoughness={0.1} transparent opacity={0.95} />
+        <meshStandardMaterial color="#FFF59D" emissive="#FBC02D" emissiveIntensity={0.3} roughness={0.6} />
       </mesh>
     ))}
     <mesh position={[0, 0, 0.01]} scale={[1, 1, 0.1]}>
@@ -83,21 +84,48 @@ const FloatingFlowers = () => {
   );
 };
 
-useGLTF.preload(siteContent.assets.flowerModel);
+// A demand-driven clock keeps idle rendering at 30 fps and stops off screen.
+const SceneClock = ({ active }: { active: boolean }) => {
+  const invalidate = useThree((state) => state.invalidate);
+  useEffect(() => {
+    invalidate();
+    if (!active) return;
+    const timer = window.setInterval(() => invalidate(), 1000 / 30);
+    return () => window.clearInterval(timer);
+  }, [active, invalidate]);
+  return null;
+};
 
 export const Osmanthus3D: React.FC = () => {
+  const container = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(false);
+  const [ready, setReady] = useState(false);
+  const revealModel = useCallback(() => setReady(true), []);
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let visible = false;
+    const update = () => setActive(visible && !document.hidden && !query.matches);
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; update(); });
+    if (container.current) observer.observe(container.current);
+    document.addEventListener('visibilitychange', update);
+    query.addEventListener('change', update);
+    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', update); query.removeEventListener('change', update); };
+  }, []);
   return (
-    <div className="w-full h-full relative cursor-grab active:cursor-grabbing">
+    <div ref={container} className={`osmanthus-scene w-full h-full relative cursor-grab active:cursor-grabbing ${ready ? 'is-ready' : ''}`} role="img" aria-label="桂花 3D 模型 / Osmanthus 3D model">
       <Canvas
-        camera={{ position: [0, 0, 4], fov: 50 }}
-        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 3.8], fov: 50 }}
+        frameloop="demand"
+        dpr={[1, 1.25]}
         gl={{ antialias: false, powerPreference: 'high-performance' }}
       >
+        <SceneClock active={active} />
         <Suspense fallback={null}>
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[10, 10, 5]} intensity={1.0} color="#ffffff" />
-          <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#E0F7FA" />
-          <pointLight position={[0, 0, 2]} intensity={0.6} color="#FFD54F" />
+          <ambientLight intensity={1.0} />
+          <hemisphereLight args={['#ffffff', '#E0F7FA', 0.7]} />
+          <directionalLight position={[3, 4, 6]} intensity={1.7} color="#ffffff" />
+          <directionalLight position={[-4, 2, 4]} intensity={0.8} color="#F0FBFF" />
+          <directionalLight position={[0, 3, -4]} intensity={0.5} color="#FFF9E6" />
 
           <Float
             speed={1.2}
@@ -106,12 +134,13 @@ export const Osmanthus3D: React.FC = () => {
             floatingRange={[0.05, 0.1]}
           >
             <group position={[0, 0.4, 0]}>
-              <Model />
+              <Model onReady={revealModel} />
               <FloatingFlowers />
             </group>
           </Float>
 
           <OrbitControls
+            enableDamping={false}
             enableZoom={false}
             enablePan={false}
             enableRotate={true}
@@ -121,8 +150,7 @@ export const Osmanthus3D: React.FC = () => {
             maxPolarAngle={THREE.MathUtils.degToRad(115)}
             autoRotate={false}
           />
-          <Environment preset="city" />
-          <ContactShadows frames={1} position={[0, -1.5, 0]} opacity={0.3} scale={10} blur={2} far={4} color="#00BCD4" />
+          <ContactShadows frames={1} position={[0, -1.5, 0]} opacity={0.18} scale={10} blur={2} far={4} color="#00BCD4" />
         </Suspense>
       </Canvas>
     </div>

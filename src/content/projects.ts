@@ -52,7 +52,7 @@ export const projects: Project[] = [
     tags: ["Unity", "Blender", "Photoshop", "Spine", "C#"],
     details: {
       about: "这个项目最早是参加 GameJam 时做的 Demo，后来又花了大约三个月扩展成完整版。我担任制作人和主程序，负责核心玩法、交互逻辑、部分美术资产、场景渲染，也参与了世界观和关卡机制的设计。",
-      enAbout: "This project originated from a GameJam event and was later expanded into a full product. Designed from scratch, it features unique gameplay mechanics and art style. I served as the lead producer, responsible for core programming, interaction logic, parts of art creation, scene rendering, world-building, and level mechanism design.",
+      enAbout: "This started as a game jam demo. We spent about three months expanding it into a full game. I was the producer and lead programmer, working on gameplay, interactions, some art assets and rendering, as well as world-building and level design.",
       features: [
         "包含沼泽、流沙等多样化地形，需要管理步数与体力",
         "收集分布在世界各地的民俗收藏品解锁额外剧情关卡",
@@ -68,7 +68,7 @@ export const projects: Project[] = [
           title: "地形交互与体力管理",
           enTitle: "Terrain & Overworld",
           content: "地图里有沼泽、流沙等不同地形，经过时会消耗不同数量的步数和体力。玩家需要先观察路线，再决定要不要绕路，探索本身也是玩法的一部分。",
-          enContent: "Designed diverse terrains like swamps and quicksand. Players must manage steps and stamina, adding tactical depth to exploration that fits the survival theme.",
+          enContent: "Swamps and quicksand use different amounts of steps and stamina. Players need to look at the route and decide when to take a detour.",
           image: assetUrl("/Work/1/sos_gameplay_1.webp"),
           icon: 'star'
         },
@@ -76,14 +76,14 @@ export const projects: Project[] = [
           title: "民俗叙事与收集系统",
           enTitle: "Folklore & Collection",
           content: "地图中散落着一些民俗收藏品。它们一方面用来补充世界观，另一方面也会解锁额外剧情和关卡，算是给绕路探索一个比较实际的理由。",
-          enContent: "Used folklore items as drivers for exploration. Collecting specific sets not only completes world-building but also unlocks unique narrative branches.",
+          enContent: "Folklore items are scattered around the map. They add to the setting and unlock extra stories and levels, giving players a reason to explore.",
           icon: 'pen'
         },
         {
           title: "潜行逃脱与视线检测",
           enTitle: "Stealth & Escape",
           content: "敌人的视线范围会直接显示在场景中。被发现后会进入倒计时，玩家需要利用地形尽快离开警戒区域。",
-          enContent: "Enemies feature dynamic LoS detection. Once alerted, players must plan paths to escape before the countdown, creating intense tension and gameplay feedback.",
+          enContent: "Enemy sight ranges are shown in the scene. Being spotted starts a countdown, and players need to use the terrain to leave the area in time.",
           icon: 'trophy'
         }
       ],
@@ -92,7 +92,7 @@ export const projects: Project[] = [
           title: "2.5D 风格化渲染管线",
           enTitle: "2.5D Stylized Pipeline",
           content: "项目使用 MK Toon，并在这个基础上调整了材质和 Shader。主要处理了高度图、阴影和手绘贴图的显示，让 2D 素材放进 3D 场景后不会显得太突兀。",
-          enContent: "Customized hand-drawn materials via MK Toon. Used custom Shaders for heightmaps and shadows to balance 2D aesthetics with 3D spatial depth.",
+          enContent: "I adjusted materials and shaders built on MK Toon, working on heightmaps, shadows and hand-painted textures so the 2D assets would fit into the 3D scenes.",
 
           icon: 'cpu'
         },
@@ -100,7 +100,7 @@ export const projects: Project[] = [
           title: "A* 寻路优化与路径缓存",
           enTitle: "Pathfinding & Cache",
           content: "因为地图地形比较复杂，我对 A* 寻路做了一些调整，并加入路径缓存，减少多个单位同时寻路时的重复计算。",
-          enContent: "Optimized A* for complex terrains. Introduced Path Cache to maintain 60+ FPS even with numerous entities performing pathfinding simultaneously.",
+          enContent: "I adapted A* for the terrain and added a path cache to reduce repeated calculations when several units were finding routes at once.",
           icon: 'code'
         }
       ],
@@ -137,14 +137,14 @@ export const projects: Project[] = [
       enFeatures: [
         "Light interaction system",
         "Interconnected sandbox exploration",
-        "Emotionally rich narrative experience"
+        "A story told through exploration and puzzles"
       ],
       designModules: [
         {
           title: "双层光影解谜机制",
           enTitle: "Dual-Layer Light Logic",
           content: "游戏的主要机制围绕光照展开。被照亮的区域会显示过去的状态，阴影里则保留现在的样子。玩家需要移动或寻找光源，对照两个状态来解谜。",
-          enContent: "Innovative mechanism: Lit areas show the 'intact past' while shadows hide the 'ruined present.' Players must find light sources to bridge these two timelines.",
+          enContent: "Lit areas show the past, while shadows show the present. Players move or look for light sources and compare the two states to solve puzzles.",
 
           icon: 'star'
         },
@@ -152,7 +152,7 @@ export const projects: Project[] = [
           title: "互联沙盒关卡设计",
           enTitle: "Sandbox Exploration",
           content: "关卡不是完全按顺序推进，而是由几个互相连接的区域组成。玩家可以自由探索，也可以通过地图快速移动，避免在已经走过的场景里反复赶路。",
-          enContent: "Shifted from linear levels to Interconnected regions. Supports free exploration, deep scene interaction, and fast travel, boosting narrative immersion.",
+          enContent: "The levels consist of connected areas rather than a fixed sequence. Players can explore freely and use fast travel to avoid repeatedly crossing familiar scenes.",
           icon: 'pen'
         }
       ],
@@ -161,7 +161,7 @@ export const projects: Project[] = [
           title: "实时光影像素计算",
           enTitle: "Pixel-Perfect Lighting",
           content: "我用 C# 收集光源和遮挡物的数据，再传给自定义 Shader，按像素计算哪些内容应该被光照显示。这个系统主要用来实现“只有被照亮时才看得见”的场景物件。",
-          enContent: "Collected light & occluder data in C# passed to custom Shaders. Achieved pixel-level transparency logic for the 'lit-only' effect via reversed ray-logic.",
+          enContent: "I collect light and occluder data in C# and pass it to a shader. It calculates which pixels are lit, allowing objects to appear only when light falls on them.",
 
           icon: 'code'
         },
@@ -169,7 +169,7 @@ export const projects: Project[] = [
           title: "通用交互框架架构",
           enTitle: "Universal Interaction",
           content: "为了方便后面继续加谜题，我写了一套通用交互基类，统一处理物品状态保存、交互提示和道具消耗判断，减少每个物件重复写逻辑。",
-          enContent: "Built a scalable interaction base class. Supports state persistence, visual hints, and complex item validation, ensuring logical consistency across gameplay.",
+          enContent: "I wrote a shared interaction base class for saving object states, displaying prompts and checking item use. This reduced the repeated code needed for each new puzzle.",
           icon: 'cpu'
         }
       ],
@@ -198,7 +198,7 @@ export const projects: Project[] = [
     tags: ["Unity", "Photoshop", "C#", "HLSL"],
     details: {
       about: "这是一个自己独立开发的工厂模拟游戏。最开始只是突然想到，可以把菌丝管道和自动化流水线放在一起，于是就做了出来。玩法、程序和美术都由我完成。",
-      enAbout: "An automated simulation game combining a love for mushrooms with factory gameplay, emphasizing a relaxing and creative experience. Independently responsible for gameplay design, art design, and all programming.",
+      enAbout: "I made this factory simulation game on my own. It started with an idea to combine mycelium pipes with automated production lines. I did the gameplay, programming and art.",
       features: [
         "培育与利用不同功能的蘑菇自动化加工",
         "搭建菌丝管网物流与逻辑元件流水线",

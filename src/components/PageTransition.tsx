@@ -1,25 +1,19 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 
 export const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const reducedMotion = useReducedMotion();
 
   return (
-    <motion.div
-      key={location.pathname}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-      transition={{ 
-        type: "spring",
-        stiffness: 260,
-        damping: 20,
-        duration: 0.5
-      }}
-      className="w-full"
+    <motion.main
+      key={pathname}
+      initial={reducedMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: reducedMotion ? 0 : 0.24, ease: 'easeOut' }}
     >
       {children}
-    </motion.div>
+    </motion.main>
   );
 };

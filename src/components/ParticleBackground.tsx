@@ -1,180 +1,141 @@
 import React, { useEffect, useRef } from 'react';
+import { useSettings } from '../context/SettingsContext';
 
-interface Particle {
+interface Petal {
   x: number;
   y: number;
+  vx: number;
+  vy: number;
   size: number;
-  speedX: number;
-  speedY: number;
   angle: number;
   spin: number;
-  color: string;
   opacity: number;
+  color: string;
+  life: number;
 }
 
-import { useSettings } from '../context/SettingsContext';
+const COLORS = ['#FFD54F', '#FFCA28', '#FFC107', '#FFE082', '#FFF9C4'];
+const BURST_CAPACITY = 16;
+const BURST_LIFETIME = 700;
 
 export const ParticleBackground: React.FC = () => {
   const { isLateNightMode } = useSettings();
-  const intensity = isLateNightMode ? 'high' : 'low';
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let particles: Particle[] = [];
-    let animationFrameId: number;
-    let lastFrameTime = 0;
-    const frameInterval = 1000 / 30;
-
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let previous = 0;
+    let lastBurst = -Infinity;
+    let burstCursor = 0;
+    let ambient: Petal[] = [];
+    const pointer = { x: -1000, y: -1000 };
+    const create = (): Petal => ({ x: 0, y: 0, vx: 0, vy: 0, size: 2 + Math.random() * 4, angle: Math.random() * Math.PI * 2, spin: (Math.random() - .5) * .04, opacity: .35 + Math.random() * .4, color: COLORS[Math.floor(Math.random() * COLORS.length)], life: 0 });
+    // Reuse a fixed pool. Clicks never increase the amount of drawing work.
+    const bursts = Array.from({ length: BURST_CAPACITY }, create);
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles();
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const scale = Math.min(1, 1600 / width);
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      const count = Math.min(isLateNightMode ? 40 : 28, Math.floor(width * height / 42000));
+      ambient = Array.from({ length: count }, () => ({ ...create(), x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - .5) * .5, vy: .4 + Math.random() * .7 }));
     };
-
-    const createParticle = (x?: number, y?: number): Particle => {
-      // Osmanthus colors: soft yellows, light oranges, warm whites
-      const colors = ['#FFD54F', '#FFCA28', '#FFC107', '#FFE082', '#FFF9C4'];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      return {
-        x: x !== undefined ? x : Math.random() * canvas.width,
-        y: y !== undefined ? y : Math.random() * canvas.height,
-        size: Math.random() * 4 + 2,
-        speedX: (Math.random() - 0.5) * 1.5,
-        speedY: Math.random() * 1.5 + 0.5, // Falling down gently
-        angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() - 0.5) * 0.05,
-        color,
-        opacity: Math.random() * 0.6 + 0.4,
-      };
-    };
-
-    const initParticles = () => {
-      particles = [];
-      
-      const divisor = intensity === 'high' ? 12000 : 36000;
-      const numParticles = Math.floor((window.innerWidth * window.innerHeight) / divisor);
-      for (let i = 0; i < numParticles; i++) {
-        particles.push(createParticle());
-      }
-    };
-
-    const drawPetal = (p: Particle) => {
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.angle);
-      ctx.globalAlpha = p.opacity;
-      ctx.fillStyle = p.color;
-      
+    const draw = (petal: Petal, fade = 1) => {
+      ctx.globalAlpha = petal.opacity * fade;
+      ctx.fillStyle = petal.color;
       ctx.beginPath();
-      // Draw a cute, plump petal shape
-      ctx.ellipse(0, 0, p.size * 1.5, p.size, 0, 0, Math.PI * 2);
+      // Ellipse rotation avoids save/translate/rotate/restore for every petal.
+      ctx.ellipse(petal.x, petal.y, petal.size * 1.5, petal.size, petal.angle, 0, Math.PI * 2);
       ctx.fill();
-      ctx.restore();
     };
-
-    const update = (time = 0) => {
-      animationFrameId = requestAnimationFrame(update);
-      if (document.hidden || time - lastFrameTime < frameInterval) return;
-      lastFrameTime = time;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-
-        // Mouse interaction (gentle push)
-        const dx = mouseRef.current.x - p.x;
-        const dy = mouseRef.current.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        if (dist < 120) {
-          const force = (120 - dist) / 120;
-          p.speedX -= (dx / dist) * force * 0.8;
-          p.speedY -= (dy / dist) * force * 0.8;
+    const update = (time: number) => {
+      frame = requestAnimationFrame(update);
+      if (time - previous < 1000 / 30) return;
+      const elapsed = previous ? Math.min(time - previous, 64) : 33;
+      const step = elapsed / 33;
+      previous = time;
+      ctx.clearRect(0, 0, width, height);
+      for (const petal of ambient) {
+        const dx = petal.x - pointer.x;
+        const dy = petal.y - pointer.y;
+        const distanceSquared = dx * dx + dy * dy;
+        if (distanceSquared > 1 && distanceSquared < 6400) {
+          petal.vx += dx * .0003 * step;
         }
-
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.angle += p.spin;
-
-        // Add some wind/drift
-        p.speedX += (Math.random() - 0.5) * 0.1;
-        // Dampen speed back to normal
-        p.speedX *= 0.95;
-        if (p.speedY < 0.5) p.speedY += 0.05;
-        if (p.speedY > 2.5) p.speedY *= 0.95;
-
-        // Wrap around
-        if (p.y > canvas.height + 20) {
-          p.y = -20;
-          p.x = Math.random() * canvas.width;
-          p.speedX = (Math.random() - 0.5) * 1.5;
-        }
-        if (p.x > canvas.width + 20) p.x = -20;
-        if (p.x < -20) p.x = canvas.width + 20;
-
-        drawPetal(p);
+        petal.vx *= Math.pow(.98, step);
+        petal.x += (petal.vx + .15) * step;
+        petal.y += petal.vy * step;
+        petal.angle += petal.spin * step;
+        if (petal.y > height + 12) { petal.y = -12; petal.x = Math.random() * width; }
+        if (petal.x > width + 12) petal.x = -12;
+        if (petal.x < -12) petal.x = width + 12;
+        draw(petal);
       }
-
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
-
-    const handleMouseLeave = () => {
-      mouseRef.current.x = -1000;
-      mouseRef.current.y = -1000;
-    };
-
-    const handleMouseClick = (e: MouseEvent) => {
-      
-      const burstCount = intensity === 'high' ? 15 : 5;
-      // Burst of petals on click!
-      for (let i = 0; i < burstCount; i++) {
-        const p = createParticle(e.clientX, e.clientY);
-        p.speedX = (Math.random() - 0.5) * 15;
-        p.speedY = (Math.random() - 0.5) * 15;
-        particles.push(p);
-      }
-      
-      const maxParticles = intensity === 'high' ? 200 : 80;
-      // Keep particle count somewhat stable by removing old ones if there are too many
-      if (particles.length > maxParticles) {
-        particles.splice(0, burstCount);
+      for (const petal of bursts) {
+        if (petal.life <= 0) continue;
+        petal.life = Math.max(0, petal.life - elapsed);
+        petal.x += petal.vx * step;
+        petal.y += petal.vy * step;
+        petal.vx *= Math.pow(.9, step);
+        petal.vy = petal.vy * Math.pow(.9, step) + .08 * step;
+        petal.angle += petal.spin * step;
+        draw(petal, petal.life / BURST_LIFETIME);
       }
     };
-
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('click', handleMouseClick);
-    
+    const move = (event: PointerEvent) => { pointer.x = event.clientX; pointer.y = event.clientY; };
+    const leave = () => { pointer.x = -1000; pointer.y = -1000; };
+    const burst = (event: MouseEvent) => {
+      const target = event.target;
+      // Navigation, dialogs and model dragging should not trigger extra work.
+      if (target instanceof Element && target.closest('a, button, input, select, textarea, dialog, canvas')) return;
+      const time = performance.now();
+      if (motion.matches || document.hidden || time - lastBurst < 120) return;
+      lastBurst = time;
+      for (let i = 0; i < 4; i++) {
+        const petal = bursts[burstCursor];
+        burstCursor = (burstCursor + 1) % BURST_CAPACITY;
+        petal.x = event.clientX;
+        petal.y = event.clientY;
+        petal.vx = (Math.random() - .5) * 7;
+        petal.vy = (Math.random() - .6) * 7;
+        petal.life = BURST_LIFETIME;
+      }
+    };
+    const resume = () => {
+      cancelAnimationFrame(frame);
+      ctx.clearRect(0, 0, width, height);
+      bursts.forEach((petal) => { petal.life = 0; });
+      if (!document.hidden && !motion.matches) { previous = 0; frame = requestAnimationFrame(update); }
+    };
     resize();
-    animationFrameId = requestAnimationFrame(update);
-
+    resume();
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', move, { passive: true });
+    document.documentElement.addEventListener('pointerleave', leave);
+    window.addEventListener('click', burst);
+    document.addEventListener('visibilitychange', resume);
+    motion.addEventListener('change', resume);
     return () => {
+      cancelAnimationFrame(frame);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('click', handleMouseClick);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('pointermove', move);
+      document.documentElement.removeEventListener('pointerleave', leave);
+      window.removeEventListener('click', burst);
+      document.removeEventListener('visibilitychange', resume);
+      motion.removeEventListener('change', resume);
     };
-  }, [intensity]);
+  }, [isLateNightMode]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-500"
-      style={{ background: 'transparent', opacity: 1 }}
-    />
-  );
+  return <canvas ref={canvasRef} aria-hidden="true" className="fixed inset-0 pointer-events-none z-0" />;
 };

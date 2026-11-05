@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
+import './studio.css';
 import { BrowserRouter, HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { PageTransition } from './components/PageTransition';
+import { ParticleBackground } from './components/ParticleBackground';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
@@ -22,9 +25,10 @@ const AppContent = () => {
   }, [pathname]);
 
   return (
-    <div className={`min-h-screen font-sans selection:bg-yellow-main selection:text-cyan-dark ${isLateNightMode ? 'dark-mode bg-[#0A1A1F]' : 'bg-[#F8FCFC]'}`}>
+    <div className={`atelier-app min-h-screen font-sans selection:bg-yellow-main selection:text-cyan-dark ${isLateNightMode ? 'dark-mode' : ''}`}>
+      <ParticleBackground />
       <Navbar />
-      <main>
+      <PageTransition>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -32,7 +36,7 @@ const AppContent = () => {
           <Route path="/experience" element={<Experience />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
         </Routes>
-      </main>
+      </PageTransition>
       {pathname === '/' && <Footer />}
     </div>
   );

@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'motion/react';
-import { ArrowLeft, ExternalLink, PlayCircle, Star } from 'lucide-react';
+import { ExternalLink, PlayCircle, Star } from 'lucide-react';
 import { projects, featuredProjects } from '../content/projects';
 import { useLanguage } from '../context/LanguageContext';
-import { useSoundEffects } from '../hooks/useSoundEffects';
 import { SEO } from '../components/SEO';
 
 export const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { language, t } = useLanguage();
-  const { playHover, playClick } = useSoundEffects();
   const project = projects.find((item) => item.id === Number(id));
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
@@ -37,9 +35,7 @@ export const ProjectDetail: React.FC = () => {
       <motion.div className="fixed top-0 left-0 right-0 h-1 bg-cyan-main origin-left z-[60]" style={{ scaleX }} />
 
       <article className="max-w-4xl mx-auto px-5 md:px-8">
-        <button onClick={() => { playClick(); navigate('/works'); }} onMouseEnter={playHover} className="flex items-center gap-2 text-sm font-black text-cyan-dark/60 hover:text-cyan-main mb-14">
-          <ArrowLeft className="w-4 h-4" /> {t('返回作品', 'Back to Works')}
-        </button>
+
 
         <header className="relative w-full aspect-video overflow-hidden bg-cyan-dark mb-8 group rounded-[2rem] md:rounded-[3rem]">
           {project.image && <img src={project.image} alt={local(project.title, project.enTitle)} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" />}

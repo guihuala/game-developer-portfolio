@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useLanguage } from '../context/LanguageContext';
 import { featuredProjects } from '../content/projects';
 
@@ -12,47 +13,73 @@ const roles: Record<number, { zh: string; en: string }> = {
 
 export const Portfolio: React.FC = () => {
   const { language, t } = useLanguage();
+  const [selected, setSelected] = useState(0);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const reduceMotion = useReducedMotion();
+  const project = featuredProjects[selected];
+  const select = (index: number) => setSelected((index + featuredProjects.length) % featuredProjects.length);
+
+  const handleKey = (event: React.KeyboardEvent, index: number) => {
+    let next = index;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % featuredProjects.length;
+    else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index + featuredProjects.length - 1) % featuredProjects.length;
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = featuredProjects.length - 1;
+    else return;
+    event.preventDefault();
+    setSelected(next);
+    tabs.current[next]?.focus();
+  };
 
   return (
-    <section className="max-w-5xl mx-auto px-5 md:px-8 pb-16">
-      <header className="mb-8 md:mb-10">
-        <h1 className="text-3xl md:text-4xl font-black text-cyan-dark">{t('精选作品', 'Selected Works')}</h1>
-        <div aria-hidden="true" className="w-9 h-1 rounded-full bg-yellow-main mt-5" />
-      </header>
+    <section className="work-gallery">
+      <div className="gallery-index">
+        <h1>{t('精选', 'Selected')}<br /><span>{t('作品', 'Works')}<span className="title-period" aria-hidden="true">.</span></span></h1>
+        <div className="project-tabs" role="tablist" aria-label={t('选择作品', 'Select a project')}>
+          {featuredProjects.map((item, index) => (
+            <button
+              key={item.id}
+              ref={(node) => { tabs.current[index] = node; }}
+              role="tab"
+              id={`project-tab-${item.id}`}
+              aria-controls="project-stage"
+              aria-selected={index === selected}
+              tabIndex={index === selected ? 0 : -1}
+              onClick={() => setSelected(index)}
+              onKeyDown={(event) => handleKey(event, index)}
+              className={`project-tab ${index === selected ? 'selected' : ''}`}
+            >
+              <span className="tab-copy"><span>{language === 'zh' ? item.title : item.enTitle}</span><small>{language === 'zh' ? item.type : item.enType}</small></span>
+              <ArrowUpRight size={19} className="tab-arrow" aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      </div>
 
-      <div className="space-y-5 md:space-y-6">
-        {featuredProjects.map((project, index) => (
-          <Link
-            key={project.id}
-            to={`/project/${project.id}`}
-            className="group grid md:grid-cols-[1.15fr_1fr] gap-2 md:gap-0 p-3 rounded-2xl border border-cyan-dark/10 bg-white/80 shadow-[0_4px_20px_-12px_rgba(2,132,199,0.15)] transition-[border-color,box-shadow] duration-300 hover:border-cyan-main/40 hover:shadow-[0_12px_32px_-20px_rgba(2,132,199,0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-dark"
-          >
-            <div className="overflow-hidden rounded-xl bg-cyan-light/30 self-center">
-              <img
-                src={project.image}
-                alt={language === 'zh' ? project.title : project.enTitle}
-                className="w-full aspect-[16/10] object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.025]"
-                loading={index === 0 ? 'eager' : 'lazy'}
-              />
-            </div>
-            <div className="flex flex-col justify-center px-2 py-4 md:px-7 md:py-5 lg:px-9">
-              <div className="flex items-center gap-3 text-xs mb-3 md:mb-4">
-                <span aria-hidden="true" className="font-mono text-cyan-dark/45">0{index + 1}</span>
-                <span aria-hidden="true" className="w-5 h-px bg-cyan-dark/20" />
-                <span className="font-bold text-cyan-main">{language === 'zh' ? project.type : project.enType}</span>
-              </div>
-              <h2 className="text-2xl lg:text-3xl font-bold tracking-tight text-cyan-dark group-hover:text-cyan-main transition-colors">{language === 'zh' ? project.title : project.enTitle}</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600">{language === 'zh' ? project.desc : project.enDesc}</p>
-              <p className="mt-4 text-xs leading-relaxed text-slate-500">{roles[project.id][language]}</p>
-              <div className="mt-5 pt-4 border-t border-cyan-dark/10 flex items-center justify-between gap-4">
-                <span className="text-xs font-bold text-cyan-dark">{t('查看项目', 'View project')}</span>
-                <span className="w-8 h-8 rounded-full bg-cyan-light/50 text-cyan-dark flex items-center justify-center transition-colors group-hover:bg-cyan-dark group-hover:text-white">
-                  <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
+      <div id="project-stage" role="tabpanel" aria-labelledby={`project-tab-${project.id}`} tabIndex={0} className="project-stage">
+        <div className="stage-visual">
+          <div className="stage-grid" aria-hidden="true" />
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div key={project.id} className="stage-image" initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -8 }} transition={{ duration: reduceMotion ? 0 : .18 }}>
+              <Link to={`/project/${project.id}`} aria-label={`${t('查看项目', 'View project')}: ${language === 'zh' ? project.title : project.enTitle}`}>
+                <img src={project.image} alt={language === 'zh' ? project.title : project.enTitle} fetchPriority="high" />
+                <span className="stage-open"><ArrowUpRight aria-hidden="true" /></span>
+              </Link>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <div className="stage-caption">
+          <div className="stage-description" aria-live="polite" aria-atomic="true">
+            <p>{language === 'zh' ? project.desc : project.enDesc}</p>
+            <small>{roles[project.id][language]}</small>
+            <Link to={`/project/${project.id}`}>{t('查看项目', 'View project')}<ArrowUpRight size={15} aria-hidden="true" /></Link>
+          </div>
+          <div className="stage-pagination">
+            <span className="page-count" aria-hidden="true"><strong>0{selected + 1}</strong><span>/ 03</span></span>
+            <div><button onClick={() => select(selected - 1)} aria-label={t('上一个作品', 'Previous project')}><ArrowLeft size={18} /></button><button onClick={() => select(selected + 1)} aria-label={t('下一个作品', 'Next project')}><ArrowRight size={18} /></button></div>
+          </div>
+        </div>
+        <div className="stage-progress" aria-hidden="true">{featuredProjects.map((item, index) => <span key={item.id} className={index === selected ? 'active' : ''} />)}</div>
       </div>
     </section>
   );
